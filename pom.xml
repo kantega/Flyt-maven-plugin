@@ -1,0 +1,105 @@
+<!--
+  ~ Copyright 2009 Kantega AS
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~    http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+    <parent>
+        <groupId>org.kantega.opensource-parent</groupId>
+        <artifactId>opensource-parent</artifactId>
+        <version>1.1</version>
+    </parent>
+
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>org.kantega.openaksess</groupId>
+    <artifactId>openaksess-maven-plugin</artifactId>
+    <packaging>maven-plugin</packaging>
+    <version>2.8-SNAPSHOT</version>
+    <name>OpenAksess Maven plugin</name>
+
+
+    <scm>
+        <connection>scm:svn:https://opensource.kantega.no/svn/openaksess-plugin/trunk/</connection>
+    </scm>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.apache.maven</groupId>
+            <artifactId>maven-plugin-api</artifactId>
+            <version>2.0.9</version>
+        </dependency>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>3.8.1</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-antrun-plugin</artifactId>
+            <version>1.0</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.mortbay.jetty</groupId>
+            <artifactId>maven-jetty-plugin</artifactId>
+            <version>6.1.14</version>
+        </dependency>
+        <dependency>
+            <artifactId>plexus-archiver</artifactId>
+            <groupId>org.codehaus.plexus</groupId>
+            <version>1.0-alpha-10</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.codehaus.plexus</groupId>
+                    <artifactId>plexus-container-default</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.codehaus.plexus</groupId>
+                    <artifactId>plexus-component-api</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
+        <dependency>
+            <groupId>xalan</groupId>
+            <artifactId>xalan</artifactId>
+            <version>2.7.0</version>
+        </dependency>
+        
+        <dependency>
+            <groupId>xerces</groupId>
+            <artifactId>xercesImpl</artifactId>
+            <version>2.9.1</version>
+        </dependency>
+        <dependency>
+            <artifactId>commons-io</artifactId>
+            <groupId>commons-io</groupId>
+            <version>1.4</version>
+        </dependency>
+
+
+    </dependencies>
+
+    <build>
+        <sourceDirectory>src/java</sourceDirectory>
+        <resources>
+            <resource>
+                <directory>${basedir}/src/resources</directory>
+            </resource>
+        </resources>
+    </build>
+
+</project>
