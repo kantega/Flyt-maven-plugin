@@ -31,7 +31,7 @@
 
 
     <scm>
-        <connection>scm:svn:https://opensource.kantega.no/svn/openaksess-plugin/trunk/</connection>
+        <connection>scm:svn:https://opensource.kantega.no/svn/openaksess-maven-plugin/trunk/</connection>
     </scm>
 
     <dependencies>
