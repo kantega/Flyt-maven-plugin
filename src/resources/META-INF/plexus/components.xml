@@ -28,9 +28,9 @@
                         <phases>
                             <process-resources>
                                 org.apache.maven.plugins:maven-resources-plugin:resources,
-                                org.kantega.openaksess:openaksess-maven-plugin:makeversion,
-                                org.kantega.openaksess:openaksess-maven-plugin:kantegadir,
-                                org.kantega.openaksess:openaksess-maven-plugin:mergewebxml
+                                org.kantega.openaksess:aksess-maven-plugin:makeversion,
+                                org.kantega.openaksess:aksess-maven-plugin:kantegadir,
+                                org.kantega.openaksess:aksess-maven-plugin:mergewebxml
                             </process-resources>
                             <compile>org.apache.maven.plugins:maven-compiler-plugin:compile</compile>
                             <process-test-resources>
@@ -40,7 +40,7 @@
                             <test>org.apache.maven.plugins:maven-surefire-plugin:test</test>
                             <package>
                                 org.apache.maven.plugins:maven-war-plugin:war,
-                                org.kantega.openaksess:openaksess-maven-plugin:package
+                                org.kantega.openaksess:aksess-maven-plugin:package
                             </package>
                             <install>org.apache.maven.plugins:maven-install-plugin:install</install>
                             <deploy>org.apache.maven.plugins:maven-deploy-plugin:deploy</deploy>
