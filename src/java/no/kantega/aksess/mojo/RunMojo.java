@@ -169,7 +169,7 @@ public class RunMojo extends AbstractMojo {
         JettyStarter starter = new JettyStarter();
 
         if(aksessHome != null) {
-            File aksessSrc  = new File(aksessHome, "webapp/src/webapp");
+            File aksessSrc  = new File(aksessHome, "modules/webapp/src/webapp");
             if(aksessSrc.exists()) {
                 starter.getAdditinalBases().add(aksessSrc.getAbsolutePath());
             }
