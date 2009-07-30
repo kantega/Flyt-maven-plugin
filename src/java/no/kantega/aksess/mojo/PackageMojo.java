@@ -34,6 +34,7 @@ import org.codehaus.plexus.archiver.util.DefaultArchivedFileSet;
 import org.codehaus.plexus.archiver.jar.JarArchiver;
 import org.codehaus.plexus.components.io.fileselectors.FileSelector;
 import org.codehaus.plexus.components.io.fileselectors.FileInfo;
+import org.codehaus.plexus.util.FileUtils;
 import org.xml.sax.SAXException;
 
 import java.io.File;
@@ -236,8 +237,9 @@ public class PackageMojo extends AbstractMojo {
 
             jarArchiver.createArchive();
 
-            project.getArtifact().setFile(destFile);
-
+            FileUtils.copyFile(destFile, warFile);
+            destFile.delete();
+            
 
         } catch (ArchiverException e) {
             throw new MojoExecutionException(e.getMessage(), e);
