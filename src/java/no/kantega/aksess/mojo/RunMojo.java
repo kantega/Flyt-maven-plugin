@@ -30,6 +30,7 @@ import org.codehaus.plexus.archiver.UnArchiver;
 import org.codehaus.plexus.archiver.ArchiverException;
 import org.codehaus.plexus.components.io.fileselectors.FileSelector;
 import org.codehaus.plexus.components.io.fileselectors.IncludeExcludeFileSelector;
+import org.mortbay.util.Scanner;
 import no.kantega.aksess.JettyStarter;
 
 import java.io.File;
@@ -166,7 +167,7 @@ public class RunMojo extends AbstractMojo {
             }
         }
 
-        JettyStarter starter = new JettyStarter();
+        final JettyStarter starter = new JettyStarter();
 
         if(aksessHome != null) {
             File aksessSrc  = new File(aksessHome, "modules/webapp/src/webapp");
@@ -225,10 +226,27 @@ public class RunMojo extends AbstractMojo {
         jettyWorkDir.mkdirs();
         starter.setWorkDir(jettyWorkDir);
         starter.setOpenBrowser(true);
+
+        Scanner scanner = new Scanner();
+        scanner.setReportExistingFilesOnStartup(false);
+        scanner.setScanDirs(dependencyFiles);
+        scanner.addListener(new Scanner.BulkListener() {
+            public void filesChanged(List filenames) throws Exception {
+                getLog().info("Restarting webapp because the following dependencies have changed: " + filenames);
+                starter.restart();
+            }
+        });
+
+        scanner.setScanInterval(3);
+        scanner.start();
+
+
         try {
             starter.start();
         } catch (Exception e) {
             throw new MojoExecutionException(e.getMessage(), e);
         }
+
+
     }
 }

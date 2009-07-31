@@ -53,6 +53,7 @@ public class JettyStarter {
     private List additinalBases = new ArrayList();
     private List<File> dependencyFiles;
     private boolean openBrowser;
+    private WebAppContext context;
 
     public static void main(String[] args) throws Exception {
         final JettyStarter js = new JettyStarter();
@@ -115,7 +116,7 @@ public class JettyStarter {
     public void start() throws Exception {
         Server server = new Server(8080);
 
-        WebAppContext context = new WebAppContext();
+        context = new WebAppContext();
         context.setDescriptor(webXml.getAbsolutePath());
         List bases = new ArrayList();
         bases.add(srcDir.getAbsolutePath());
@@ -239,5 +240,10 @@ public class JettyStarter {
 
     public void setOpenBrowser(boolean openBrowser) {
         this.openBrowser = openBrowser;
+    }
+
+    public void restart() throws Exception {
+        context.stop();
+        context.start();
     }
 }
