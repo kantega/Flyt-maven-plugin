@@ -20,9 +20,14 @@ import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.project.MavenProject;
+import org.apache.maven.project.MavenProjectBuilder;
+import org.apache.maven.project.ProjectBuildingException;
+import org.apache.maven.project.artifact.InvalidDependencyVersionException;
 import org.apache.maven.artifact.Artifact;
 import org.apache.maven.artifact.resolver.ArtifactResolutionException;
 import org.apache.maven.artifact.resolver.ArtifactNotFoundException;
+import org.apache.maven.artifact.resolver.ArtifactResolutionResult;
+import org.apache.maven.artifact.resolver.filter.ScopeArtifactFilter;
 import org.apache.maven.artifact.metadata.ArtifactMetadataSource;
 import org.apache.maven.artifact.versioning.VersionRange;
 import org.codehaus.plexus.archiver.jar.JarArchiver;
@@ -34,16 +39,14 @@ import org.mortbay.util.Scanner;
 import no.kantega.aksess.JettyStarter;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Iterator;
-import java.util.Map;
+import java.io.IOException;
+import java.util.*;
 
 /**
  * @goal run
  * @execute phase="test"
  * @requiresDependencyResolution runtime
- * 
+ *
  */
 public class RunMojo extends AbstractMojo {
 
@@ -143,16 +146,20 @@ public class RunMojo extends AbstractMojo {
      */
     private File aksessHome;
 
+    /** @component */
+    private MavenProjectBuilder mavenProjectBuilder;
+
 
     public void execute() throws MojoExecutionException, MojoFailureException {
         getLog().info("Running Jetty");
 
         List<Artifact> wars = new ArrayList<Artifact>();
 
+        final Artifact aksessWarArtifact;
         try {
-            final Artifact aksessArifact = artifactFactory.createDependencyArtifact("org.kantega.openaksess", "openaksess-webapp", VersionRange.createFromVersion(aksessVersion), "war", null, "compile");
-            resolver.resolve(aksessArifact, remoteRepositories, localRepository);
-            wars.add(aksessArifact);
+            aksessWarArtifact = artifactFactory.createDependencyArtifact("org.kantega.openaksess", "openaksess-webapp", VersionRange.createFromVersion(aksessVersion), "war", null, "compile");
+            resolver.resolve(aksessWarArtifact, remoteRepositories, localRepository);
+            wars.add(aksessWarArtifact);
         } catch (ArtifactResolutionException e) {
             throw new MojoExecutionException(e.getMessage(), e);
         } catch (ArtifactNotFoundException e) {
@@ -177,44 +184,46 @@ public class RunMojo extends AbstractMojo {
         }
 
         for(Artifact artifact : wars) {
-            File dir = new File(warsWorkDir, artifact.getFile().getName());
-            if(!dir.exists() ||  (artifact.getFile().lastModified() > dir.lastModified())) {
-                dir.mkdirs();
-                dir.setLastModified(System.currentTimeMillis());
-                unArchiver.setSourceFile(artifact.getFile());
-                unArchiver.setDestDirectory(dir);
-                final IncludeExcludeFileSelector selector = new IncludeExcludeFileSelector();
-                if(overlays != null) {
-                    for(Overlay overlay : overlays) {
-                        if(artifact.getGroupId().equals(overlay.getGroupId()) && artifact.getArtifactId().equals(overlay.getArtifactId())) {
-                            if(overlay.getIncludes() != null) {
-                                selector.setIncludes(overlay.getIncludes().toArray(new String[overlay.getIncludes().size()]));
-                            }
-                            break;
-                        }
-                    }
-                }
-
-                unArchiver.setFileSelectors(new FileSelector[] {selector});
-
-                try {
-                    getLog().info("Unpacking " + artifact.getFile().getName() + " into " + dir.getAbsolutePath());
-                    unArchiver.extract();
-                } catch (ArchiverException e) {
-                    throw new MojoExecutionException(e.getMessage(), e);
-                }
-            }
+            File dir = unpackArtifact(artifact);
             starter.getAdditinalBases().add(dir.getAbsolutePath());
         }
 
 
+
         List<File> dependencyFiles = new ArrayList<File>();
         dependencyFiles.add(classesDirectory);
-        for(Iterator i = project.getArtifacts().iterator(); i.hasNext(); ) {
-            Artifact artifact = (Artifact) i.next();
-            if (artifact.getType().equals("jar") && (!Artifact.SCOPE_PROVIDED.equals(artifact.getScope())) && (!Artifact.SCOPE_TEST.equals( artifact.getScope())))  {
-                dependencyFiles.add(artifact.getFile());
+
+
+        try {
+            final MavenProject aksessWarProject = mavenProjectBuilder.buildFromRepository(aksessWarArtifact, remoteRepositories, localRepository);
+
+
+            Set<Artifact> artifacts = new HashSet<Artifact>();
+            artifacts.addAll(aksessWarProject.createArtifacts(artifactFactory, null, null));
+            artifacts.addAll(project.getArtifacts());
+
+
+            final ArtifactResolutionResult result = resolver.resolveTransitively(artifacts,
+                    aksessWarProject.getArtifact(),
+                    localRepository,
+                    remoteRepositories,
+                    artifactMetadataSource, new ScopeArtifactFilter( Artifact.SCOPE_RUNTIME ));
+
+            for(Iterator i = result.getArtifacts().iterator(); i.hasNext(); ) {
+                Artifact artifact = (Artifact) i.next();
+                if (artifact.getType().equals("jar") && (!Artifact.SCOPE_PROVIDED.equals(artifact.getScope())) && (!Artifact.SCOPE_TEST.equals( artifact.getScope())))  {
+                    dependencyFiles.add(artifact.getFile());
+                }
             }
+
+        } catch (ProjectBuildingException e) {
+            throw new MojoExecutionException(e.getMessage(), e);
+        } catch (ArtifactNotFoundException e) {
+            throw new MojoExecutionException(e.getMessage(), e);
+        } catch (ArtifactResolutionException e) {
+            throw new MojoExecutionException(e.getMessage(), e);
+        } catch (InvalidDependencyVersionException e) {
+            throw new MojoExecutionException(e.getMessage(), e);
         }
 
         starter.setContextPath(contextPath);
@@ -237,9 +246,45 @@ public class RunMojo extends AbstractMojo {
             }
         });
 
-        scanner.setScanInterval(3);
+        scanner.setScanInterval(5);
         scanner.start();
 
+        {
+            Scanner warScanner = new Scanner();
+            warScanner.setReportExistingFilesOnStartup(false);
+            warScanner.setScanDirs(Collections.singletonList(aksessWarArtifact.getFile()));
+            warScanner.addListener(new Scanner.BulkListener() {
+                public void filesChanged(List filenames) throws Exception {
+                    getLog().info("Unpacking changed OpenAksess web artifact: " + filenames);
+                    for(Iterator i = project.getDependencyArtifacts().iterator(); i.hasNext(); ) {
+                        Artifact a = (Artifact) i.next();
+                        if(a.getType().equals("war")) {
+                            waitForUnpack(a);
+                            unpackArtifact(a);
+                        }
+                    }
+                    waitForUnpack(aksessWarArtifact);
+                    unpackArtifact(aksessWarArtifact);
+                    starter.restart();
+                }
+            });
+
+            warScanner.setScanInterval(5);
+            warScanner.start();
+        }
+
+
+        Thread t = new ConsoleScanner() {
+            protected void restart() {
+                try {
+                    getLog().info("Restarting webapp on request");
+                    starter.restart();
+                } catch (Exception e) {
+                    getLog().error("Error restarting webapp", e);
+                }
+            }
+        };
+        t.start();
 
         try {
             starter.start();
@@ -248,5 +293,117 @@ public class RunMojo extends AbstractMojo {
         }
 
 
+    }
+
+    private void waitForUnpack(Artifact a) {
+        long last = a.getFile().lastModified();
+        for(int i = 0; i < 10; i++) {
+            try {
+                Thread.sleep(200);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+
+            if(last == a.getFile().lastModified()) {
+                break;
+            } else {
+                last = a.getFile().lastModified();
+            }
+        }
+    }
+
+    private File unpackArtifact(Artifact artifact) throws MojoExecutionException {
+        File dir = new File(warsWorkDir, artifact.getFile().getName());
+        if(!dir.exists() ||  (artifact.getFile().lastModified() > dir.lastModified())) {
+            dir.mkdirs();
+            dir.setLastModified(System.currentTimeMillis());
+            unArchiver.setSourceFile(artifact.getFile());
+            unArchiver.setDestDirectory(dir);
+            final IncludeExcludeFileSelector selector = new IncludeExcludeFileSelector();
+            if("org.kantega.openaksess".equals(artifact.getGroupId()) && "openaksess-webapp".equals(artifact.getArtifactId())) {
+                selector.setExcludes(new String[] {"WEB-INF/lib/**"});
+            }
+            if(overlays != null) {
+                for(Overlay overlay : overlays) {
+                    if(artifact.getGroupId().equals(overlay.getGroupId()) && artifact.getArtifactId().equals(overlay.getArtifactId())) {
+                        if(overlay.getIncludes() != null) {
+                            selector.setIncludes(overlay.getIncludes().toArray(new String[overlay.getIncludes().size()]));
+                        }
+                        break;
+                    }
+                }
+            }
+
+            unArchiver.setFileSelectors(new FileSelector[] {selector});
+
+            try {
+                getLog().info("Unpacking " + artifact.getFile().getName() + " into " + dir.getAbsolutePath());
+                unArchiver.extract();
+            } catch (ArchiverException e) {
+                throw new MojoExecutionException(e.getMessage(), e);
+            }
+        }
+        return dir;
+    }
+
+    abstract class ConsoleScanner extends Thread {
+
+        @Override
+        public void run() {
+            while(true) {
+                try {
+                    checkInput();
+                    Thread.sleep(100);
+                } catch (IOException e) {
+                    getLog().error(e);
+                } catch (InterruptedException e) {
+                    getLog().error(e);
+                }
+            }
+        }
+
+        private void checkInput() throws IOException {
+
+            char p = '0';
+
+            while (System.in.available() > 0) {
+                int inputByte = System.in.read();
+                if (inputByte >= 0)
+                {
+                    char c = (char)inputByte;
+                    if (c == '\n' && p == 'r') {
+                        restart();
+                    }
+                    p = c;
+                }
+            }
+        }
+
+        private void doRestart() {
+            restart();
+            emptyBuffer();
+        }
+        protected abstract void restart();
+    }
+
+    private void emptyBuffer() {
+
+        try
+        {
+            while (System.in.available() > 0)
+            {
+                // System.in.skip doesn't work properly. I don't know why
+                long available = System.in.available();
+                for (int i = 0; i < available; i++)
+                {
+                    if (System.in.read() == -1)
+                    {
+                        break;
+                    }
+                }
+            }
+        } catch (IOException e) {
+            getLog().error("Error emptying buffer", e);
+        }
     }
 }
