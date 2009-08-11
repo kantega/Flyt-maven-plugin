@@ -54,6 +54,7 @@ public class JettyStarter {
     private List<File> dependencyFiles;
     private boolean openBrowser;
     private WebAppContext context;
+    private int port = 8080;
 
     public static void main(String[] args) throws Exception {
         final JettyStarter js = new JettyStarter();
@@ -114,7 +115,7 @@ public class JettyStarter {
     }
 
     public void start() throws Exception {
-        Server server = new Server(8080);
+        Server server = new Server(port);
 
         context = new WebAppContext();
         context.setDescriptor(webXml.getAbsolutePath());
@@ -148,7 +149,7 @@ public class JettyStarter {
         
         server.start();
         if(openBrowser) {
-            openUrl("http://localhost:8080" + contextPath);
+            openUrl("http://localhost:" + port + contextPath);
         }
         server.join();
 
@@ -245,5 +246,9 @@ public class JettyStarter {
     public void restart() throws Exception {
         context.stop();
         context.start();
+    }
+
+    public void setPort(int port) {
+        this.port = port;
     }
 }

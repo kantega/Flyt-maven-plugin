@@ -149,6 +149,11 @@ public class RunMojo extends AbstractMojo {
     /** @component */
     private MavenProjectBuilder mavenProjectBuilder;
 
+    /**
+     * @parameter expression="${port}" default-value="8080"
+     */
+    private int port;
+
 
     public void execute() throws MojoExecutionException, MojoFailureException {
         getLog().info("Running Jetty");
@@ -226,6 +231,7 @@ public class RunMojo extends AbstractMojo {
             throw new MojoExecutionException(e.getMessage(), e);
         }
 
+        starter.setPort(port);
         starter.setContextPath(contextPath);
         starter.setSrcDir(srcDir);
         starter.setWebXml(mergedWebXml);
