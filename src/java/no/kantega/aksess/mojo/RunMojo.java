@@ -200,24 +200,48 @@ public class RunMojo extends AbstractMojo {
 
 
         try {
-            final MavenProject aksessWarProject = mavenProjectBuilder.buildFromRepository(aksessWarArtifact, remoteRepositories, localRepository);
+
+            Set<String> dependencyIds = new HashSet<String>();
+            {
+                final MavenProject aksessWarProject = mavenProjectBuilder.buildFromRepository(aksessWarArtifact, remoteRepositories, localRepository);
 
 
-            Set<Artifact> artifacts = new HashSet<Artifact>();
-            artifacts.addAll(aksessWarProject.createArtifacts(artifactFactory, null, null));
-            artifacts.addAll(project.getArtifacts());
+                Set<Artifact> artifacts = new HashSet<Artifact>();
+                artifacts.addAll(aksessWarProject.createArtifacts(artifactFactory, null, null));
 
 
-            final ArtifactResolutionResult result = resolver.resolveTransitively(artifacts,
-                    aksessWarProject.getArtifact(),
-                    localRepository,
-                    remoteRepositories,
-                    artifactMetadataSource, new ScopeArtifactFilter( Artifact.SCOPE_RUNTIME ));
+                final ArtifactResolutionResult result = resolver.resolveTransitively(artifacts,
+                        aksessWarProject.getArtifact(),
+                        aksessWarProject.getManagedVersionMap(),
+                        localRepository,
+                        remoteRepositories,
+                        artifactMetadataSource, new ScopeArtifactFilter( Artifact.SCOPE_RUNTIME ));
 
-            for(Iterator i = result.getArtifacts().iterator(); i.hasNext(); ) {
-                Artifact artifact = (Artifact) i.next();
-                if (artifact.getType().equals("jar") && (!Artifact.SCOPE_PROVIDED.equals(artifact.getScope())) && (!Artifact.SCOPE_TEST.equals( artifact.getScope())))  {
-                    dependencyFiles.add(artifact.getFile());
+                for(Iterator i = result.getArtifacts().iterator(); i.hasNext(); ) {
+                    Artifact artifact = (Artifact) i.next();
+                    if (artifact.getType().equals("jar") && (!Artifact.SCOPE_PROVIDED.equals(artifact.getScope())) && (!Artifact.SCOPE_TEST.equals( artifact.getScope())))  {
+                        dependencyFiles.add(artifact.getFile());
+                        dependencyIds.add(artifact.getDependencyConflictId());
+                    }
+                }
+            }
+            {
+                // Local project
+                final ArtifactResolutionResult result = resolver.resolveTransitively(project.getArtifacts(),
+                        project.getArtifact(),
+                        project.getManagedVersionMap(),
+                        localRepository,
+                        remoteRepositories,
+                        artifactMetadataSource, new ScopeArtifactFilter( Artifact.SCOPE_RUNTIME ));
+
+                for(Iterator i = result.getArtifacts().iterator(); i.hasNext(); ) {
+                    Artifact artifact = (Artifact) i.next();
+                    if (artifact.getType().equals("jar") && (!Artifact.SCOPE_PROVIDED.equals(artifact.getScope())) && (!Artifact.SCOPE_TEST.equals( artifact.getScope())))  {
+                        if(!dependencyIds.contains(artifact.getDependencyConflictId())) {
+                            dependencyFiles.add(artifact.getFile());
+                        }
+
+                    }
                 }
             }
 
@@ -326,7 +350,7 @@ public class RunMojo extends AbstractMojo {
             unArchiver.setSourceFile(artifact.getFile());
             unArchiver.setDestDirectory(dir);
             final IncludeExcludeFileSelector selector = new IncludeExcludeFileSelector();
-            if("org.kantega.openaksess".equals(artifact.getGroupId()) && "openaksess-webapp".equals(artifact.getArtifactId())) {
+            if(("org.kantega.openaksess".equals(artifact.getGroupId()) && "openaksess-webapp".equals(artifact.getArtifactId())) || artifact == project.getArtifact()) {
                 selector.setExcludes(new String[] {"WEB-INF/lib/**"});
             }
             if(overlays != null) {
