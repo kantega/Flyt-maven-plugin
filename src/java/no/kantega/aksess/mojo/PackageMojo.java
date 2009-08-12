@@ -21,10 +21,15 @@ import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.project.MavenProject;
 import org.apache.maven.project.MavenProjectHelper;
+import org.apache.maven.project.ProjectBuildingException;
+import org.apache.maven.project.MavenProjectBuilder;
+import org.apache.maven.project.artifact.InvalidDependencyVersionException;
 import org.apache.maven.artifact.metadata.ArtifactMetadataSource;
 import org.apache.maven.artifact.Artifact;
 import org.apache.maven.artifact.resolver.ArtifactNotFoundException;
 import org.apache.maven.artifact.resolver.ArtifactResolutionException;
+import org.apache.maven.artifact.resolver.ArtifactResolutionResult;
+import org.apache.maven.artifact.resolver.filter.ScopeArtifactFilter;
 import org.apache.maven.artifact.versioning.VersionRange;
 import org.codehaus.plexus.archiver.ArchiverException;
 import org.codehaus.plexus.archiver.ArchiveFileFilter;
@@ -41,9 +46,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 import no.kantega.aksess.MergeWebXml;
 
@@ -171,6 +174,10 @@ public class PackageMojo extends AbstractMojo {
     private String aksessVersion;
     private static final String WEB_XML = "WEB-INF/web.xml";
 
+    /** @component */
+    private MavenProjectBuilder mavenProjectBuilder;
+
+
     public void execute() throws MojoExecutionException, MojoFailureException {
 
         getLog().info("Make new war from " + warFile);
@@ -182,24 +189,74 @@ public class PackageMojo extends AbstractMojo {
 
 
         try {
-            final Artifact aksessArifact = artifactFactory.createDependencyArtifact("org.kantega.openaksess", "openaksess-webapp", VersionRange.createFromVersion(aksessVersion), "war", null, "compile");
-            resolver.resolve(aksessArifact, remoteRepositories, localRepository);
+            final Artifact aksessWarArtifact = artifactFactory.createDependencyArtifact("org.kantega.openaksess", "openaksess-webapp", VersionRange.createFromVersion(aksessVersion), "war", null, "compile");
+            resolver.resolve(aksessWarArtifact, remoteRepositories, localRepository);
 
-            final File aksessFile = aksessArifact.getFile();
+            final File aksessFile = aksessWarArtifact.getFile();
 
-            if(!mergedWebXml.exists() ||
-                    aksessFile.lastModified() > mergedWebXml.lastModified() ||
-                    projectWebXml.lastModified() > mergedWebXml.lastModified()) {
-                MergeWebXml.main(new String[] {
-                        "jar:file:" + aksessFile.getAbsolutePath() +"!/WEB-INF/web.xml",
-                        mergedWebXml.getAbsolutePath(),
-                        projectWebXml.getAbsolutePath()
+            mergeWebXml(aksessFile);
 
-                });
+            jarArchiver.addFile(mergedWebXml, WEB_XML);
+
+
+            try {
+
+                Set<String> dependencyIds = new HashSet<String>();
+
+                {
+                    final MavenProject aksessWarProject = mavenProjectBuilder.buildFromRepository(aksessWarArtifact, remoteRepositories, localRepository);
+                    Set<Artifact> artifacts = new HashSet<Artifact>();
+                    artifacts.addAll(aksessWarProject.createArtifacts(artifactFactory, null, null));
+
+
+                    final ArtifactResolutionResult result = resolver.resolveTransitively(artifacts,
+                            aksessWarProject.getArtifact(),
+                            aksessWarProject.getManagedVersionMap(),
+                            localRepository,
+                            remoteRepositories,
+                            artifactMetadataSource, new ScopeArtifactFilter( Artifact.SCOPE_RUNTIME ));
+
+
+                    for(Iterator i = result.getArtifacts().iterator(); i.hasNext(); ) {
+                        Artifact artifact = (Artifact) i.next();
+                        if (artifact.getType().equals("jar") && (!Artifact.SCOPE_PROVIDED.equals(artifact.getScope())) && (!Artifact.SCOPE_TEST.equals( artifact.getScope())))  {
+                            jarArchiver.addFile(artifact.getFile(), "WEB-INF/lib/" + artifact.getFile().getName());
+                            dependencyIds.add(artifact.getDependencyConflictId());
+                        }
+                    }
+
+                }
+                {
+                    // Local project
+                    final ArtifactResolutionResult result = resolver.resolveTransitively(project.getArtifacts(),
+                            project.getArtifact(),
+                            project.getManagedVersionMap(),
+                            localRepository,
+                            remoteRepositories,
+                            artifactMetadataSource, new ScopeArtifactFilter( Artifact.SCOPE_RUNTIME ));
+
+                    for(Iterator i = result.getArtifacts().iterator(); i.hasNext(); ) {
+                        Artifact artifact = (Artifact) i.next();
+                        if (artifact.getType().equals("jar") && (!Artifact.SCOPE_PROVIDED.equals(artifact.getScope())) && (!Artifact.SCOPE_TEST.equals( artifact.getScope())))  {
+                            if(!dependencyIds.contains(artifact.getDependencyConflictId())) {
+                                jarArchiver.addFile(artifact.getFile(), "WEB-INF/lib/" + artifact.getFile().getName());
+                            }
+
+                        }
+                    }
+                }
+
+            } catch (ProjectBuildingException e) {
+                throw new MojoExecutionException(e.getMessage(), e);
+            } catch (ArtifactNotFoundException e) {
+                throw new MojoExecutionException(e.getMessage(), e);
+            } catch (ArtifactResolutionException e) {
+                throw new MojoExecutionException(e.getMessage(), e);
+            } catch (InvalidDependencyVersionException e) {
+                throw new MojoExecutionException(e.getMessage(), e);
             }
 
 
-            jarArchiver.addFile(mergedWebXml, WEB_XML);
 
             final Set<String> paths = new HashSet<String>();
 
@@ -219,8 +276,8 @@ public class PackageMojo extends AbstractMojo {
 
             {
                 final DefaultArchivedFileSet aksessFileset = new DefaultArchivedFileSet();
-                aksessFileset.setArchive(aksessArifact.getFile());
-                aksessFileset.setExcludes(new String[] {WEB_XML});
+                aksessFileset.setArchive(aksessWarArtifact.getFile());
+                aksessFileset.setExcludes(new String[] {WEB_XML, "WEB-INF/lib/*"});
                 aksessFileset.setFileSelectors(new FileSelector[] {filter});
 
                 jarArchiver.addArchivedFileSet(aksessFileset);
@@ -228,7 +285,7 @@ public class PackageMojo extends AbstractMojo {
             {
                 final DefaultArchivedFileSet warFileSet = new DefaultArchivedFileSet();
                 warFileSet.setArchive(warFile);
-                warFileSet.setExcludes(new String[] {WEB_XML});
+                warFileSet.setExcludes(new String[] {WEB_XML, "WEB-INF/lib/*"});
                 warFileSet.setFileSelectors(new FileSelector[] {filter});
 
                 jarArchiver.addArchivedFileSet(warFileSet);
@@ -257,5 +314,18 @@ public class PackageMojo extends AbstractMojo {
             throw new MojoExecutionException(e.getMessage(), e);
         }
 
+    }
+
+    private void mergeWebXml(File aksessFile) throws TransformerException, IOException, ParserConfigurationException, SAXException {
+        if(!mergedWebXml.exists() ||
+                aksessFile.lastModified() > mergedWebXml.lastModified() ||
+                projectWebXml.lastModified() > mergedWebXml.lastModified()) {
+            MergeWebXml.main(new String[] {
+                    "jar:file:" + aksessFile.getAbsolutePath() +"!/WEB-INF/web.xml",
+                    mergedWebXml.getAbsolutePath(),
+                    projectWebXml.getAbsolutePath()
+
+            });
+        }
     }
 }
