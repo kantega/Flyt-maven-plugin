@@ -226,15 +226,8 @@ public class RunMojo extends AbstractMojo {
                 }
             }
             {
-                // Local project
-                final ArtifactResolutionResult result = resolver.resolveTransitively(project.getArtifacts(),
-                        project.getArtifact(),
-                        project.getManagedVersionMap(),
-                        localRepository,
-                        remoteRepositories,
-                        artifactMetadataSource, new ScopeArtifactFilter( Artifact.SCOPE_RUNTIME ));
 
-                for(Iterator i = result.getArtifacts().iterator(); i.hasNext(); ) {
+                for(Iterator i = project.getArtifacts().iterator(); i.hasNext(); ) {
                     Artifact artifact = (Artifact) i.next();
                     if (artifact.getType().equals("jar") && (!Artifact.SCOPE_PROVIDED.equals(artifact.getScope())) && (!Artifact.SCOPE_TEST.equals( artifact.getScope())))  {
                         if(!dependencyIds.contains(artifact.getDependencyConflictId())) {
