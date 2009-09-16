@@ -168,7 +168,7 @@ public class JettyStarter {
                 Runtime.getRuntime().exec("rundll32 url.dll,FileProtocolHandler " + url);
             else { //assume Unix or Linux
                 String[] browsers = {
-                        "firefox", "opera", "konqueror", "epiphany", "mozilla", "netscape" };
+                        "sensible-browser", "firefox", "opera", "chromium-browser", "konqueror", "epiphany", "mozilla", "netscape" };
                 String browser = null;
                 for (int count = 0; count < browsers.length && browser == null; count++)
                     if (Runtime.getRuntime().exec(
