@@ -309,16 +309,10 @@ public class RunMojo extends AbstractMojo {
         };
         t.start();
 
-        int firstport = port;
-        while (port < firstport+10) {
-          try {
-              starter.start();
-          } catch (java.net.BindException be) {
-              getLog().error("Error starting on port "+port+", trying next port");
-              starter.setPort(port++);
-          } catch (Exception e) {
-              throw new MojoExecutionException(e.getMessage(), e);
-          }
+        try {
+            starter.start();
+        } catch (Exception e) {
+            throw new MojoExecutionException(e.getMessage(), e);
         }
 
 

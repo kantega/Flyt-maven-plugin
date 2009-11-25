@@ -115,7 +115,6 @@ public class JettyStarter {
     }
 
     public void start() throws Exception {
-        Server server = new Server(port);
 
         context = new WebAppContext();
         context.setDescriptor(webXml.getAbsolutePath());
@@ -145,13 +144,25 @@ public class JettyStarter {
             }
             context.setExtraClasspath(extra);
         }
-        server.setHandler(context);
-        
-        server.start();
-        if(openBrowser) {
-            openUrl("http://localhost:" + port + contextPath);
+        int firstport = port;
+        while (port < firstport+10) {
+            try {
+                Server server = new Server(port);
+                server.setHandler(context);
+                server.start();
+                
+                if(openBrowser) {
+                    openUrl("http://localhost:" + port + contextPath);
+                }
+
+                server.join();
+
+            } catch (java.net.BindException be) {
+                System.out.println("Error starting server on port "+port+", try next port");
+                port++;
+            } 
         }
-        server.join();
+                
 
     }
 
