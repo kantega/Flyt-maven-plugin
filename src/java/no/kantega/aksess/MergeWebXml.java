@@ -58,8 +58,19 @@ public class MergeWebXml {
 
         TransformerFactory factory = TransformerFactory.newInstance();
         Transformer transformer = factory.newTransformer(new StreamSource(xsl.openStream()));
-        System.setProperty("javax.xml.parsers.DocumentBuilderFactory", "org.apache.xerces.jaxp.DocumentBuilderFactoryImpl");
-        final DocumentBuilderFactory docFac = DocumentBuilderFactory.newInstance();
+        final String factoryKey = "javax.xml.parsers.DocumentBuilderFactory";
+        String existingProperty = System.getProperty(factoryKey);
+        System.setProperty(factoryKey, "org.apache.xerces.jaxp.DocumentBuilderFactoryImpl");
+        final DocumentBuilderFactory docFac;
+        try {
+            docFac = DocumentBuilderFactory.newInstance();
+        } finally {
+            if(existingProperty != null) {
+                System.setProperty(factoryKey, existingProperty);
+            } else {
+                System.clearProperty(factoryKey);
+            }
+        }
         docFac.setNamespaceAware(false);
         transformer.setParameter("doc", docFac.newDocumentBuilder().parse(doc).getDocumentElement());
         transformer.transform(new StreamSource(in.openStream()), new StreamResult(new FileOutputStream(out)));
