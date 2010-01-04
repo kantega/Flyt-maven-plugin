@@ -93,15 +93,6 @@ public class KantegaDirMojo extends AbstractMojo {
     private File templatesDirectory;
 
     /**
-     * The War archiver.
-     *
-     * @component role="org.codehaus.plexus.archiver.UnArchiver" roleHint="zip"
-     */
-    private ZipUnArchiver unArchiver;
-
-
-
-    /**
      * The maven project.
      *
      * @parameter expression="${project}"
@@ -119,29 +110,8 @@ public class KantegaDirMojo extends AbstractMojo {
 
         try {
             // Extract Aksess's install jar
-            final Artifact install = artifactFactory.createDependencyArtifact("org.kantega.openaksess", "openaksess-install", VersionRange.createFromVersion(aksessVersion), "jar", null, "compile");
-            resolver.resolve(install, remoteRepositories, localRepository);
-
-            unArchiver.setDestDirectory(kantegaDir);
-            unArchiver.setSourceFile(install.getFile());
-            unArchiver.setFileSelectors(new FileSelector[] {new FileSelector() {
-                public boolean isSelected(FileInfo fileInfo) throws IOException {
-                    return !fileInfo.getName().startsWith("META-INF");
-                }
-            }});
-            unArchiver.extract();
-
             final File confFile = new File(kantegaDir, "conf/aksess.conf");
-            String conf ="";
-            if(confFile.exists()) {
-                conf = IOUtils.toString(new FileInputStream(confFile), "iso-8859-1");
-                conf = conf.replace("@aksess.contextpath@", project.getArtifactId());
-                conf +="\n";
-            } 
-            conf += IOUtils.toString(new FileInputStream(webappConf), "iso-8859-1");
-
-            IOUtils.write(conf, new FileOutputStream(confFile), "iso-8859-1");
-
+            FileUtils.copyFile(webappConf, confFile);
 
             // Copy anything from src/install
             if(installDir.exists()) {
@@ -156,17 +126,18 @@ public class KantegaDirMojo extends AbstractMojo {
                 FileUtils.copyFile(log4j, log4jDest);
             }
 
-            // Templates
-            if(templatesDirectory.exists()) {
-                FileUtils.copyDirectory(templatesDirectory, new File(kantegaDir, "templates"));
+            // We no longer accept templates in src/templates
+            if(templatesDirectory.exists() ) {
+                final FileFilter filter = new FileFilter() {
+                    public boolean accept(File file) {
+                        return file.isFile() && file.getName().endsWith(".xml");
+                    }
+                };
+                if(templatesDirectory.listFiles(filter).length > 0)  {
+                    throw new MojoFailureException("Content templates are no longer allowed in src/templates, please more them to WEB-INF/templates/content and then delete the src/templates directory");
+                }
             }
 
-        } catch (ArtifactResolutionException e) {
-            throw new MojoFailureException(e.getMessage(), e);
-        } catch (ArtifactNotFoundException e) {
-            throw new MojoFailureException(e.getMessage(), e);
-        } catch (ArchiverException e) {
-            throw new MojoFailureException(e.getMessage(), e);
         } catch (IOException e) {
             throw new MojoFailureException(e.getMessage(), e);
         }
