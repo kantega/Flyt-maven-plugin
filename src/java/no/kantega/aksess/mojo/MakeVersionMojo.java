@@ -45,7 +45,7 @@ public class MakeVersionMojo extends AbstractMojo {
     private String version;
 
     /**
-     * @parameter expression="${basedir}/../../.svn/entries"
+     * @parameter expression="${basedir}/../.svn/entries"
      * @required
      * @readonly
      */
