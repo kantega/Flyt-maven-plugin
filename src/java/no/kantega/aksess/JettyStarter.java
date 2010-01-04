@@ -50,7 +50,7 @@ public class JettyStarter {
     private File aksessDir;
     private Map props = new HashMap();
     private File workDir;
-    private List additinalBases = new ArrayList();
+    private List additionalBases = new ArrayList();
     private List<File> dependencyFiles;
     private boolean openBrowser;
     private WebAppContext context;
@@ -126,7 +126,7 @@ public class JettyStarter {
         if(webappDir != null) {
             bases.add(webappDir.getAbsolutePath());
         }
-        bases.addAll(additinalBases);
+        bases.addAll(additionalBases);
 
         context.getInitParams().putAll(props);
 
@@ -242,8 +242,8 @@ public class JettyStarter {
         this.workDir = workDir;
     }
 
-    public List getAdditinalBases() {
-        return additinalBases;
+    public List getAdditionalBases() {
+        return additionalBases;
     }
 
     public void setDependencyFiles(List<File> dependencyFiles) {

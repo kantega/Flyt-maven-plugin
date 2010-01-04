@@ -184,13 +184,16 @@ public class RunMojo extends AbstractMojo {
         if(aksessHome != null) {
             File aksessSrc  = new File(aksessHome, "modules/webapp/src/webapp");
             if(aksessSrc.exists()) {
-                starter.getAdditinalBases().add(aksessSrc.getAbsolutePath());
+                starter.getAdditionalBases().add(aksessSrc.getAbsolutePath());
             }
         }
 
+
+
+
         for(Artifact artifact : wars) {
             File dir = unpackArtifact(artifact);
-            starter.getAdditinalBases().add(dir.getAbsolutePath());
+            starter.getAdditionalBases().add(dir.getAbsolutePath());
         }
 
 
