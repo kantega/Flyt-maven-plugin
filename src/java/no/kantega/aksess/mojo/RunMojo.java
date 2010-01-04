@@ -82,6 +82,11 @@ public class RunMojo extends AbstractMojo {
     private File warsWorkDir;
 
     /**
+     * @parameter default-value="${basedir}/src/conf/aksess-webapp.conf"
+     */
+    private File aksessConfigFile;
+
+    /**
      * The maven project.
      *
      * @parameter expression="${project}"
@@ -180,6 +185,10 @@ public class RunMojo extends AbstractMojo {
         }
 
         final JettyStarter starter = new JettyStarter();
+        if(!aksessConfigFile.exists()) {
+            throw new MojoExecutionException("aksessConfigFile does not exist: " + aksessConfigFile.getAbsolutePath());
+        }
+        starter.addContextParam("no.kantega.publishing.setup.SetupServlet.CONFIG_SOURCE", aksessConfigFile.getAbsolutePath());
 
         if(aksessHome != null) {
             File aksessSrc  = new File(aksessHome, "modules/webapp/src/webapp");
