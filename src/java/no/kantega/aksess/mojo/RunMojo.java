@@ -35,7 +35,7 @@ import org.codehaus.plexus.archiver.UnArchiver;
 import org.codehaus.plexus.archiver.ArchiverException;
 import org.codehaus.plexus.components.io.fileselectors.FileSelector;
 import org.codehaus.plexus.components.io.fileselectors.IncludeExcludeFileSelector;
-import org.mortbay.util.Scanner;
+import org.eclipse.jetty.util.Scanner;
 import no.kantega.aksess.JettyStarter;
 
 import java.io.File;

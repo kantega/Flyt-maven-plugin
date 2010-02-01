@@ -16,11 +16,12 @@
 
 package no.kantega.aksess;
 
-import org.mortbay.jetty.Server;
-import org.mortbay.jetty.webapp.WebAppContext;
-import org.mortbay.resource.ResourceCollection;
-import org.mortbay.resource.Resource;
-import org.mortbay.resource.JarResource;
+
+import org.eclipse.jetty.webapp.WebAppContext;
+import org.eclipse.jetty.util.resource.ResourceCollection;
+import org.eclipse.jetty.util.resource.Resource;
+import org.eclipse.jetty.util.resource.JarResource;
+import org.eclipse.jetty.server.Server;
 
 import javax.swing.*;
 import java.io.File;
@@ -31,6 +32,7 @@ import java.util.Map;
 import java.util.HashMap;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.ServerSocket;
 import java.lang.reflect.Method;
 
 /**
@@ -147,21 +149,26 @@ public class JettyStarter {
         int firstport = port;
         while (port < firstport+10) {
             try {
-                Server server = new Server(port);
-                server.setHandler(context);
-                server.start();
-                
-                if(openBrowser) {
-                    openUrl("http://localhost:" + port + contextPath);
-                }
-
-                server.join();
-
+                new ServerSocket(port).close();
+                break;
             } catch (java.net.BindException be) {
-                System.out.println("Error starting server on port "+port+", try next port");
+
+                int nextPort = port+1;
+                System.out.println("Error starting server on port "+port+", trying port " + nextPort);
                 port++;
             } 
         }
+
+        Server server = new Server(port);
+        server.setHandler(context);
+        server.start();
+
+        if(openBrowser) {
+            openUrl("http://localhost:" + port + contextPath);
+        }
+
+        server.join();
+
                 
 
     }
@@ -205,8 +212,8 @@ public class JettyStarter {
                     resources[i] = Resource.newResource(resourceRef);
                 } else {
                     File extractDir = new File(workDir, file.getName());
-                    final Resource warResource = Resource.newResource(file.toURL());
-                    JarResource.extract(warResource, extractDir, false);
+                    final JarResource warResource = (JarResource) Resource.newResource(file.toURL());
+                    warResource.copyTo(extractDir);
                     resources[i] = Resource.newResource(extractDir.getAbsolutePath());
                 }
             }
