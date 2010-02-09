@@ -26,10 +26,7 @@ import org.eclipse.jetty.server.Server;
 import javax.swing.*;
 import java.io.File;
 import java.io.IOException;
-import java.util.List;
-import java.util.ArrayList;
-import java.util.Map;
-import java.util.HashMap;
+import java.util.*;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.ServerSocket;
@@ -139,6 +136,7 @@ public class JettyStarter {
         context.setBaseResource(new ResourceCollection(getResources(bases)));
         context.setContextPath(contextPath);
 
+        fixJettyUnpackIssue();
         if(dependencyFiles != null) {
             String extra = "";
             for(File file : dependencyFiles) {
@@ -171,6 +169,13 @@ public class JettyStarter {
 
                 
 
+    }
+
+    private void fixJettyUnpackIssue() {
+        // http://dev.eclipse.org/mhonarc/lists/jetty-dev/msg00371.html
+        List<String> cnfClasses = new ArrayList(Arrays.asList(context.getConfigurationClasses()));
+        cnfClasses.add(FixJettyUnpackConfiguration.class.getName());
+        context.setConfigurationClasses(cnfClasses.toArray(new String[cnfClasses.size()]));
     }
 
     private  void openUrl(String url) {
