@@ -192,7 +192,7 @@ public class RunMojo extends AbstractMojo {
         starter.addContextParam("no.kantega.publishing.setup.SetupServlet.CONFIG_SOURCE", aksessConfigFile.getAbsolutePath());
 
         if(System.getProperty("os.name").toLowerCase().contains("win")) {
-            starter.addContextParam(DefaultServlet.class.getName() + ".useFileMappedBuffer", "false");
+            starter.addContextParam("org.eclipse.jetty.servlet.Default.useFileMappedBuffer", "false");
         }
 
         if(aksessHome != null) {
