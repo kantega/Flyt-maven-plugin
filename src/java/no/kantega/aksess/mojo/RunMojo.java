@@ -35,6 +35,7 @@ import org.codehaus.plexus.archiver.UnArchiver;
 import org.codehaus.plexus.archiver.ArchiverException;
 import org.codehaus.plexus.components.io.fileselectors.FileSelector;
 import org.codehaus.plexus.components.io.fileselectors.IncludeExcludeFileSelector;
+import org.eclipse.jetty.servlet.DefaultServlet;
 import org.eclipse.jetty.util.Scanner;
 import no.kantega.aksess.JettyStarter;
 
@@ -189,6 +190,10 @@ public class RunMojo extends AbstractMojo {
             throw new MojoExecutionException("aksessConfigFile does not exist: " + aksessConfigFile.getAbsolutePath());
         }
         starter.addContextParam("no.kantega.publishing.setup.SetupServlet.CONFIG_SOURCE", aksessConfigFile.getAbsolutePath());
+
+        if(System.getProperty("os.name").toLowerCase().contains("win")) {
+            starter.addContextParam(DefaultServlet.class.getName() + ".useFileMappedBuffer", "false");
+        }
 
         if(aksessHome != null) {
             File aksessSrc  = new File(aksessHome, "modules/webapp/src/webapp");
