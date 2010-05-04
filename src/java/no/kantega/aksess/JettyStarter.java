@@ -136,7 +136,6 @@ public class JettyStarter {
         context.setBaseResource(new ResourceCollection(getResources(bases)));
         context.setContextPath(contextPath);
 
-        fixJettyUnpackIssue();
         if(dependencyFiles != null) {
             String extra = "";
             for(File file : dependencyFiles) {
@@ -171,12 +170,6 @@ public class JettyStarter {
 
     }
 
-    private void fixJettyUnpackIssue() {
-        // http://dev.eclipse.org/mhonarc/lists/jetty-dev/msg00371.html
-        List<String> cnfClasses = new ArrayList(Arrays.asList(context.getConfigurationClasses()));
-        cnfClasses.add(FixJettyUnpackConfiguration.class.getName());
-        context.setConfigurationClasses(cnfClasses.toArray(new String[cnfClasses.size()]));
-    }
 
     private  void openUrl(String url) {
         String osName = System.getProperty("os.name");
