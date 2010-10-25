@@ -1,0 +1,22 @@
+<html>
+<head>
+    <style type="text/css">
+        img {
+            border: 1px solid gray;
+        }
+        body {
+            font-family:sans-serif;
+            background-color: #d3d3d3;
+        }
+    </style>
+</head>
+
+<body>
+
+    #foreach($page in $pages)
+    <h2>${page.title} (${page.displayTemplate})</h2>
+    <img src="${page.contentId}.png"><br>
+    #end
+
+</body>
+</html>

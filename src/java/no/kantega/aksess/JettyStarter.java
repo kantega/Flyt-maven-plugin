@@ -17,20 +17,21 @@
 package no.kantega.aksess;
 
 
-import org.eclipse.jetty.webapp.WebAppContext;
-import org.eclipse.jetty.util.resource.ResourceCollection;
-import org.eclipse.jetty.util.resource.Resource;
-import org.eclipse.jetty.util.resource.JarResource;
 import org.eclipse.jetty.server.Server;
+import org.eclipse.jetty.util.resource.JarResource;
+import org.eclipse.jetty.util.resource.Resource;
+import org.eclipse.jetty.util.resource.ResourceCollection;
+import org.eclipse.jetty.webapp.WebAppContext;
 
 import javax.swing.*;
 import java.io.File;
 import java.io.IOException;
-import java.util.*;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.net.ServerSocket;
 import java.lang.reflect.Method;
+import java.net.ServerSocket;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Created by IntelliJ IDEA.
@@ -54,6 +55,8 @@ public class JettyStarter {
     private boolean openBrowser;
     private WebAppContext context;
     private int port = 8080;
+    private Server server;
+    private boolean joinServer = true;
 
     public static void main(String[] args) throws Exception {
         final JettyStarter js = new JettyStarter();
@@ -116,7 +119,9 @@ public class JettyStarter {
     public void start() throws Exception {
 
         context = new WebAppContext();
-        context.setDescriptor(webXml.getAbsolutePath());
+        if(webXml != null) {
+            context.setDescriptor(webXml.getAbsolutePath());
+        }
         List bases = new ArrayList();
         bases.add(srcDir.getAbsolutePath());
         if(aksessDir != null) {
@@ -133,7 +138,11 @@ public class JettyStarter {
             context.setTempDirectory(workDir);
         }
         System.out.println("Starting with resource bases: " + bases);
-        context.setBaseResource(new ResourceCollection(getResources(bases)));
+        if(bases.size() == 1 && new File((String) bases.get(0)).isFile()) {
+            context.setWar((String) bases.get(0));
+        } else {
+            context.setBaseResource(new ResourceCollection(getResources(bases)));
+        }
         context.setContextPath(contextPath);
 
         if(dependencyFiles != null) {
@@ -156,7 +165,7 @@ public class JettyStarter {
             } 
         }
 
-        Server server = new Server(port);
+        server = new Server(port);
         server.setHandler(context);
         server.start();
 
@@ -164,12 +173,17 @@ public class JettyStarter {
             openUrl("http://localhost:" + port + contextPath);
         }
 
-        server.join();
+        if(joinServer) {
+            server.join();
+        }
 
                 
 
     }
 
+    public void setJoinServer(boolean joinServer) {
+        this.joinServer = joinServer;
+    }
 
     private  void openUrl(String url) {
         String osName = System.getProperty("os.name");
@@ -266,5 +280,9 @@ public class JettyStarter {
 
     public void setPort(int port) {
         this.port = port;
+    }
+
+    public void stop() throws Exception {
+        server.stop();
     }
 }
