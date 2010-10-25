@@ -11,6 +11,7 @@ import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.Velocity;
 import org.jdom.Document;
 import org.jdom.Element;
+import org.jdom.JDOMException;
 import org.jdom.input.SAXBuilder;
 import org.openqa.selenium.OutputType;
 import org.openqa.selenium.firefox.FirefoxDriver;
@@ -55,6 +56,22 @@ public class SmokeTestMojo extends AbstractMojo {
      */
     private String contextPath;
 
+    /**
+     * @parameter default-value="${basedir}/src/test/smoketest.xml"
+     */
+    private File smokeTestFile;
+
+    /**
+     * @parameter 
+     */
+    private String fakeUsername = "admin";
+
+    /**
+     * @parameter
+     */
+    private String fakeUserDomain = "dbuser";
+
+
     public void execute() throws MojoExecutionException, MojoFailureException {
 
 
@@ -68,17 +85,22 @@ public class SmokeTestMojo extends AbstractMojo {
             starter.addContextParam("smokeTestEnabled", "true");
             starter.setSrcDir(warFile);
             starter.addContextParam("kantega.appDir", kantegaDir.getAbsolutePath());
+            starter.addContextParam("fakeUsername", fakeUsername);
+            starter.addContextParam("fakeUserDomain", fakeUserDomain);
             starter.setContextPath(contextPath);
             starter.setJoinServer(false);
             starter.start();
 
-            SAXBuilder builder = new SAXBuilder();
-            final Document doc = builder.build(new URL("http://localhost:8080" + contextPath + "/SmokeTestPages.action"));
             driver = new FirefoxDriver();
 
             imagesDir.mkdirs();
 
-            final List<Page> pages = getPages(doc);
+            final List<Page> pages = new ArrayList<Page>();
+            if(smokeTestFile.exists()) {
+                pages.addAll(getPages(smokeTestFile.toURL()));
+            }
+            pages.addAll(getPages(new URL("http://localhost:8080" + contextPath + "/SmokeTestPages.action")));
+            
             for (Page page : pages) {
                 try {
                     driver.get("http://localhost:8080" + page.getUrl());
@@ -134,16 +156,25 @@ public class SmokeTestMojo extends AbstractMojo {
         }
     }
 
-    private List<Page> getPages(Document doc) {
-        List<Element> elems = doc.getRootElement().getChildren("page");
+    private List<Page> getPages(URL url) {
+        try {
+            SAXBuilder builder = new SAXBuilder();
+            final Document doc = builder.build(url);
 
-        List<Page> pages = new ArrayList<Page>();
+            List<Element> elems = doc.getRootElement().getChildren("page");
 
-        for (Element elem : elems) {
-            pages.add(new ElementPage(elem));
+            List<Page> pages = new ArrayList<Page>();
+
+            for (Element elem : elems) {
+                pages.add(new ElementPage(elem));
+            }
+
+            return pages;
+        } catch (JDOMException e) {
+            throw new RuntimeException(e);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
-
-        return pages;
     }
 
     private void diff(File oldFile, File newFile, File diffFile) {
