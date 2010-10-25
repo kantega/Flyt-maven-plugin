@@ -15,7 +15,7 @@
 
     #foreach($page in $pages)
     <h2>${page.title} (${page.displayTemplate})</h2>
-    <img src="${page.contentId}.png"><br>
+    <img src="${page.id}.png"><br>
     #end
 
 </body>
