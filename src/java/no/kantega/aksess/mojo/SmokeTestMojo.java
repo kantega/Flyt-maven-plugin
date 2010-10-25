@@ -14,7 +14,11 @@ import org.jdom.Element;
 import org.jdom.JDOMException;
 import org.jdom.input.SAXBuilder;
 import org.openqa.selenium.OutputType;
+import org.openqa.selenium.TakesScreenshot;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.ie.InternetExplorerDriver;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -77,8 +81,7 @@ public class SmokeTestMojo extends AbstractMojo {
 
         JettyStarter starter = null;
 
-        FirefoxDriver driver = null;
-
+        List<DriverConfig> drivers = new ArrayList<DriverConfig>();
         try {
 
             starter = new JettyStarter();
@@ -91,7 +94,14 @@ public class SmokeTestMojo extends AbstractMojo {
             starter.setJoinServer(false);
             starter.start();
 
-            driver = new FirefoxDriver();
+
+            drivers.add(new DriverConfig(new FirefoxDriver(), "firefox"));
+            if(System.getProperty("os.name").toLowerCase().contains("win")) {
+                drivers.add(new DriverConfig(new InternetExplorerDriver(), "ie"));
+            }
+            drivers.add(new DriverConfig(new ChromeDriver(), "chrome"));
+
+
 
             imagesDir.mkdirs();
 
@@ -100,33 +110,45 @@ public class SmokeTestMojo extends AbstractMojo {
                 pages.addAll(getPages(smokeTestFile.toURL()));
             }
             pages.addAll(getPages(new URL("http://localhost:8080" + contextPath + "/SmokeTestPages.action")));
-            
-            for (Page page : pages) {
+
+            for (DriverConfig driver : drivers) {
+
                 try {
-                    driver.get("http://localhost:8080" + page.getUrl());
-                } finally {
-                    File f = driver.getScreenshotAs(OutputType.FILE);
-                    final File imgFile = new File(imagesDir, page.getId() + ".png");
-                    if (imgFile.exists()) {
-                        diff(imgFile, f, new File(imagesDir, page.getId() + "-diff.png"));
-                        FileUtils.copyFile(imgFile, new File(imagesDir, page.getId() + "-prev.png"));
+                File driverDir = new File(imagesDir, driver.getId());
+
+                for (Page page : pages) {
+                    try {
+                        driver.getDriver().get("http://localhost:8080" + page.getUrl());
+                    } finally {
+                        File f = driver.getScreenshotTaker().getScreenshotAs(OutputType.FILE);
+                        final File imgFile = new File(driverDir, page.getId() + ".png");
+                        FileUtils.copyFile(f, imgFile);
+                        f.delete();
                     }
-                    FileUtils.copyFile(f, imgFile);
-                    f.delete();
+
+                }
+
+                writeReport(pages, new File(driverDir, "index.html"));
+                } catch (Exception e) {
+                    getLog().info("Ignoring failed driver " + driver.getId(), e);
                 }
 
             }
-
-            writeReport(pages, new File(imagesDir, "index.html"));
-
 
         } catch (Exception e) {
             throw new MojoExecutionException(e.getMessage(), e);
         } finally {
             try {
-                if (driver != null) {
-                    driver.close();
+                for (DriverConfig driver : drivers) {
+                    if (driver != null) {
+                        try {
+                            driver.getDriver().close();
+                        } catch(Throwable e) {
+                            e.printStackTrace();
+                        }
+                    }
                 }
+
             } finally {
                 if (starter != null) {
                     try {
@@ -202,6 +224,27 @@ public class SmokeTestMojo extends AbstractMojo {
 
     }
 
+    class DriverConfig {
+        private final WebDriver driver;
+        private final String id;
+
+        DriverConfig(WebDriver driver, String id) {
+            this.driver = driver;
+            this.id = id;
+        }
+
+        TakesScreenshot getScreenshotTaker() {
+            return (TakesScreenshot) driver;
+        }
+
+        public WebDriver getDriver() {
+            return driver;
+        }
+
+        public String getId() {
+            return id;
+        }
+    }
     private void dumpThreads(String s) {
         System.out.println("-- " + s);
         final Thread[] threads = new Thread[Thread.activeCount()];
