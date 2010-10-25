@@ -118,6 +118,7 @@ public class SmokeTestMojo extends AbstractMojo {
                     for (Page page : pages) {
                         try {
                             driver.getDriver().get("http://localhost:8080" + page.getUrl());
+                            Thread.sleep(100);
                         } finally {
                             File f = driver.getScreenshotTaker().getScreenshotAs(OutputType.FILE);
                             final File imgFile = new File(driverDir, page.getId() + ".png");
@@ -127,7 +128,7 @@ public class SmokeTestMojo extends AbstractMojo {
 
                     }
 
-                    writeReport(pages, drivers, new File(driverDir, "index.html"));
+                    writeReport(pages, drivers, driver, new File(driverDir, "index.html"));
                 } catch (Exception e) {
                     getLog().info("Ignoring failed driver " + driver.getId(), e);
                 }
@@ -163,10 +164,11 @@ public class SmokeTestMojo extends AbstractMojo {
         }
     }
 
-    private void writeReport(List<Page> pages, List<DriverConfig> drivers, File reportFile) {
+    private void writeReport(List<Page> pages, List<DriverConfig> drivers, DriverConfig driver, File reportFile) {
         VelocityContext context = new VelocityContext();
         context.put("pages", pages);
         context.put("drivers", drivers);
+        context.put("driver", driver);
 
         try {
             final Writer writer = new OutputStreamWriter(new FileOutputStream(reportFile), "utf-8");
