@@ -16,7 +16,7 @@ public class ElementPage implements Page {
         return elem.getAttributeValue("url");
     }
 
-    public String getDisplayTemplate() {
+    public String getCategory() {
         return elem.getAttributeValue("category");
     }
 

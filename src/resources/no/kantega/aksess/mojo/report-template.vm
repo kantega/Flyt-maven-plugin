@@ -14,9 +14,14 @@
 
 <body>
 
+<ul>
+#foreach($page in $pages)
+  <li><a href="#${page.id}">${page.title} (${page.category})</a></li>
+#end
+</ul>
     #foreach($page in $pages)
     <a name="${page.id}"></a>
-    <h2>${page.title} (${page.displayTemplate})</h2>
+    <h2>${page.title} (${page.category})</h2>
     <p>
         #foreach($d in $drivers)
             <a href="../${d.id}/index.html#${page.id}" #if($driver.id == $d.id) style="font-weight:bold;" #end >${d.id}</a> |
