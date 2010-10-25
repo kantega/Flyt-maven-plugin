@@ -15,7 +15,13 @@
 <body>
 
     #foreach($page in $pages)
+    <a name="${page.id}"
     <h2>${page.title} (${page.displayTemplate})</h2>
+    <p>
+        #foreach($driver in $drivers)
+            <a href="../${driver.id}/index.html#${page.id}">${driver.id}</a> |
+        #end
+    </p>
     <img src="${page.id}.png"><br>
     #end
 

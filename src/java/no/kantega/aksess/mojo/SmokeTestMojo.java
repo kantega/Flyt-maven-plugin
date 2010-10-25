@@ -1,6 +1,7 @@
 package no.kantega.aksess.mojo;
 
 import no.kantega.aksess.JettyStarter;
+import no.kantega.aksess.mojo.smoke.DriverConfig;
 import no.kantega.aksess.mojo.smoke.ElementPage;
 import no.kantega.aksess.mojo.smoke.Page;
 import org.apache.commons.io.FileUtils;
@@ -14,8 +15,6 @@ import org.jdom.Element;
 import org.jdom.JDOMException;
 import org.jdom.input.SAXBuilder;
 import org.openqa.selenium.OutputType;
-import org.openqa.selenium.TakesScreenshot;
-import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.ie.InternetExplorerDriver;
@@ -50,9 +49,9 @@ public class SmokeTestMojo extends AbstractMojo {
 
 
     /**
-     * @parameter expression="${project.build.directory}/aksessrun/smoke/images"
+     * @parameter expression="${project.build.directory}/aksessrun/smoke/"
      */
-    private File imagesDir;
+    private File smokeDir;
 
 
     /**
@@ -66,7 +65,7 @@ public class SmokeTestMojo extends AbstractMojo {
     private File smokeTestFile;
 
     /**
-     * @parameter 
+     * @parameter
      */
     private String fakeUsername = "admin";
 
@@ -96,17 +95,16 @@ public class SmokeTestMojo extends AbstractMojo {
 
 
             drivers.add(new DriverConfig(new FirefoxDriver(), "firefox"));
-            if(System.getProperty("os.name").toLowerCase().contains("win")) {
+            if (System.getProperty("os.name").toLowerCase().contains("win")) {
                 drivers.add(new DriverConfig(new InternetExplorerDriver(), "ie"));
             }
             drivers.add(new DriverConfig(new ChromeDriver(), "chrome"));
 
 
-
-            imagesDir.mkdirs();
+            smokeDir.mkdirs();
 
             final List<Page> pages = new ArrayList<Page>();
-            if(smokeTestFile.exists()) {
+            if (smokeTestFile.exists()) {
                 pages.addAll(getPages(smokeTestFile.toURL()));
             }
             pages.addAll(getPages(new URL("http://localhost:8080" + contextPath + "/SmokeTestPages.action")));
@@ -114,21 +112,22 @@ public class SmokeTestMojo extends AbstractMojo {
             for (DriverConfig driver : drivers) {
 
                 try {
-                File driverDir = new File(imagesDir, driver.getId());
+                    File driverDir = new File(smokeDir, driver.getId());
+                    driverDir.mkdirs();
 
-                for (Page page : pages) {
-                    try {
-                        driver.getDriver().get("http://localhost:8080" + page.getUrl());
-                    } finally {
-                        File f = driver.getScreenshotTaker().getScreenshotAs(OutputType.FILE);
-                        final File imgFile = new File(driverDir, page.getId() + ".png");
-                        FileUtils.copyFile(f, imgFile);
-                        f.delete();
+                    for (Page page : pages) {
+                        try {
+                            driver.getDriver().get("http://localhost:8080" + page.getUrl());
+                        } finally {
+                            File f = driver.getScreenshotTaker().getScreenshotAs(OutputType.FILE);
+                            final File imgFile = new File(driverDir, page.getId() + ".png");
+                            FileUtils.copyFile(f, imgFile);
+                            f.delete();
+                        }
+
                     }
 
-                }
-
-                writeReport(pages, new File(driverDir, "index.html"));
+                    writeReport(pages, drivers, new File(driverDir, "index.html"));
                 } catch (Exception e) {
                     getLog().info("Ignoring failed driver " + driver.getId(), e);
                 }
@@ -143,7 +142,7 @@ public class SmokeTestMojo extends AbstractMojo {
                     if (driver != null) {
                         try {
                             driver.getDriver().close();
-                        } catch(Throwable e) {
+                        } catch (Throwable e) {
                             e.printStackTrace();
                         }
                     }
@@ -164,9 +163,10 @@ public class SmokeTestMojo extends AbstractMojo {
         }
     }
 
-    private void writeReport(List<Page> pages, File reportFile) {
+    private void writeReport(List<Page> pages, List<DriverConfig> drivers, File reportFile) {
         VelocityContext context = new VelocityContext();
         context.put("pages", pages);
+        context.put("drivers", drivers);
 
         try {
             final Writer writer = new OutputStreamWriter(new FileOutputStream(reportFile), "utf-8");
@@ -224,27 +224,7 @@ public class SmokeTestMojo extends AbstractMojo {
 
     }
 
-    class DriverConfig {
-        private final WebDriver driver;
-        private final String id;
 
-        DriverConfig(WebDriver driver, String id) {
-            this.driver = driver;
-            this.id = id;
-        }
-
-        TakesScreenshot getScreenshotTaker() {
-            return (TakesScreenshot) driver;
-        }
-
-        public WebDriver getDriver() {
-            return driver;
-        }
-
-        public String getId() {
-            return id;
-        }
-    }
     private void dumpThreads(String s) {
         System.out.println("-- " + s);
         final Thread[] threads = new Thread[Thread.activeCount()];
