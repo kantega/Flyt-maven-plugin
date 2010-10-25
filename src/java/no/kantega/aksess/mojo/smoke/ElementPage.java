@@ -17,14 +17,14 @@ public class ElementPage implements Page {
     }
 
     public String getDisplayTemplate() {
-        return elem.getAttributeValue("displayTemplate");
+        return elem.getAttributeValue("category");
     }
 
     public String getTitle() {
         return elem.getAttributeValue("title");
     }
 
-    public int getContentId() {
-        return Integer.parseInt(elem.getAttributeValue("contentId"));
+    public String getId() {
+        return elem.getAttributeValue("id");
     }
 }

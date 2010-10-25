@@ -84,10 +84,10 @@ public class SmokeTestMojo extends AbstractMojo {
                     driver.get("http://localhost:8080" + page.getUrl());
                 } finally {
                     File f = driver.getScreenshotAs(OutputType.FILE);
-                    final File imgFile = new File(imagesDir, page.getContentId() + ".png");
+                    final File imgFile = new File(imagesDir, page.getId() + ".png");
                     if (imgFile.exists()) {
-                        diff(imgFile, f, new File(imagesDir, page.getContentId() + "-diff.png"));
-                        FileUtils.copyFile(imgFile, new File(imagesDir, page.getContentId() + "-prev.png"));
+                        diff(imgFile, f, new File(imagesDir, page.getId() + "-diff.png"));
+                        FileUtils.copyFile(imgFile, new File(imagesDir, page.getId() + "-prev.png"));
                     }
                     FileUtils.copyFile(f, imgFile);
                     f.delete();
