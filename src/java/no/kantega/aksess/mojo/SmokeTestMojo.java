@@ -147,7 +147,7 @@ public class SmokeTestMojo extends AbstractMojo {
         context.put("pages", pages);
 
         try {
-            final Writer writer = new OutputStreamWriter(new FileOutputStream(reportFile));
+            final Writer writer = new OutputStreamWriter(new FileOutputStream(reportFile), "utf-8");
             final Reader reader = new InputStreamReader(getClass().getResourceAsStream("report-template.vm"));
             Velocity.evaluate(context, writer, "smokereport", reader);
             writer.close();
