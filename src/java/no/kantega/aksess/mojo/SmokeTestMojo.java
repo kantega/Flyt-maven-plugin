@@ -129,7 +129,9 @@ public class SmokeTestMojo extends AbstractMojo {
 
                     for (Page page : pages) {
                         try {
-                            driver.getDriver().get(root + page.getUrl());
+                            final String pageUrl = root + page.getUrl();
+                            getLog().info("GETing page " + pageUrl);
+                            driver.getDriver().get(pageUrl);
                             Thread.sleep(100);
                         } finally {
                             File f = driver.getScreenshotTaker().getScreenshotAs(OutputType.FILE);
