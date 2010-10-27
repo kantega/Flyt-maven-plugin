@@ -285,4 +285,8 @@ public class JettyStarter {
     public void stop() throws Exception {
         server.stop();
     }
+
+    public int getPort() {
+        return port;
+    }
 }

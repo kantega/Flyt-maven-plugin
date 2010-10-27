@@ -93,12 +93,23 @@ public class SmokeTestMojo extends AbstractMojo {
             starter.setJoinServer(false);
             starter.start();
 
-
-            drivers.add(new DriverConfig(new FirefoxDriver(), "firefox"));
-            if (System.getProperty("os.name").toLowerCase().contains("win")) {
-                drivers.add(new DriverConfig(new InternetExplorerDriver(), "ie"));
+            try {
+                drivers.add(new DriverConfig(new FirefoxDriver(), "firefox"));
+            } catch (Exception e) {
+                getLog().error("Failed adding FirefoxDriver: ", e);
             }
-            drivers.add(new DriverConfig(new ChromeDriver(), "chrome"));
+            if (System.getProperty("os.name").toLowerCase().contains("win")) {
+                try {
+                    drivers.add(new DriverConfig(new InternetExplorerDriver(), "ie"));
+                } catch (Exception e) {
+                    getLog().error("Failed adding InternetExplorerDriver: ", e);
+                }
+            }
+            try {
+                drivers.add(new DriverConfig(new ChromeDriver(), "chrome"));
+            } catch (Exception e) {
+                getLog().error("Failed adding ChromiumDriver: ", e);
+            }
 
 
             smokeDir.mkdirs();
@@ -107,7 +118,8 @@ public class SmokeTestMojo extends AbstractMojo {
             if (smokeTestFile.exists()) {
                 pages.addAll(getPages(smokeTestFile.toURL()));
             }
-            pages.addAll(getPages(new URL("http://localhost:8080" + contextPath + "/SmokeTestPages.action")));
+            final String root = "http://localhost:" + starter.getPort() + contextPath;
+            pages.addAll(getPages(new URL(root + "/SmokeTestPages.action")));
 
             for (DriverConfig driver : drivers) {
 
@@ -117,7 +129,7 @@ public class SmokeTestMojo extends AbstractMojo {
 
                     for (Page page : pages) {
                         try {
-                            driver.getDriver().get("http://localhost:8080" + contextPath + page.getUrl());
+                            driver.getDriver().get(root + page.getUrl());
                             Thread.sleep(100);
                         } finally {
                             File f = driver.getScreenshotTaker().getScreenshotAs(OutputType.FILE);
