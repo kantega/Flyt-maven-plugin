@@ -26,12 +26,12 @@
     <groupId>org.kantega.openaksess</groupId>
     <artifactId>aksess-maven-plugin</artifactId>
     <packaging>maven-plugin</packaging>
-    <version>1.21-SNAPSHOT</version>
+    <version>1.21</version>
     <name>OpenAksess Maven plugin</name>
 
 
     <scm>
-        <connection>scm:svn:https://opensource.kantega.no/svn/openaksess-maven-plugin/trunk/</connection>
+        <connection>scm:svn:https://opensource.kantega.no/svn/openaksess-maven-plugin/tags/aksess-maven-plugin-1.21</connection>
     </scm>
 
 
