@@ -29,7 +29,6 @@ import java.util.List;
 
 /**
  * @goal smoketest
- * @execute phase="install"
  */
 public class SmokeTestMojo extends AbstractMojo {
 
