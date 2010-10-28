@@ -14,6 +14,7 @@ import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.JDOMException;
 import org.jdom.input.SAXBuilder;
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.OutputType;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
@@ -92,6 +93,8 @@ public class SmokeTestMojo extends AbstractMojo {
             starter.setJoinServer(false);
             starter.start();
 
+            final String resize = "window.resizeTo(1280, 1024);";
+
             try {
                 drivers.add(new DriverConfig(new FirefoxDriver(), "firefox"));
             } catch (Exception e) {
@@ -129,8 +132,9 @@ public class SmokeTestMojo extends AbstractMojo {
                     for (Page page : pages) {
                         try {
                             final String pageUrl = root + page.getUrl();
-                            getLog().info("GETing page " + pageUrl);
+                            getLog().info("GETing page in " + driver.getId() +": " + pageUrl);
                             driver.getDriver().get(pageUrl);
+                            ((JavascriptExecutor)driver.getDriver()).executeScript(resize);
                             Thread.sleep(100);
                         } finally {
                             File f = driver.getScreenshotTaker().getScreenshotAs(OutputType.FILE);
