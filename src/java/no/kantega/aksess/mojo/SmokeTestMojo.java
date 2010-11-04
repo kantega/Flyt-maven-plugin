@@ -197,7 +197,7 @@ public class SmokeTestMojo extends AbstractMojo {
         }
     }
 
-    private List<Page> getPages(URL url) {
+    public static List<Page> getPages(URL url) {
         try {
             SAXBuilder builder = new SAXBuilder();
             final Document doc = builder.build(url);

@@ -289,4 +289,8 @@ public class JettyStarter {
     public int getPort() {
         return port;
     }
+
+    public String getContextPath() {
+        return contextPath;
+    }
 }

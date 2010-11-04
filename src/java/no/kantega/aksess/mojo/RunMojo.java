@@ -16,6 +16,14 @@
 
 package no.kantega.aksess.mojo;
 
+import no.kantega.aksess.JettyStarter;
+import org.apache.maven.artifact.Artifact;
+import org.apache.maven.artifact.metadata.ArtifactMetadataSource;
+import org.apache.maven.artifact.resolver.ArtifactNotFoundException;
+import org.apache.maven.artifact.resolver.ArtifactResolutionException;
+import org.apache.maven.artifact.resolver.ArtifactResolutionResult;
+import org.apache.maven.artifact.resolver.filter.ScopeArtifactFilter;
+import org.apache.maven.artifact.versioning.VersionRange;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
@@ -23,21 +31,11 @@ import org.apache.maven.project.MavenProject;
 import org.apache.maven.project.MavenProjectBuilder;
 import org.apache.maven.project.ProjectBuildingException;
 import org.apache.maven.project.artifact.InvalidDependencyVersionException;
-import org.apache.maven.artifact.Artifact;
-import org.apache.maven.artifact.resolver.ArtifactResolutionException;
-import org.apache.maven.artifact.resolver.ArtifactNotFoundException;
-import org.apache.maven.artifact.resolver.ArtifactResolutionResult;
-import org.apache.maven.artifact.resolver.filter.ScopeArtifactFilter;
-import org.apache.maven.artifact.metadata.ArtifactMetadataSource;
-import org.apache.maven.artifact.versioning.VersionRange;
-import org.codehaus.plexus.archiver.jar.JarArchiver;
-import org.codehaus.plexus.archiver.UnArchiver;
 import org.codehaus.plexus.archiver.ArchiverException;
+import org.codehaus.plexus.archiver.UnArchiver;
 import org.codehaus.plexus.components.io.fileselectors.FileSelector;
 import org.codehaus.plexus.components.io.fileselectors.IncludeExcludeFileSelector;
-import org.eclipse.jetty.servlet.DefaultServlet;
 import org.eclipse.jetty.util.Scanner;
-import no.kantega.aksess.JettyStarter;
 
 import java.io.File;
 import java.io.IOException;
@@ -98,19 +96,19 @@ public class RunMojo extends AbstractMojo {
 
 
     /** @component */
-    private org.apache.maven.artifact.factory.ArtifactFactory artifactFactory;
+    protected org.apache.maven.artifact.factory.ArtifactFactory artifactFactory;
 
     /** @component */
-    private org.apache.maven.artifact.resolver.ArtifactResolver resolver;
+    protected org.apache.maven.artifact.resolver.ArtifactResolver resolver;
 
     /**@parameter expression="${localRepository}" */
-    private org.apache.maven.artifact.repository.ArtifactRepository localRepository;
+    protected org.apache.maven.artifact.repository.ArtifactRepository localRepository;
 
     /** @parameter expression="${project.remoteArtifactRepositories}" */
-    private java.util.List remoteRepositories;
+    protected java.util.List remoteRepositories;
 
     /** @component */
-    private ArtifactMetadataSource artifactMetadataSource;
+    protected ArtifactMetadataSource artifactMetadataSource;
 
 
     /**
@@ -159,6 +157,7 @@ public class RunMojo extends AbstractMojo {
      * @parameter expression="${port}" default-value="8080"
      */
     private int port;
+    private JettyStarter starter;
 
 
     public void execute() throws MojoExecutionException, MojoFailureException {
@@ -185,7 +184,7 @@ public class RunMojo extends AbstractMojo {
             }
         }
 
-        final JettyStarter starter = new JettyStarter();
+        starter = new JettyStarter();
         if(!aksessConfigFile.exists()) {
             throw new MojoExecutionException("aksessConfigFile does not exist: " + aksessConfigFile.getAbsolutePath());
         }
@@ -274,7 +273,8 @@ public class RunMojo extends AbstractMojo {
         starter.setDependencyFiles(dependencyFiles);
         jettyWorkDir.mkdirs();
         starter.setWorkDir(jettyWorkDir);
-        starter.setOpenBrowser(true);
+
+        configureStarter(starter);
 
         Scanner scanner = new Scanner();
         scanner.setReportExistingFilesOnStartup(false);
@@ -335,6 +335,10 @@ public class RunMojo extends AbstractMojo {
 
     }
 
+    protected void configureStarter(JettyStarter starter) {
+        starter.setOpenBrowser(true);
+    }
+
     private void waitForUnpack(Artifact a) {
         long last = a.getFile().lastModified();
         for(int i = 0; i < 10; i++) {
@@ -384,6 +388,10 @@ public class RunMojo extends AbstractMojo {
             }
         }
         return dir;
+    }
+
+    protected JettyStarter getJettyStarter() {
+        return starter;
     }
 
     abstract class ConsoleScanner extends Thread {
