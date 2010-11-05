@@ -19,7 +19,6 @@ public class ReportJMeterMojo extends AbstractJMeterMojo {
             if(hasJMeterEnded() || (System.currentTimeMillis()-start > 60000)) {
                 break;
             } else {
-                getLog().info("Wating for JMeter to end");
                 try {
                     Thread.sleep(200);
                 } catch (InterruptedException e) {
