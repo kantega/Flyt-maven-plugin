@@ -16,13 +16,13 @@ import org.jdom.Text;
 import org.jdom.input.SAXBuilder;
 import org.jdom.output.XMLOutputter;
 import org.jdom.xpath.XPath;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.htmlunit.HtmlUnitDriver;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.ArrayList;
@@ -30,9 +30,8 @@ import java.util.List;
 
 /**
  *
- * @goal jmeter
  */
-public class JMeterMojo extends RunMojo {
+public abstract class AbstractJMeterMojo extends RunMojo {
 
     /**
      * @parameter default-value="${settings.localRepository}/apache-jmeter/"
@@ -112,6 +111,13 @@ public class JMeterMojo extends RunMojo {
             final String root = "http://localhost:" + getJettyStarter().getPort() + getJettyStarter().getContextPath();
             pages.addAll(SmokeTestMojo.getPages(new URL(root + "/SmokeTestPages.action")));
 
+
+            WebDriver driver = new HtmlUnitDriver();
+
+            for(Page page : pages) {
+                getLog().info("Pre-heating page " + page.getUrl());
+                driver.get(root + page.getUrl());
+            }
             Element frontPage= (Element) XPath.selectNodes(doc, "//HTTPSampler[@testname='Frontpage']").get(0);
 
             final Element parent = frontPage.getParentElement();
@@ -170,35 +176,23 @@ public class JMeterMojo extends RunMojo {
 
             jmeterClass.getMethod("addURL", URL.class).invoke(null, apacheJMeterJar.toURI().toURL());
 
-            String[] args = new String[] {"-t", jmeterTestFile.getAbsolutePath()};
+            String[] args = getJMeterCommandLine(jmeterTestFile);
             final Method method = jmeterClass.getMethod("main", new Class[] {args.getClass()});
 
             method.invoke(null, new Object[] {args});
 
 
-            synchronized (this) {
-                try {
-                    this.wait();
-                } catch (InterruptedException e) {
+            afterJMeterStarted();
 
-                }
-            }
-        } catch (MalformedURLException e) {
-            throw new MojoExecutionException(e.getMessage(), e);
-        } catch (ClassNotFoundException e) {
-            throw new MojoExecutionException(e.getMessage(), e);
-        } catch (NoSuchMethodException e) {
-            throw new MojoExecutionException(e.getMessage(), e);
-        } catch (InvocationTargetException e) {
-            throw new MojoExecutionException(e.getMessage(), e);
-        } catch (IllegalAccessException e) {
+            getJettyStarter().stop();
+        } catch (Exception e) {
             throw new MojoExecutionException(e.getMessage(), e);
         }
 
 
-
-
     }
 
+    protected abstract void afterJMeterStarted() ;
 
+    protected abstract String[] getJMeterCommandLine(File jmeterTestFile);
 }
