@@ -25,6 +25,7 @@ import java.awt.image.BufferedImage;
 import java.io.*;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 
@@ -117,11 +118,22 @@ public class SmokeTestMojo extends AbstractMojo {
             smokeDir.mkdirs();
 
             final List<Page> pages = new ArrayList<Page>();
+            String params = null;
             if (smokeTestFile.exists()) {
-                pages.addAll(getPages(smokeTestFile.toURL()));
+                URL smokeTestFileUrl = smokeTestFile.toURL();
+                pages.addAll(getPages(smokeTestFileUrl));
+                String excludedTemplates = getExcludedTemplates(smokeTestFileUrl);
+                if (excludedTemplates != null) {
+                    params = "?excludedTemplates=" + excludedTemplates;
+                }
             }
+
             final String root = "http://localhost:" + starter.getPort() + contextPath;
-            pages.addAll(getPages(new URL(root + "/SmokeTestPages.action")));
+            String smokeTestActionUrl = root + "/SmokeTestPages.action";
+            if (params != null) {
+                smokeTestActionUrl += params;
+            }
+            pages.addAll(getPages(new URL(smokeTestActionUrl)));
 
             for (DriverConfig driver : drivers) {
 
@@ -181,6 +193,31 @@ public class SmokeTestMojo extends AbstractMojo {
         }
     }
 
+    private String getExcludedTemplates(URL url) {
+        try {
+            SAXBuilder builder = new SAXBuilder();
+            final Document doc = builder.build(url);
+
+            Element excludeElem = doc.getRootElement().getChild("excludes");
+            if (excludeElem == null) {
+                return null;
+            }
+            List<Element> elems = excludeElem.getChildren("template");
+
+            StringBuilder excludes = new StringBuilder();
+
+            for (Element elem : elems) {
+                excludes.append(elem.getAttributeValue("id")).append(",");
+            }
+
+            return excludes.toString();
+        } catch (JDOMException e) {
+            throw new RuntimeException(e);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     private void writeReport(List<Page> pages, List<DriverConfig> drivers, DriverConfig driver, File reportFile) {
         VelocityContext context = new VelocityContext();
         context.put("pages", pages);
@@ -202,7 +239,15 @@ public class SmokeTestMojo extends AbstractMojo {
             SAXBuilder builder = new SAXBuilder();
             final Document doc = builder.build(url);
 
-            List<Element> elems = doc.getRootElement().getChildren("page");
+            List<Element> elems = Collections.emptyList();
+            //If the root element has child element 'includes', add only this element's children
+            Element includes = doc.getRootElement().getChild("includes");
+            if (includes != null) {
+                elems = includes.getChildren("page");
+            } else {
+                //If there is no includes element we assume that the pages are immediate children of the root element.
+                doc.getRootElement().getChildren("page");
+            }
 
             List<Page> pages = new ArrayList<Page>();
 
