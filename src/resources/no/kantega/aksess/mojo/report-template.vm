@@ -27,6 +27,7 @@
             <a href="../${d.id}/index.html#${page.id}" #if($driver.id == $d.id) style="font-weight:bold;" #end >${d.id}</a> |
         #end
     </p>
+    <p><a href="${page.url}">${page.url}</a></p>    
     <img src="${page.id}.png"><br>
     #end
 
