@@ -53,7 +53,7 @@ public abstract class AbstractJMeterMojo extends RunMojo {
     protected void configureStarter(JettyStarter starter) {
         starter.setJoinServer(false);
         starter.setOpenBrowser(false);
-        starter.addContextParam("smokeTestEnabled", "true");
+        starter.addContextParam("testPagesEnabled", "true");
     }
 
     public void execute() throws MojoExecutionException, MojoFailureException {
@@ -109,7 +109,7 @@ public abstract class AbstractJMeterMojo extends RunMojo {
 
             final List<Page> pages = new ArrayList<Page>();
             final String root = "http://localhost:" + getJettyStarter().getPort() + getJettyStarter().getContextPath();
-            pages.addAll(SmokeTestMojo.getPages(new URL(root + "/SmokeTestPages.action")));
+            pages.addAll(SmokeTestMojo.getPages(new URL(root + "/TestPages.action")));
 
 
             WebDriver driver = new HtmlUnitDriver();

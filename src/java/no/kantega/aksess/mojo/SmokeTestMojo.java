@@ -95,7 +95,7 @@ public class SmokeTestMojo extends AbstractMojo {
             copyWar();
 
             starter = new JettyStarter();
-            starter.addContextParam("smokeTestEnabled", "true");
+            starter.addContextParam("testPagesEnabled", "true");
             starter.setSrcDir(smokeWar);
             starter.setWorkDir(unpackedWarDir);
             starter.addContextParam("kantega.appDir", kantegaDir.getAbsolutePath());
@@ -133,7 +133,7 @@ public class SmokeTestMojo extends AbstractMojo {
                 pages.addAll(getPages(smokeTestFile.toURL()));
             }
             final String root = "http://localhost:" + starter.getPort() + contextPath;
-            pages.addAll(getPages(new URL(root + "/SmokeTestPages.action")));
+            pages.addAll(getPages(new URL(root + "/TestPages.action")));
 
             for (DriverConfig driver : drivers) {
 
