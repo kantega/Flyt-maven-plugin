@@ -54,6 +54,15 @@ public class SmokeTestMojo extends AbstractMojo {
      */
     private File smokeDir;
 
+    /**
+     * @parameter expression="${project.build.directory}/aksessrun/unpackedwar/"
+     */
+    private File unpackedWarDir;
+
+    /**
+     * @parameter expression="${project.build.directory}/aksessrun/${project.build.finalName}.war"
+     */
+    private File smokeWar;
 
     /**
      * @parameter expression="/${project.artifactId}"
@@ -84,9 +93,12 @@ public class SmokeTestMojo extends AbstractMojo {
         List<DriverConfig> drivers = new ArrayList<DriverConfig>();
         try {
 
+            copyWar();
+
             starter = new JettyStarter();
             starter.addContextParam("smokeTestEnabled", "true");
-            starter.setSrcDir(warFile);
+            starter.setSrcDir(smokeWar);
+            starter.setWorkDir(unpackedWarDir);
             starter.addContextParam("kantega.appDir", kantegaDir.getAbsolutePath());
             starter.addContextParam("fakeUsername", fakeUsername);
             starter.addContextParam("fakeUserDomain", fakeUserDomain);
@@ -190,6 +202,12 @@ public class SmokeTestMojo extends AbstractMojo {
 
 
             dumpThreads("Jetty and server stopped");
+        }
+    }
+
+    private void copyWar() throws IOException {
+        if (!smokeWar.exists() || smokeWar.lastModified() < warFile.lastModified()) {
+            FileUtils.copyFile(warFile, smokeWar);
         }
     }
 
