@@ -109,7 +109,8 @@ public abstract class AbstractJMeterMojo extends RunMojo {
 
             final List<Page> pages = new ArrayList<Page>();
             final String root = "http://localhost:" + getJettyStarter().getPort() + getJettyStarter().getContextPath();
-            pages.addAll(SmokeTestMojo.getPages(new URL(root + "/TestPages.action")));
+            String testOptions = "excludeFilter=jmetertest=false";
+            pages.addAll(SmokeTestMojo.getPages(new URL(root + "/TestPages.action?" +testOptions)));
 
 
             WebDriver driver = new HtmlUnitDriver();

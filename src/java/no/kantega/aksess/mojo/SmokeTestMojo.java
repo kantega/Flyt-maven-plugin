@@ -133,7 +133,8 @@ public class SmokeTestMojo extends AbstractMojo {
                 pages.addAll(getPages(smokeTestFile.toURL()));
             }
             final String root = "http://localhost:" + starter.getPort() + contextPath;
-            pages.addAll(getPages(new URL(root + "/TestPages.action")));
+            String testOptions = "excludeFilter=smoketest=false";
+            pages.addAll(getPages(new URL(root + "/TestPages.action?" + testOptions)));
 
             for (DriverConfig driver : drivers) {
 
