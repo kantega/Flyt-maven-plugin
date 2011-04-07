@@ -173,6 +173,7 @@ public class SmokeTestMojo extends AbstractMojo {
                     if (driver != null) {
                         try {
                             driver.getDriver().close();
+                            driver.getDriver().quit();
                         } catch (Throwable e) {
                             e.printStackTrace();
                         }
