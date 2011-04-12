@@ -19,27 +19,21 @@ package no.kantega.aksess.mojo;
 import no.kantega.aksess.JettyStarter;
 import org.apache.maven.artifact.Artifact;
 import org.apache.maven.artifact.metadata.ArtifactMetadataSource;
-import org.apache.maven.artifact.resolver.ArtifactNotFoundException;
-import org.apache.maven.artifact.resolver.ArtifactResolutionException;
-import org.apache.maven.artifact.resolver.ArtifactResolutionResult;
-import org.apache.maven.artifact.resolver.filter.ScopeArtifactFilter;
-import org.apache.maven.artifact.versioning.VersionRange;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.project.MavenProject;
 import org.apache.maven.project.MavenProjectBuilder;
-import org.apache.maven.project.ProjectBuildingException;
-import org.apache.maven.project.artifact.InvalidDependencyVersionException;
 import org.codehaus.plexus.archiver.ArchiverException;
 import org.codehaus.plexus.archiver.UnArchiver;
 import org.codehaus.plexus.components.io.fileselectors.FileSelector;
 import org.codehaus.plexus.components.io.fileselectors.IncludeExcludeFileSelector;
-import org.eclipse.jetty.util.Scanner;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
 /**
  * @goal run
@@ -50,7 +44,7 @@ import java.util.*;
 public class RunMojo extends AbstractMojo {
 
     /**
-     * @parameter expression="${basedir}/src/webapp"
+     * @parameter expression="${basedir}/src/main/webapp"
      */
     private File srcDir;
 
@@ -65,7 +59,7 @@ public class RunMojo extends AbstractMojo {
     private File kantegaDir;
 
     /**
-     * @parameter expression="/${project.artifactId}"
+     * @parameter expression="/"
      */
     private String contextPath;
 
@@ -120,17 +114,6 @@ public class RunMojo extends AbstractMojo {
 
     /**
      * @parameter
-     * @required
-     */
-    private String aksessVersion;
-
-    /**
-     * @parameter expression="${project.build.directory}/web.xml""
-     */
-    private File mergedWebXml;
-
-    /**
-     * @parameter
      */
     private List<Overlay> overlays;
 
@@ -164,18 +147,6 @@ public class RunMojo extends AbstractMojo {
         getLog().info("Running Jetty");
 
         List<Artifact> wars = new ArrayList<Artifact>();
-
-        final Artifact aksessWarArtifact;
-        try {
-            aksessWarArtifact = artifactFactory.createDependencyArtifact("org.kantega.openaksess", "openaksess-webapp", VersionRange.createFromVersion(aksessVersion), "war", null, "compile");
-            resolver.resolve(aksessWarArtifact, remoteRepositories, localRepository);
-            wars.add(aksessWarArtifact);
-        } catch (ArtifactResolutionException e) {
-            throw new MojoExecutionException(e.getMessage(), e);
-        } catch (ArtifactNotFoundException e) {
-            throw new MojoExecutionException(e.getMessage(), e);
-        }
-
 
         for(Iterator i = project.getDependencyArtifacts().iterator(); i.hasNext(); ) {
             Artifact a = (Artifact) i.next();
@@ -214,60 +185,18 @@ public class RunMojo extends AbstractMojo {
         List<File> dependencyFiles = new ArrayList<File>();
         dependencyFiles.add(classesDirectory);
 
-
-        try {
-
-            Set<String> dependencyIds = new HashSet<String>();
-            {
-                final MavenProject aksessWarProject = mavenProjectBuilder.buildFromRepository(aksessWarArtifact, remoteRepositories, localRepository);
-
-
-                Set<Artifact> artifacts = new HashSet<Artifact>();
-                artifacts.addAll(aksessWarProject.createArtifacts(artifactFactory, null, null));
-
-
-                final ArtifactResolutionResult result = resolver.resolveTransitively(artifacts,
-                        aksessWarProject.getArtifact(),
-                        aksessWarProject.getManagedVersionMap(),
-                        localRepository,
-                        remoteRepositories,
-                        artifactMetadataSource, new ScopeArtifactFilter( Artifact.SCOPE_RUNTIME ));
-
-                for(Iterator i = result.getArtifacts().iterator(); i.hasNext(); ) {
-                    Artifact artifact = (Artifact) i.next();
-                    if (artifact.getType().equals("jar") && (!Artifact.SCOPE_PROVIDED.equals(artifact.getScope())) && (!Artifact.SCOPE_TEST.equals( artifact.getScope())))  {
-                        dependencyFiles.add(artifact.getFile());
-                        dependencyIds.add(artifact.getDependencyConflictId());
-                    }
-                }
+        for(Iterator i = project.getArtifacts().iterator(); i.hasNext(); ) {
+            Artifact artifact = (Artifact) i.next();
+            if (artifact.getType().equals("jar") && (!Artifact.SCOPE_PROVIDED.equals(artifact.getScope())) && (!Artifact.SCOPE_TEST.equals( artifact.getScope())))  {
+                dependencyFiles.add(artifact.getFile());
             }
-            {
-
-                for(Iterator i = project.getArtifacts().iterator(); i.hasNext(); ) {
-                    Artifact artifact = (Artifact) i.next();
-                    if (artifact.getType().equals("jar") && (!Artifact.SCOPE_PROVIDED.equals(artifact.getScope())) && (!Artifact.SCOPE_TEST.equals( artifact.getScope())))  {
-                        if(!dependencyIds.contains(artifact.getDependencyConflictId())) {
-                            dependencyFiles.add(artifact.getFile());
-                        }
-
-                    }
-                }
-            }
-
-        } catch (ProjectBuildingException e) {
-            throw new MojoExecutionException(e.getMessage(), e);
-        } catch (ArtifactNotFoundException e) {
-            throw new MojoExecutionException(e.getMessage(), e);
-        } catch (ArtifactResolutionException e) {
-            throw new MojoExecutionException(e.getMessage(), e);
-        } catch (InvalidDependencyVersionException e) {
-            throw new MojoExecutionException(e.getMessage(), e);
         }
+
+
 
         starter.setPort(port);
         starter.setContextPath(contextPath);
         starter.setSrcDir(srcDir);
-        starter.setWebXml(mergedWebXml);
         starter.addContextParam("kantega.appDir", kantegaDir.getAbsolutePath());
 
         starter.setDependencyFiles(dependencyFiles);
@@ -275,44 +204,6 @@ public class RunMojo extends AbstractMojo {
         starter.setWorkDir(jettyWorkDir);
 
         configureStarter(starter);
-
-        Scanner scanner = new Scanner();
-        scanner.setReportExistingFilesOnStartup(false);
-        scanner.setScanDirs(dependencyFiles);
-        scanner.addListener(new Scanner.BulkListener() {
-            public void filesChanged(List filenames) throws Exception {
-                getLog().info("Restarting webapp because the following dependencies have changed: " + filenames);
-                starter.restart();
-            }
-        });
-
-        scanner.setScanInterval(5);
-        scanner.start();
-
-        {
-            Scanner warScanner = new Scanner();
-            warScanner.setReportExistingFilesOnStartup(false);
-            warScanner.setScanDirs(Collections.singletonList(aksessWarArtifact.getFile()));
-            warScanner.addListener(new Scanner.BulkListener() {
-                public void filesChanged(List filenames) throws Exception {
-                    getLog().info("Unpacking changed OpenAksess web artifact: " + filenames);
-                    for(Iterator i = project.getDependencyArtifacts().iterator(); i.hasNext(); ) {
-                        Artifact a = (Artifact) i.next();
-                        if(a.getType().equals("war")) {
-                            waitForUnpack(a);
-                            unpackArtifact(a);
-                        }
-                    }
-                    waitForUnpack(aksessWarArtifact);
-                    unpackArtifact(aksessWarArtifact);
-                    starter.restart();
-                }
-            });
-
-            warScanner.setScanInterval(5);
-            warScanner.start();
-        }
-
 
         Thread t = new ConsoleScanner() {
             protected void restart() {

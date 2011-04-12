@@ -16,25 +16,16 @@
 
 package no.kantega.aksess.mojo;
 
+import org.apache.commons.io.FileUtils;
+import org.apache.maven.artifact.metadata.ArtifactMetadataSource;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
-import org.apache.maven.artifact.metadata.ArtifactMetadataSource;
-import org.apache.maven.artifact.versioning.VersionRange;
-import org.apache.maven.artifact.Artifact;
-import org.apache.maven.artifact.resolver.ArtifactResolutionException;
-import org.apache.maven.artifact.resolver.ArtifactNotFoundException;
 import org.apache.maven.project.MavenProject;
-import org.apache.commons.io.IOUtils;
-import org.apache.commons.io.FileUtils;
-import org.codehaus.plexus.archiver.jar.JarArchiver;
-import org.codehaus.plexus.archiver.zip.ZipUnArchiver;
-import org.codehaus.plexus.archiver.ArchiverException;
-import org.codehaus.plexus.components.io.fileselectors.FileSelector;
-import org.codehaus.plexus.components.io.fileselectors.FileInfo;
 
-import java.io.*;
-import java.util.Properties;
+import java.io.File;
+import java.io.FileFilter;
+import java.io.IOException;
 
 /**
  * @goal kantegadir
@@ -63,13 +54,6 @@ public class KantegaDirMojo extends AbstractMojo {
 
     /** @component */
     private ArtifactMetadataSource artifactMetadataSource;
-
-    /**
-     * @parameter
-     * @required
-     */
-    private String aksessVersion;
-
     /**
      * @parameter expression="${basedir}/src/install"
      */
@@ -105,11 +89,9 @@ public class KantegaDirMojo extends AbstractMojo {
 
     public void execute() throws MojoExecutionException, MojoFailureException {
         kantegaDir.mkdirs();
-        getLog().info("Copy files from openaksess-install " + aksessVersion);
-
 
         try {
-            // Extract Aksess's install jar
+            // Copy aksess.conf
             final File confFile = new File(kantegaDir, "conf/aksess.conf");
             FileUtils.copyFile(webappConf, confFile);
 

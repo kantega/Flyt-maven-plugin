@@ -21,7 +21,7 @@ import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.util.resource.JarResource;
 import org.eclipse.jetty.util.resource.Resource;
 import org.eclipse.jetty.util.resource.ResourceCollection;
-import org.eclipse.jetty.webapp.WebAppContext;
+import org.mortbay.jetty.plugin.JettyWebAppContext;
 
 import javax.swing.*;
 import java.io.File;
@@ -53,7 +53,7 @@ public class JettyStarter {
     private List additionalBases = new ArrayList();
     private List<File> dependencyFiles;
     private boolean openBrowser;
-    private WebAppContext context;
+    private JettyWebAppContext context;
     private int port = 8080;
     private Server server;
     private boolean joinServer = true;
@@ -65,24 +65,24 @@ public class JettyStarter {
             String arg = args[i];
             System.out.println("arg: " + arg);
         }
-        if(args.length != 4) {
+        if (args.length != 4) {
             usage();
         }
 
         final File srcDir = new File(args[0]);
-        if(!srcDir.exists()) {
+        if (!srcDir.exists()) {
             usage("srcDir " + srcDir.getAbsoluteFile() + " doesn't exist");
         }
         js.setSrcDir(srcDir);
 
         final File webappDir = new File(args[1]);
-        if(!webappDir.exists()) {
+        if (!webappDir.exists()) {
             usage("webappDir " + srcDir.getAbsoluteFile() + " doesn't exist");
         }
         js.setWebappDir(webappDir);
 
         final File webXml = new File(args[2]);
-        if(!webXml.exists()) {
+        if (!webXml.exists()) {
             usage("webXml file " + webXml.getAbsoluteFile() + " doesn't exist");
         }
 
@@ -90,9 +90,9 @@ public class JettyStarter {
 
         String aksessHome = System.getProperty("aksess.home");
 
-        if(aksessHome != null) {
+        if (aksessHome != null) {
             File aksessHomeFile = new File(aksessHome);
-            if(aksessHomeFile.isDirectory() && aksessHomeFile.exists()) {
+            if (aksessHomeFile.isDirectory() && aksessHomeFile.exists()) {
                 System.out.println("Using aksess dir " + aksessHomeFile);
                 js.setAksessDir(aksessHomeFile);
             }
@@ -109,7 +109,7 @@ public class JettyStarter {
     }
 
     private static void usage(String message) {
-        if(message != null) {
+        if (message != null) {
             System.out.println(message);
         }
         System.out.println("Usage: " + JettyStarter.class.getName() + " <srcDir> <webappDir> <web.xml> <contextPath>");
@@ -118,27 +118,27 @@ public class JettyStarter {
 
     public void start() throws Exception {
 
-        context = new WebAppContext();
-        if(webXml != null) {
+        context = new JettyWebAppContext();
+        if (webXml != null) {
             context.setDescriptor(webXml.getAbsolutePath());
         }
         List bases = new ArrayList();
         bases.add(srcDir.getAbsolutePath());
-        if(aksessDir != null) {
+        if (aksessDir != null) {
             bases.add(aksessDir.getAbsolutePath());
         }
-        if(webappDir != null) {
+        if (webappDir != null) {
             bases.add(webappDir.getAbsolutePath());
         }
         bases.addAll(additionalBases);
 
         context.getInitParams().putAll(props);
 
-        if(workDir != null) {
+        if (workDir != null) {
             context.setTempDirectory(workDir);
         }
         System.out.println("Starting with resource bases: " + bases);
-        if(bases.size() == 1 && new File((String) bases.get(0)).isFile()) {
+        if (bases.size() == 1 && new File((String) bases.get(0)).isFile()) {
             context.setWar((String) bases.get(0));
         } else {
             context.setBaseResource(new ResourceCollection(getResources(bases)));
@@ -146,38 +146,34 @@ public class JettyStarter {
         context.setContextPath(contextPath);
 
         if(dependencyFiles != null) {
-            String extra = "";
-            for(File file : dependencyFiles) {
-                extra += file.getAbsolutePath() +";";
-            }
-            context.setExtraClasspath(extra);
+            context.setWebInfLib(dependencyFiles);
+            context.setClassPathFiles(dependencyFiles);
         }
         int firstport = port;
-        while (port < firstport+10) {
+        while (port < firstport + 10) {
             try {
                 new ServerSocket(port).close();
                 break;
             } catch (java.net.BindException be) {
 
-                int nextPort = port+1;
-                System.out.println("Error starting server on port "+port+", trying port " + nextPort);
+                int nextPort = port + 1;
+                System.out.println("Error starting server on port " + port + ", trying port " + nextPort);
                 port++;
-            } 
+            }
         }
 
         server = new Server(port);
         server.setHandler(context);
         server.start();
 
-        if(openBrowser) {
+        if (openBrowser) {
             openUrl("http://localhost:" + port + contextPath);
         }
 
-        if(joinServer) {
+        if (joinServer) {
             server.join();
         }
 
-                
 
     }
 
@@ -185,42 +181,41 @@ public class JettyStarter {
         this.joinServer = joinServer;
     }
 
-    private  void openUrl(String url) {
+    private void openUrl(String url) {
         String osName = System.getProperty("os.name");
         try {
             if (osName.startsWith("Mac OS")) {
                 Class fileMgr = Class.forName("com.apple.eio.FileManager");
                 Method openURL = fileMgr.getDeclaredMethod("openURL",
-                        new Class[] {String.class});
-                openURL.invoke(null, new Object[] {url});
-            }
-            else if (osName.startsWith("Windows"))
+                        new Class[]{String.class});
+                openURL.invoke(null, new Object[]{url});
+            } else if (osName.startsWith("Windows"))
                 Runtime.getRuntime().exec("rundll32 url.dll,FileProtocolHandler " + url);
             else { //assume Unix or Linux
                 String[] browsers = {
-                        "sensible-browser", "firefox", "opera", "chromium-browser", "konqueror", "epiphany", "mozilla", "netscape" };
+                        "sensible-browser", "firefox", "opera", "chromium-browser", "konqueror", "epiphany", "mozilla", "netscape"};
                 String browser = null;
                 for (int count = 0; count < browsers.length && browser == null; count++)
                     if (Runtime.getRuntime().exec(
-                            new String[] {"which", browsers[count]}).waitFor() == 0)
+                            new String[]{"which", browsers[count]}).waitFor() == 0)
                         browser = browsers[count];
                 if (browser == null)
                     throw new Exception("Could not find web browser");
                 else
-                    Runtime.getRuntime().exec(new String[] {browser, url});
+                    Runtime.getRuntime().exec(new String[]{browser, url});
             }
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             JOptionPane.showMessageDialog(null, e.getMessage());
         }
     }
+
     private Resource[] getResources(List bases) throws IOException {
         Resource[] resources = new Resource[bases.size()];
-        for(int i  = 0; i < bases.size(); i++) {
+        for (int i = 0; i < bases.size(); i++) {
             String resourceRef = (String) bases.get(i);
             File file = new File(resourceRef);
-            if(file.exists()) {
-                if(file.isDirectory()) {
+            if (file.exists()) {
+                if (file.isDirectory()) {
                     resources[i] = Resource.newResource(resourceRef);
                 } else {
                     File extractDir = new File(workDir, file.getName());
@@ -293,4 +288,5 @@ public class JettyStarter {
     public String getContextPath() {
         return contextPath;
     }
+
 }
