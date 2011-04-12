@@ -30,6 +30,8 @@ import java.util.List;
 
 /**
  * @goal smoketest
+ * @execute phase="package"
+ * @requiresDependencyResolution runtime
  */
 public class SmokeTestMojo extends AbstractMojo {
 
@@ -64,7 +66,7 @@ public class SmokeTestMojo extends AbstractMojo {
     private File smokeWar;
 
     /**
-     * @parameter expression="/${project.artifactId}"
+     * @parameter expression="/"
      */
     private String contextPath;
 
@@ -132,7 +134,7 @@ public class SmokeTestMojo extends AbstractMojo {
             if (smokeTestFile.exists()) {
                 pages.addAll(getPages(smokeTestFile.toURL()));
             }
-            final String root = "http://localhost:" + starter.getPort() + contextPath;
+            final String root = "http://localhost:" + starter.getPort() + ("/".equals(contextPath) ? "" : contextPath);
             String testOptions = "excludeFilter=smoketest=false";
             pages.addAll(getPages(new URL(root + "/TestPages.action?" + testOptions)));
 

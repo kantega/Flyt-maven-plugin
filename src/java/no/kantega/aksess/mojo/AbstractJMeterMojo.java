@@ -108,7 +108,8 @@ public abstract class AbstractJMeterMojo extends RunMojo {
 
 
             final List<Page> pages = new ArrayList<Page>();
-            final String root = "http://localhost:" + getJettyStarter().getPort() + getJettyStarter().getContextPath();
+            String contextPath = "/".equals(getJettyStarter().getContextPath()) ? "" : getJettyStarter().getContextPath();
+            final String root = "http://localhost:" + getJettyStarter().getPort() + contextPath;
             String testOptions = "excludeFilter=jmetertest=false";
             pages.addAll(SmokeTestMojo.getPages(new URL(root + "/TestPages.action?" +testOptions)));
 
@@ -129,7 +130,7 @@ public abstract class AbstractJMeterMojo extends RunMojo {
                 Element sampler = (Element) frontPage.clone();
                 sampler.setAttribute("testname", page.getCategory() +" (" +page.getTitle() +")");
                 Element path = (Element) XPath.selectNodes(sampler, "stringProp[@name='HTTPSampler.path']").get(0);
-                path.setContent(new Text(getJettyStarter().getContextPath() + page.getUrl()));
+                path.setContent(new Text(contextPath + page.getUrl()));
                 Element hash = new Element("hashTree");
                 parent.addContent(sampler);
                 parent.addContent(hash);
