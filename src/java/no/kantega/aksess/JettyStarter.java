@@ -119,6 +119,10 @@ public class JettyStarter {
     public void start() throws Exception {
 
         context = new WebAppContext();
+
+        context.addServerClass("-org.apache.commons.logging.");
+        context.addServerClass("-org.apache.jasper.");
+        context.addServerClass("org.apache.");
         if(webXml != null) {
             context.setDescriptor(webXml.getAbsolutePath());
         }
