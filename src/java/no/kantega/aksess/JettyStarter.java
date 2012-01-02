@@ -118,6 +118,7 @@ public class JettyStarter {
 
     public void start() throws Exception {
 
+        System.setProperty("development", "true");
         context = new WebAppContext();
 
         context.addServerClass("-org.apache.commons.logging.");
