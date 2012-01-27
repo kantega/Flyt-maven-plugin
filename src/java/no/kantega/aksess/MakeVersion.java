@@ -83,7 +83,15 @@ public class MakeVersion {
                         reader.readLine();
                     }
                     date = reader.readLine();
-                    revision = reader.readLine();
+                    if (date != null) {
+                        revision = reader.readLine();
+                    } else {
+                        System.out.println(entriesFile + " + unable to read SVN metadata. Support for SVN 1.7 not yet implemented");
+                        date = new Date().toString();
+                    }
+                    if (revision == null) {
+                        revision = "unknown";
+                    }
                 } catch (IOException ex) {
                     System.out.println("Error reading " + entriesFile);
                     ex.printStackTrace();
