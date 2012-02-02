@@ -119,6 +119,11 @@ public class JettyStarter {
     public void start() throws Exception {
 
         System.setProperty("development", "true");
+
+        // We want to use ECJ because that's what JettyConsole uses:
+        System.setProperty("org.apache.jasper.compiler.disablejsr199", "true");
+
+
         context = new WebAppContext();
 
         context.addServerClass("-org.apache.commons.logging.");

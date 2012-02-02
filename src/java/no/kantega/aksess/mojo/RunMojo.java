@@ -35,7 +35,6 @@ import org.codehaus.plexus.archiver.ArchiverException;
 import org.codehaus.plexus.archiver.UnArchiver;
 import org.codehaus.plexus.components.io.fileselectors.FileSelector;
 import org.codehaus.plexus.components.io.fileselectors.IncludeExcludeFileSelector;
-import org.eclipse.jetty.util.Scanner;
 
 import java.io.File;
 import java.io.IOException;
@@ -276,44 +275,6 @@ public class RunMojo extends AbstractMojo {
 
         configureStarter(starter);
 
-        Scanner scanner = new Scanner();
-        scanner.setReportExistingFilesOnStartup(false);
-        scanner.setScanDirs(dependencyFiles);
-        scanner.addListener(new Scanner.BulkListener() {
-            public void filesChanged(List filenames) throws Exception {
-                getLog().info("Restarting webapp because the following dependencies have changed: " + filenames);
-                starter.restart();
-            }
-        });
-
-        scanner.setScanInterval(5);
-        scanner.start();
-
-        {
-            Scanner warScanner = new Scanner();
-            warScanner.setReportExistingFilesOnStartup(false);
-            warScanner.setScanDirs(Collections.singletonList(aksessWarArtifact.getFile()));
-            warScanner.addListener(new Scanner.BulkListener() {
-                public void filesChanged(List filenames) throws Exception {
-                    getLog().info("Unpacking changed OpenAksess web artifact: " + filenames);
-                    for(Iterator i = project.getDependencyArtifacts().iterator(); i.hasNext(); ) {
-                        Artifact a = (Artifact) i.next();
-                        if(a.getType().equals("war")) {
-                            waitForUnpack(a);
-                            unpackArtifact(a);
-                        }
-                    }
-                    waitForUnpack(aksessWarArtifact);
-                    unpackArtifact(aksessWarArtifact);
-                    starter.restart();
-                }
-            });
-
-            warScanner.setScanInterval(5);
-            warScanner.start();
-        }
-
-
         Thread t = new ConsoleScanner() {
             protected void restart() {
                 try {
@@ -431,7 +392,8 @@ public class RunMojo extends AbstractMojo {
             restart();
             emptyBuffer();
         }
-        protected abstract void restart();
+        protected abstract void
+        restart();
     }
 
     private void emptyBuffer() {
