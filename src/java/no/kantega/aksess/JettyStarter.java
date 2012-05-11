@@ -33,13 +33,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-/**
- * Created by IntelliJ IDEA.
- * User: bjorsnos
- * Date: Jan 13, 2009
- * Time: 2:58:58 PM
- * To change this template use File | Settings | File Templates.
- */
+
 public class JettyStarter {
 
     private File srcDir;
@@ -61,7 +55,7 @@ public class JettyStarter {
     public static void main(String[] args) throws Exception {
         final JettyStarter js = new JettyStarter();
 
-        for (int i = 0; i < args.length; i++) {
+        for(int i = 0; i < args.length; i++) {
             String arg = args[i];
             System.out.println("arg: " + arg);
         }
@@ -85,7 +79,6 @@ public class JettyStarter {
         if(!webXml.exists()) {
             usage("webXml file " + webXml.getAbsoluteFile() + " doesn't exist");
         }
-
         js.setWebXml(webXml);
 
         String aksessHome = System.getProperty("aksess.home");
@@ -98,8 +91,6 @@ public class JettyStarter {
             }
 
         }
-
-
         js.setContextPath(args[3]);
         js.start();
     }
@@ -117,12 +108,10 @@ public class JettyStarter {
     }
 
     public void start() throws Exception {
-
         System.setProperty("development", "true");
 
         // We want to use ECJ because that's what JettyConsole uses:
         System.setProperty("org.apache.jasper.compiler.disablejsr199", "true");
-
 
         context = new WebAppContext();
 
@@ -186,9 +175,6 @@ public class JettyStarter {
         if(joinServer) {
             server.join();
         }
-
-                
-
     }
 
     public void setJoinServer(boolean joinServer) {

@@ -1,29 +1,22 @@
 package no.kantega.aksess.mojo;
 
-import no.kantega.aksess.JettyStarter;
 import no.kantega.aksess.mojo.smoke.DriverConfig;
-import no.kantega.aksess.mojo.smoke.ElementPage;
 import no.kantega.aksess.mojo.smoke.Page;
+import no.kantega.aksess.mojo.smoke.SmokeTestBase;
 import org.apache.commons.io.FileUtils;
-import org.apache.maven.plugin.AbstractMojo;
+import org.apache.commons.io.IOUtils;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.Velocity;
-import org.jdom.Document;
-import org.jdom.Element;
-import org.jdom.JDOMException;
-import org.jdom.input.SAXBuilder;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.OutputType;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.ie.InternetExplorerDriver;
+import org.openqa.selenium.remote.DesiredCapabilities;
 
-import javax.imageio.ImageIO;
-import java.awt.image.BufferedImage;
 import java.io.*;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,7 +24,7 @@ import java.util.List;
 /**
  * @goal smoketest
  */
-public class SmokeTestMojo extends AbstractMojo {
+public class SmokeTestMojo extends SmokeTestBase {
 
     /**
      * The name of the generated WAR.
@@ -41,32 +34,10 @@ public class SmokeTestMojo extends AbstractMojo {
      */
     private File warFile;
 
-
-    /**
-     * @parameter expression="${project.build.directory}/kantega-dir"
-     */
-    private File kantegaDir;
-
-
-    /**
-     * @parameter expression="${project.build.directory}/aksessrun/smoke/"
-     */
-    private File smokeDir;
-
-    /**
-     * @parameter expression="${project.build.directory}/aksessrun/unpackedwar/"
-     */
-    private File unpackedWarDir;
-
     /**
      * @parameter expression="${project.build.directory}/aksessrun/${project.build.finalName}.war"
      */
     private File smokeWar;
-
-    /**
-     * @parameter expression="/${project.artifactId}"
-     */
-    private String contextPath;
 
     /**
      * @parameter default-value="${basedir}/src/test/smoketest.xml"
@@ -74,77 +45,67 @@ public class SmokeTestMojo extends AbstractMojo {
     private File smokeTestFile;
 
     /**
-     * @parameter
+     * @parameter expression="${project.build.directory}/aksessrun/smoke/"
      */
-    private String fakeUsername = "admin";
+    private File smokeDir;
 
     /**
-     * @parameter
+     * @parameter default-value="${java.io.tmpdir}/chromedriver"
      */
-    private String fakeUserDomain = "dbuser";
-
+    private File chromeFile;
 
     public void execute() throws MojoExecutionException, MojoFailureException {
 
-
-        JettyStarter starter = null;
-
         List<DriverConfig> drivers = new ArrayList<DriverConfig>();
+
         try {
 
+            start(smokeWar);
             copyWar();
-
-            starter = new JettyStarter();
-            starter.addContextParam("testPagesEnabled", "true");
-            starter.setSrcDir(smokeWar);
-            starter.setWorkDir(unpackedWarDir);
-            starter.addContextParam("kantega.appDir", kantegaDir.getAbsolutePath());
-            starter.addContextParam("fakeUsername", fakeUsername);
-            starter.addContextParam("fakeUserDomain", fakeUserDomain);
-            starter.setContextPath(contextPath);
-            starter.setJoinServer(false);
-            starter.start();
 
             final String resize = "window.resizeTo(1280, 1024);";
 
-            try {
-                drivers.add(new DriverConfig(new FirefoxDriver(), "firefox"));
-            } catch (Exception e) {
-                getLog().error("Failed adding FirefoxDriver: ", e);
-            }
             if (System.getProperty("os.name").toLowerCase().contains("win")) {
                 try {
-                    drivers.add(new DriverConfig(new InternetExplorerDriver(), "ie"));
+                    DesiredCapabilities ieCapabilities = DesiredCapabilities.internetExplorer();
+                    ieCapabilities.setCapability(InternetExplorerDriver.INTRODUCE_FLAKINESS_BY_IGNORING_SECURITY_DOMAINS, true);
+                    DriverConfig ie = new DriverConfig(new InternetExplorerDriver(ieCapabilities), "ie");
+                    drivers.add(ie);
+                    addDriver(ie);
                 } catch (Exception e) {
                     getLog().error("Failed adding InternetExplorerDriver: ", e);
                 }
             }
             try {
-                drivers.add(new DriverConfig(new ChromeDriver(), "chrome"));
+                configureChromeDriver();
+                DriverConfig chrome = new DriverConfig(new ChromeDriver(), "chrome");
+                drivers.add(chrome);
+                addDriver(chrome);
             } catch (Exception e) {
                 getLog().error("Failed adding ChromiumDriver: ", e);
             }
-
-
-            smokeDir.mkdirs();
-
+            try {
+                DriverConfig firefox = new DriverConfig(new FirefoxDriver(), "firefox");
+                drivers.add(firefox);
+                addDriver(firefox);
+            } catch (Exception e) {
+                getLog().error("Failed adding FirefoxDriver: ", e);
+            }
             final List<Page> pages = new ArrayList<Page>();
             if (smokeTestFile.exists()) {
                 pages.addAll(getPages(smokeTestFile.toURL()));
             }
-            final String root = "http://localhost:" + starter.getPort() + contextPath;
-            String testOptions = "excludeFilter=smoketest=false";
-            pages.addAll(getPages(new URL(root + "/TestPages.action?" + testOptions)));
+            pages.addAll(pages());
 
             for (DriverConfig driver : drivers) {
-
                 try {
+                    smokeDir.mkdirs();
                     File driverDir = new File(smokeDir, driver.getId());
                     driverDir.mkdirs();
 
                     for (Page page : pages) {
                         try {
-                            final String pageUrl = root + page.getUrl();
+                            final String pageUrl = getRoot() + page.getUrl();
                             getLog().info("GETing page in " + driver.getId() +": " + pageUrl);
                             driver.getDriver().get(pageUrl);
                             ((JavascriptExecutor)driver.getDriver()).executeScript(resize);
@@ -155,43 +116,38 @@ public class SmokeTestMojo extends AbstractMojo {
                             FileUtils.copyFile(f, imgFile);
                             f.delete();
                         }
-
                     }
-
                     writeReport(pages, drivers, driver, new File(driverDir, "index.html"));
                 } catch (Exception e) {
                     getLog().info("Ignoring failed driver " + driver.getId(), e);
                 }
-
             }
-
         } catch (Exception e) {
             throw new MojoExecutionException(e.getMessage(), e);
         } finally {
-            try {
-                for (DriverConfig driver : drivers) {
-                    if (driver != null) {
-                        try {
-                            driver.getDriver().close();
-                            driver.getDriver().quit();
-                        } catch (Throwable e) {
-                            e.printStackTrace();
-                        }
-                    }
-                }
-
-            } finally {
-                if (starter != null) {
-                    try {
-                        starter.stop();
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
-
-
             dumpThreads("Jetty and server stopped");
+        }
+    }
+
+    private void configureChromeDriver() {
+        InputStream chromeDriverStream = null;
+        if(System.getProperty("os.name").toLowerCase().contains("win")){
+            chromeDriverStream = getClass().getResourceAsStream("/chromeDriver/chromedriverWindows.exe");
+        }else if(System.getProperty("os.name").toLowerCase().contains("nux")){
+            chromeDriverStream = getClass().getResourceAsStream("/chromeDriver/chromedriverLinux64");
+        }else if(System.getProperty("os.name").toLowerCase().contains("mac")){
+            chromeDriverStream = getClass().getResourceAsStream("/chromeDriver/chromedriverMac");
+        }
+        try{
+            if(!chromeFile.exists()){
+                chromeFile = new File(System.getProperty("java.io.tmpdir"), "chromedriver");
+                IOUtils.copy(chromeDriverStream, new FileOutputStream(chromeFile));
+            }
+            System.setProperty("webdriver.chrome.driver", chromeFile.getAbsolutePath());
+        }catch(FileNotFoundException e){
+            e.printStackTrace();
+        }catch(IOException e){
+            e.printStackTrace();
         }
     }
 
@@ -214,62 +170,6 @@ public class SmokeTestMojo extends AbstractMojo {
             writer.close();
         } catch (IOException e) {
             throw new RuntimeException(e);
-        }
-    }
-
-    public static List<Page> getPages(URL url) {
-        try {
-            SAXBuilder builder = new SAXBuilder();
-            final Document doc = builder.build(url);
-
-            List<Element> elems = doc.getRootElement().getChildren("page");
-
-            List<Page> pages = new ArrayList<Page>();
-
-            for (Element elem : elems) {
-                pages.add(new ElementPage(elem));
-            }
-
-            return pages;
-        } catch (JDOMException e) {
-            throw new RuntimeException(e);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    private void diff(File oldFile, File newFile, File diffFile) {
-        try {
-            final BufferedImage oldImage = ImageIO.read(oldFile);
-            final BufferedImage newImage = ImageIO.read(newFile);
-
-            final BufferedImage diffImage = new BufferedImage(Math.max(oldImage.getWidth(), newImage.getWidth()),
-                    Math.max(oldImage.getHeight(), newImage.getHeight()), BufferedImage.TYPE_INT_ARGB);
-
-            for (int x = 0; x < oldImage.getWidth() && x < newImage.getWidth(); x++) {
-
-                for (int y = 0; y < oldImage.getHeight() && y < newImage.getHeight(); y++) {
-
-                    if (oldImage.getRGB(x, y) != newImage.getRGB(x, y)) {
-                        diffImage.setRGB(x, y, 0xFF00FF00);
-                    }
-                }
-            }
-            ImageIO.write(diffImage, "png", diffFile);
-
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-
-    }
-
-
-    private void dumpThreads(String s) {
-        System.out.println("-- " + s);
-        final Thread[] threads = new Thread[Thread.activeCount()];
-        final int i = Thread.enumerate(threads);
-        for (Thread t : threads) {
-            System.out.println("t: " + t + " " + t.isDaemon());
         }
     }
 
