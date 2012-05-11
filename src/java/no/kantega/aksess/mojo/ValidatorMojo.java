@@ -73,8 +73,7 @@ public class ValidatorMojo extends SmokeTestBase {
 
             Map<Page, String> errors = new HashMap<Page, String>();
 
-            for(int i = 0; i < 10; i++) {
-                Page page = pages.get(i);
+            for (Page page : pages) {
                 try {
                     final String pageUrl = getRoot() + page.getUrl();
                     getLog().info("GETing page in: " + pageUrl);
