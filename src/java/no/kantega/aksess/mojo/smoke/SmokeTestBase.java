@@ -1,7 +1,10 @@
 package no.kantega.aksess.mojo.smoke;
 
 import no.kantega.aksess.JettyStarter;
+import org.apache.commons.io.FileUtils;
 import org.apache.maven.plugin.AbstractMojo;
+import org.apache.maven.plugin.MojoExecutionException;
+import org.apache.maven.plugin.MojoFailureException;
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.JDOMException;
@@ -18,9 +21,22 @@ import java.util.List;
 public abstract class SmokeTestBase extends AbstractMojo {
 
     /**
+     * The name of the generated WAR.
+     *
+     * @parameter expression="${project.build.directory}/${project.build.finalName}.war"
+     * @required
+     */
+    private File warFile;
+
+    /**
      * @parameter expression="${project.build.directory}/aksessrun/unpackedwar/"
      */
     private File unpackedWarDir;
+
+    /**
+     * @parameter expression="${project.build.directory}/aksessrun/${project.build.finalName}.war"
+     */
+    private File smokeWar;
 
     /**
      * @parameter expression="${project.build.directory}/kantega-dir"
@@ -51,11 +67,11 @@ public abstract class SmokeTestBase extends AbstractMojo {
     public String getRoot() {
         return root;
     }
-    public void start(File srcDir) throws Exception {
+    public void start() throws Exception {
         starter = new JettyStarter();
         starter.addContextParam("testPagesEnabled", "true");
+        starter.setSrcDir(smokeWar);
         starter.setWorkDir(unpackedWarDir);
-        starter.setSrcDir(srcDir);
         starter.addContextParam("kantega.appDir", kantegaDir.getAbsolutePath());
         starter.addContextParam("fakeUsername", fakeUsername);
         starter.addContextParam("fakeUserDomain", fakeUserDomain);
@@ -64,6 +80,21 @@ public abstract class SmokeTestBase extends AbstractMojo {
 
         starter.start();
     }
+
+    public void execute() throws MojoExecutionException, MojoFailureException {
+        try {
+            copyWar();
+            start();
+
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+    }
+
     public List<Page> pages() throws MalformedURLException {
         final List<Page> pages = new ArrayList<Page>();
         root = "http://localhost:" + starter.getPort() + contextPath + "/";
@@ -121,4 +152,9 @@ public abstract class SmokeTestBase extends AbstractMojo {
         }
     }
 
+    private void copyWar() throws IOException {
+        if (!smokeWar.exists() || smokeWar.lastModified() < warFile.lastModified()) {
+            FileUtils.copyFile(warFile, smokeWar);
+        }
+    }
 }

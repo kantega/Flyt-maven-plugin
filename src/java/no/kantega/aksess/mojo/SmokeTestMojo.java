@@ -28,19 +28,6 @@ import java.util.List;
 public class SmokeTestMojo extends SmokeTestBase {
 
     /**
-     * The name of the generated WAR.
-     *
-     * @parameter expression="${project.build.directory}/${project.build.finalName}.war"
-     * @required
-     */
-    private File warFile;
-
-    /**
-     * @parameter expression="${project.build.directory}/aksessrun/${project.build.finalName}.war"
-     */
-    private File smokeWar;
-
-    /**
      * @parameter default-value="${basedir}/src/test/smoketest.xml"
      */
     private File smokeTestFile;
@@ -55,15 +42,12 @@ public class SmokeTestMojo extends SmokeTestBase {
      */
     private File chromeFile;
 
+    @Override
     public void execute() throws MojoExecutionException, MojoFailureException {
-
-        List<DriverConfig> drivers = new ArrayList<DriverConfig>();
+        super.execute();
 
         try {
-
-            start(smokeWar);
-            copyWar();
-
+            List<DriverConfig> drivers = new ArrayList<DriverConfig>();
             final String resize = "window.resizeTo(1280, 1024);";
 
             configureIEDriver(drivers);
@@ -180,12 +164,6 @@ public class SmokeTestMojo extends SmokeTestBase {
             e.printStackTrace();
         }catch(IOException e){
             e.printStackTrace();
-        }
-    }
-
-    private void copyWar() throws IOException {
-        if (!smokeWar.exists() || smokeWar.lastModified() < warFile.lastModified()) {
-            FileUtils.copyFile(warFile, smokeWar);
         }
     }
 

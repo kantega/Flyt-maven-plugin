@@ -25,7 +25,6 @@ import java.util.*;
 
 /**
  * @goal validator
- * @phase validate
 */
 public class ValidatorMojo extends SmokeTestBase {
 
@@ -36,29 +35,23 @@ public class ValidatorMojo extends SmokeTestBase {
 
     /**
      * @parameter
-     * @default http://validator.w3.org/check
+     * @required
+     * The url of the host hosting a page with the same
+     * functionality as http://validator.w3.org/check
      */
     private URI validatorURL;
-
-    /**
-     * @parameter expression="${project.build.directory}/aksessrun/${project.build.finalName}.war"
-     */
-    private File validatorWar;
 
     /**
      * @parameter expression="${project.build.directory}/aksessrun/validate/"
      */
     private File validateDir;
 
+    @Override
     public void execute() throws MojoExecutionException, MojoFailureException {
-
-        WebDriver driver = null;
+        super.execute();
 
         try {
-
-            start(validatorWar);
-
-            driver = configureDriver();
+            WebDriver driver = configureDriver();
 
             HttpClient httpclient = new DefaultHttpClient();
             ObjectMapper mapper = new ObjectMapper();
@@ -92,7 +85,7 @@ public class ValidatorMojo extends SmokeTestBase {
                 getLog().info("GETing page in: " + pageUrl);
                 driver.get(pageUrl);
             } finally {
-                validity(driver, httpclient, mapper, allowedErrorMessages, page, errors);
+                checkValidity(driver, httpclient, mapper, allowedErrorMessages, page, errors);
             }
         }
     }
@@ -118,8 +111,8 @@ public class ValidatorMojo extends SmokeTestBase {
         }
     }
 
-    private void validity(WebDriver driver, HttpClient httpclient, ObjectMapper mapper, 
-                             List<String> allowedErrorMessages, Page page, Map<Page, String> errors) {
+    private void checkValidity(WebDriver driver, HttpClient httpclient, ObjectMapper mapper,
+                               List<String> allowedErrorMessages, Page page, Map<Page, String> errors) {
         try {
             HttpPost post = new HttpPost(validatorURL);
             List<NameValuePair> formparams = new ArrayList<NameValuePair>();
