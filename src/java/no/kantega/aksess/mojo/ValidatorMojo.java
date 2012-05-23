@@ -71,10 +71,17 @@ public class ValidatorMojo extends SmokeTestBase {
             File testValidate = new File(validateDir, "validate.html");
             writeReport(errors, testValidate);
 
+            throwExceptionIfThereAreValidationErrors(errors);
         } catch (Exception e) {
             throw new MojoExecutionException(e.getMessage(), e);
         } finally {
             dumpThreads("Jetty and server stopped");
+        }
+    }
+
+    private void throwExceptionIfThereAreValidationErrors(Map<Page, String> errors) throws MojoFailureException {
+        if (errors.size() > 0) {
+            throw new MojoFailureException(String.format("There where %d validation errors. For more details see the report in target/aksessrun/validate", errors.size()));
         }
     }
 

@@ -122,6 +122,7 @@ public abstract class SmokeTestBase extends AbstractMojo {
             throw new RuntimeException(e);
         }
     }
+
     public void dumpThreads(String s) {
         try {
             for (DriverConfig driver : drivers) {
