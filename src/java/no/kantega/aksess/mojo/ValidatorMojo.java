@@ -20,7 +20,7 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.htmlunit.HtmlUnitDriver;
 
 import java.io.*;
-import java.net.URL;
+import java.net.URI;
 import java.util.*;
 
 /**
@@ -36,8 +36,9 @@ public class ValidatorMojo extends SmokeTestBase {
 
     /**
      * @parameter
+     * @default http://validator.w3.org/check
      */
-    private URL validatorURL;
+    private URI validatorURL;
 
     /**
      * @parameter expression="${project.build.directory}/aksessrun/${project.build.finalName}.war"
@@ -57,9 +58,7 @@ public class ValidatorMojo extends SmokeTestBase {
 
             start(validatorWar);
 
-            driver = new HtmlUnitDriver();
-            DriverConfig config = new DriverConfig(driver, "ValidatorMojo");
-            addDriver(config);
+            driver = configureDriver();
 
             HttpClient httpclient = new DefaultHttpClient();
             ObjectMapper mapper = new ObjectMapper();
@@ -73,15 +72,7 @@ public class ValidatorMojo extends SmokeTestBase {
 
             Map<Page, String> errors = new HashMap<Page, String>();
 
-            for (Page page : pages) {
-                try {
-                    final String pageUrl = getRoot() + page.getUrl();
-                    getLog().info("GETing page in: " + pageUrl);
-                    driver.get(pageUrl);
-                } finally {
-                    validity(driver, httpclient, mapper, allowedErrorMessages, page, errors);
-                }
-            }
+            checkPages(driver, httpclient, mapper, allowedErrorMessages, pages, errors);
 
             validateDir.mkdirs();
             File testValidate = new File(validateDir, "validate.html");
@@ -92,6 +83,26 @@ public class ValidatorMojo extends SmokeTestBase {
         } finally {
             dumpThreads("Jetty and server stopped");
         }
+    }
+
+    private void checkPages(WebDriver driver, HttpClient httpclient, ObjectMapper mapper, List<String> allowedErrorMessages, List<Page> pages, Map<Page, String> errors) {
+        for (Page page : pages) {
+            try {
+                final String pageUrl = getRoot() + page.getUrl();
+                getLog().info("GETing page in: " + pageUrl);
+                driver.get(pageUrl);
+            } finally {
+                validity(driver, httpclient, mapper, allowedErrorMessages, page, errors);
+            }
+        }
+    }
+
+    private WebDriver configureDriver() {
+        WebDriver driver;
+        driver = new HtmlUnitDriver();
+        DriverConfig config = new DriverConfig(driver, "ValidatorMojo");
+        addDriver(config);
+        return driver;
     }
 
     private void writeReport(Map<Page, String> pages, File reportFile) {
@@ -110,7 +121,7 @@ public class ValidatorMojo extends SmokeTestBase {
     private void validity(WebDriver driver, HttpClient httpclient, ObjectMapper mapper, 
                              List<String> allowedErrorMessages, Page page, Map<Page, String> errors) {
         try {
-            HttpPost post = new HttpPost("http://validator.w3.org/check");
+            HttpPost post = new HttpPost(validatorURL);
             List<NameValuePair> formparams = new ArrayList<NameValuePair>();
             String pageSource = driver.getPageSource();
             formparams.add(new BasicNameValuePair("fragment", pageSource));

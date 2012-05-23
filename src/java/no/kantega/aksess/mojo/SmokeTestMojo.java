@@ -17,6 +17,7 @@ import org.openqa.selenium.ie.InternetExplorerDriver;
 import org.openqa.selenium.remote.DesiredCapabilities;
 
 import java.io.*;
+import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -65,67 +66,98 @@ public class SmokeTestMojo extends SmokeTestBase {
 
             final String resize = "window.resizeTo(1280, 1024);";
 
-            if (System.getProperty("os.name").toLowerCase().contains("win")) {
-                try {
-                    DesiredCapabilities ieCapabilities = DesiredCapabilities.internetExplorer();
-                    ieCapabilities.setCapability(InternetExplorerDriver.INTRODUCE_FLAKINESS_BY_IGNORING_SECURITY_DOMAINS, true);
-                    DriverConfig ie = new DriverConfig(new InternetExplorerDriver(ieCapabilities), "ie");
-                    drivers.add(ie);
-                    addDriver(ie);
-                } catch (Exception e) {
-                    getLog().error("Failed adding InternetExplorerDriver: ", e);
-                }
-            }
-            try {
-                configureChromeDriver();
-                DriverConfig chrome = new DriverConfig(new ChromeDriver(), "chrome");
-                drivers.add(chrome);
-                addDriver(chrome);
-            } catch (Exception e) {
-                getLog().error("Failed adding ChromiumDriver: ", e);
-            }
-            try {
-                DriverConfig firefox = new DriverConfig(new FirefoxDriver(), "firefox");
-                drivers.add(firefox);
-                addDriver(firefox);
-            } catch (Exception e) {
-                getLog().error("Failed adding FirefoxDriver: ", e);
-            }
-            final List<Page> pages = new ArrayList<Page>();
-            if (smokeTestFile.exists()) {
-                pages.addAll(getPages(smokeTestFile.toURL()));
-            }
-            pages.addAll(pages());
+            configureIEDriver(drivers);
+            configureChrome(drivers);
+            configureFirefox(drivers);
 
-            for (DriverConfig driver : drivers) {
-                try {
-                    smokeDir.mkdirs();
-                    File driverDir = new File(smokeDir, driver.getId());
-                    driverDir.mkdirs();
+            final List<Page> pages = getTestPagesFromOA();
 
-                    for (Page page : pages) {
-                        try {
-                            final String pageUrl = getRoot() + page.getUrl();
-                            getLog().info("GETing page in " + driver.getId() +": " + pageUrl);
-                            driver.getDriver().get(pageUrl);
-                            ((JavascriptExecutor)driver.getDriver()).executeScript(resize);
-                            Thread.sleep(100);
-                        } finally {
-                            File f = driver.getScreenshotTaker().getScreenshotAs(OutputType.FILE);
-                            final File imgFile = new File(driverDir, page.getId() + ".png");
-                            FileUtils.copyFile(f, imgFile);
-                            f.delete();
-                        }
-                    }
-                    writeReport(pages, drivers, driver, new File(driverDir, "index.html"));
-                } catch (Exception e) {
-                    getLog().info("Ignoring failed driver " + driver.getId(), e);
-                }
-            }
+            executeDriversOnPages(drivers, resize, pages);
         } catch (Exception e) {
             throw new MojoExecutionException(e.getMessage(), e);
         } finally {
             dumpThreads("Jetty and server stopped");
+        }
+    }
+
+    private void executeDriversOnPages(List<DriverConfig> drivers, String resize, List<Page> pages) {
+        for (DriverConfig driver : drivers) {
+            try {
+                File driverDir = createImageFolder(driver);
+
+                for (Page page : pages) {
+                    takeScreenshot(resize, driver, driverDir, page);
+                }
+                writeReport(pages, drivers, driver, new File(driverDir, "index.html"));
+            } catch (Exception e) {
+                getLog().info("Ignoring failed driver " + driver.getId(), e);
+            }
+        }
+    }
+
+    private File createImageFolder(DriverConfig driver) {
+        smokeDir.mkdirs();
+        File driverDir = new File(smokeDir, driver.getId());
+        driverDir.mkdirs();
+        return driverDir;
+    }
+
+    private void takeScreenshot(String resize, DriverConfig driver, File driverDir, Page page) throws InterruptedException, IOException {
+        try {
+            final String pageUrl = getRoot() + page.getUrl();
+            getLog().info("GETing page in " + driver.getId() +": " + pageUrl);
+            driver.getDriver().get(pageUrl);
+            ((JavascriptExecutor)driver.getDriver()).executeScript(resize);
+            Thread.sleep(100);
+        } finally {
+            File f = driver.getScreenshotTaker().getScreenshotAs(OutputType.FILE);
+            final File imgFile = new File(driverDir, page.getId() + ".png");
+            FileUtils.copyFile(f, imgFile);
+            f.delete();
+        }
+    }
+
+    private List<Page> getTestPagesFromOA() throws MalformedURLException {
+        final List<Page> pages = new ArrayList<Page>();
+        if (smokeTestFile.exists()) {
+            pages.addAll(getPages(smokeTestFile.toURL()));
+        }
+        pages.addAll(pages());
+        return pages;
+    }
+
+    private void configureFirefox(List<DriverConfig> drivers) {
+        try {
+            DriverConfig firefox = new DriverConfig(new FirefoxDriver(), "firefox");
+            drivers.add(firefox);
+            addDriver(firefox);
+        } catch (Exception e) {
+            getLog().error("Failed adding FirefoxDriver: ", e);
+        }
+    }
+
+    private void configureChrome(List<DriverConfig> drivers) {
+        try {
+            configureChromeDriver();
+            DriverConfig chrome = new DriverConfig(new ChromeDriver(), "chrome");
+            drivers.add(chrome);
+            addDriver(chrome);
+        } catch (Exception e) {
+            getLog().error("Failed adding ChromiumDriver: ", e);
+        }
+    }
+
+    private void configureIEDriver(List<DriverConfig> drivers) {
+        if (System.getProperty("os.name").toLowerCase().contains("win")) {
+            try {
+                DesiredCapabilities ieCapabilities = DesiredCapabilities.internetExplorer();
+                ieCapabilities.setCapability(InternetExplorerDriver.INTRODUCE_FLAKINESS_BY_IGNORING_SECURITY_DOMAINS, true);
+                DriverConfig ie = new DriverConfig(new InternetExplorerDriver(ieCapabilities), "ie");
+                drivers.add(ie);
+                addDriver(ie);
+            } catch (Exception e) {
+                getLog().error("Failed adding InternetExplorerDriver: ", e);
+            }
         }
     }
 
