@@ -92,6 +92,10 @@
 	    <xsl:comment>Aksess error pages</xsl:comment>
             <xsl:copy-of select="error-page"/>
 
+        <xsl:comment>Project jsp-config</xsl:comment>
+            <xsl:copy-of select="$doc/jsp-config"/>
+
+
         </web-app>
     </xsl:template>
 </xsl:stylesheet>
