@@ -17,12 +17,19 @@
 package no.kantega.aksess;
 
 
+import org.eclipse.jetty.server.Handler;
+import org.eclipse.jetty.server.Request;
 import org.eclipse.jetty.server.Server;
+import org.eclipse.jetty.server.handler.AbstractHandler;
+import org.eclipse.jetty.server.handler.HandlerCollection;
 import org.eclipse.jetty.util.resource.JarResource;
 import org.eclipse.jetty.util.resource.Resource;
 import org.eclipse.jetty.util.resource.ResourceCollection;
 import org.eclipse.jetty.webapp.WebAppContext;
 
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.swing.*;
 import java.io.File;
 import java.io.IOException;
@@ -165,7 +172,10 @@ public class JettyStarter {
         }
 
         server = new Server(port);
-        server.setHandler(context);
+
+        HandlerCollection collection = new HandlerCollection();
+        collection.setHandlers(new Handler[] {new ContextPathHandler(), context});
+        server.setHandler(collection);
         server.start();
 
         if(openBrowser) {
@@ -288,5 +298,16 @@ public class JettyStarter {
 
     public String getContextPath() {
         return contextPath;
+    }
+
+    private class ContextPathHandler extends AbstractHandler {
+        public void handle(String target, Request baseRequest, HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+            if("/oa-maven-plugin-context-path".equals(target)) {
+                response.setContentType("text/plain;charset=utf-8");
+                response.setContentLength(contextPath.getBytes().length);
+                response.getOutputStream().write(contextPath.getBytes());
+                baseRequest.setHandled(true);
+            }
+        }
     }
 }
