@@ -1,0 +1,35 @@
+<html>
+<head>
+    <style type="text/css">
+        img {
+            border: 1px solid gray;
+        }
+        body {
+            font-family:sans-serif;
+            background-color: #d3d3d3;
+        }
+    </style>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /> 
+</head>
+
+<body>
+
+<ul>
+#foreach($page in $pages)
+  <li><a href="#${page.id}">${page.title} (${page.category})</a></li>
+#end
+</ul>
+    #foreach($page in $pages)
+    <a name="${page.id}"></a>
+    <h2>${page.title} (${page.category})</h2>
+    <p>
+        #foreach($d in $drivers)
+            <a href="../${d.id}/index.html#${page.id}" #if($driver.id == $d.id) style="font-weight:bold;" #end >${d.id}</a> |
+        #end
+    </p>
+    <p><a href="${page.url}">${page.url}</a></p>    
+    <img src="${page.id}.png"><br>
+    #end
+
+</body>
+</html>
