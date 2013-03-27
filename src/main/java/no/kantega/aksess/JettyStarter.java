@@ -49,9 +49,9 @@ public class JettyStarter {
     private String contextPath;
     private File webXml;
     private File aksessDir;
-    private Map props = new HashMap();
+    private Map<String, String> props = new HashMap<>();
     private File workDir;
-    private List additionalBases = new ArrayList();
+    private List<String> additionalBases = new ArrayList<>();
     private List<File> dependencyFiles;
     private boolean openBrowser;
     private WebAppContext context;
@@ -62,8 +62,7 @@ public class JettyStarter {
     public static void main(String[] args) throws Exception {
         final JettyStarter js = new JettyStarter();
 
-        for(int i = 0; i < args.length; i++) {
-            String arg = args[i];
+        for (String arg : args) {
             System.out.println("arg: " + arg);
         }
         if(args.length != 4) {
@@ -128,7 +127,7 @@ public class JettyStarter {
         if(webXml != null) {
             context.setDescriptor(webXml.getAbsolutePath());
         }
-        List bases = new ArrayList();
+        List<String> bases = new ArrayList<>();
         bases.add(srcDir.getAbsolutePath());
         if(aksessDir != null) {
             bases.add(aksessDir.getAbsolutePath());
@@ -198,7 +197,7 @@ public class JettyStarter {
                 Class fileMgr = Class.forName("com.apple.eio.FileManager");
                 Method openURL = fileMgr.getDeclaredMethod("openURL",
                         new Class[] {String.class});
-                openURL.invoke(null, new Object[] {url});
+                openURL.invoke(null, url);
             }
             else if (osName.startsWith("Windows"))
                 Runtime.getRuntime().exec("rundll32 url.dll,FileProtocolHandler " + url);
@@ -267,7 +266,7 @@ public class JettyStarter {
         this.workDir = workDir;
     }
 
-    public List getAdditionalBases() {
+    public List<String> getAdditionalBases() {
         return additionalBases;
     }
 

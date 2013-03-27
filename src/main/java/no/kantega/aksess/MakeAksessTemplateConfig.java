@@ -168,7 +168,7 @@ public class MakeAksessTemplateConfig {
     private static void setIdNameAndDatabaseId(JCodeModel jCodeModel, String databaseId, String id, String name, JDefinedClass templateClass) {
         templateClass.field(STATIC_FINAL, String.class, "id", JExpr.lit(id));
         templateClass.field(STATIC_FINAL, String.class, "name", JExpr.lit(name));
-        templateClass.field(STATIC_FINAL, jCodeModel.INT, "databaseID", JExpr.lit(Integer.parseInt(databaseId)));
+        templateClass.field(STATIC_FINAL, jCodeModel.INT, "databaseId", JExpr.lit(Integer.parseInt(databaseId)));
     }
 
     private static String cleanFieldName(String allowedParentId) {

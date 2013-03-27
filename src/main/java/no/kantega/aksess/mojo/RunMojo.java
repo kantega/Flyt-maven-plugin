@@ -38,7 +38,10 @@ import org.codehaus.plexus.components.io.fileselectors.IncludeExcludeFileSelecto
 
 import java.io.File;
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 /**
  * @goal run
@@ -174,9 +177,9 @@ public class RunMojo extends AbstractMojo {
         }
 
 
-        for(Iterator i = project.getDependencyArtifacts().iterator(); i.hasNext(); ) {
-            Artifact a = (Artifact) i.next();
-            if(a.getType().equals("war")) {
+        for (Object o : project.getDependencyArtifacts()) {
+            Artifact a = (Artifact) o;
+            if (a.getType().equals("war")) {
                 wars.add(a);
             }
         }
@@ -230,9 +233,9 @@ public class RunMojo extends AbstractMojo {
                         remoteRepositories,
                         artifactMetadataSource, new ScopeArtifactFilter( Artifact.SCOPE_RUNTIME ));
 
-                for(Iterator i = result.getArtifacts().iterator(); i.hasNext(); ) {
-                    Artifact artifact = (Artifact) i.next();
-                    if (artifact.getType().equals("jar") && (!Artifact.SCOPE_PROVIDED.equals(artifact.getScope())) && (!Artifact.SCOPE_TEST.equals( artifact.getScope())))  {
+                for (Object o : result.getArtifacts()) {
+                    Artifact artifact = (Artifact) o;
+                    if (artifact.getType().equals("jar") && (!Artifact.SCOPE_PROVIDED.equals(artifact.getScope())) && (!Artifact.SCOPE_TEST.equals(artifact.getScope()))) {
                         dependencyFiles.add(artifact.getFile());
                         dependencyIds.add(artifact.getDependencyConflictId());
                     }
@@ -240,10 +243,10 @@ public class RunMojo extends AbstractMojo {
             }
             {
 
-                for(Iterator i = project.getArtifacts().iterator(); i.hasNext(); ) {
-                    Artifact artifact = (Artifact) i.next();
-                    if (artifact.getType().equals("jar") && (!Artifact.SCOPE_PROVIDED.equals(artifact.getScope())) && (!Artifact.SCOPE_TEST.equals( artifact.getScope())))  {
-                        if(!dependencyIds.contains(artifact.getDependencyConflictId())) {
+                for (Object o : project.getArtifacts()) {
+                    Artifact artifact = (Artifact) o;
+                    if (artifact.getType().equals("jar") && (!Artifact.SCOPE_PROVIDED.equals(artifact.getScope())) && (!Artifact.SCOPE_TEST.equals(artifact.getScope()))) {
+                        if (!dependencyIds.contains(artifact.getDependencyConflictId())) {
                             dependencyFiles.add(artifact.getFile());
                         }
 
