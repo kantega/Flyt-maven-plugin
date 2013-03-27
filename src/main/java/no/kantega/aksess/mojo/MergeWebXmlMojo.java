@@ -16,28 +16,20 @@
 
 package no.kantega.aksess.mojo;
 
-import org.apache.maven.plugin.AbstractMojo;
-import org.apache.maven.plugin.MojoExecutionException;
-import org.apache.maven.plugin.MojoFailureException;
-import org.apache.maven.project.MavenProject;
-import org.apache.maven.project.MavenProjectHelper;
-import org.apache.maven.artifact.metadata.ArtifactMetadataSource;
+import no.kantega.aksess.MergeWebXml;
 import org.apache.maven.artifact.Artifact;
 import org.apache.maven.artifact.resolver.ArtifactNotFoundException;
 import org.apache.maven.artifact.resolver.ArtifactResolutionException;
 import org.apache.maven.artifact.versioning.VersionRange;
-import org.codehaus.plexus.archiver.ArchiverException;
-import org.codehaus.plexus.archiver.jar.JarArchiver;
+import org.apache.maven.plugin.AbstractMojo;
+import org.apache.maven.plugin.MojoExecutionException;
+import org.apache.maven.plugin.MojoFailureException;
 import org.xml.sax.SAXException;
 
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.TransformerException;
 import java.io.File;
 import java.io.IOException;
-import java.net.URL;
-
-import no.kantega.aksess.MergeWebXml;
-
-import javax.xml.transform.TransformerException;
-import javax.xml.parsers.ParserConfigurationException;
 
 /**
  * @goal mergewebxml
@@ -68,15 +60,11 @@ public class MergeWebXmlMojo extends AbstractMojo {
     /** @parameter expression="${project.remoteArtifactRepositories}" */
     private java.util.List remoteRepositories;
 
-    /** @component */
-    private ArtifactMetadataSource artifactMetadataSource;
-
     /**
      * @parameter
      * @required
      */
     private String aksessVersion;
-    private static final String WEB_XML = "WEB-INF/web.xml";
 
     public void execute() throws MojoExecutionException, MojoFailureException {
 
@@ -98,17 +86,7 @@ public class MergeWebXmlMojo extends AbstractMojo {
                 });
             }
 
-        } catch (IOException e) {
-            throw new MojoExecutionException(e.getMessage(), e);
-        } catch (TransformerException e) {
-            throw new MojoExecutionException(e.getMessage(), e);
-        } catch (ParserConfigurationException e) {
-            throw new MojoExecutionException(e.getMessage(), e);
-        } catch (SAXException e) {
-            throw new MojoExecutionException(e.getMessage(), e);
-        } catch (ArtifactNotFoundException e) {
-            throw new MojoExecutionException(e.getMessage(), e);
-        } catch (ArtifactResolutionException e) {
+        } catch (IOException | TransformerException | ParserConfigurationException | SAXException | ArtifactNotFoundException | ArtifactResolutionException e) {
             throw new MojoExecutionException(e.getMessage(), e);
         }
 

@@ -169,9 +169,7 @@ public class RunMojo extends AbstractMojo {
             aksessWarArtifact = artifactFactory.createDependencyArtifact("org.kantega.openaksess", "openaksess-webapp", VersionRange.createFromVersion(aksessVersion), "war", null, "compile");
             resolver.resolve(aksessWarArtifact, remoteRepositories, localRepository);
             wars.add(aksessWarArtifact);
-        } catch (ArtifactResolutionException e) {
-            throw new MojoExecutionException(e.getMessage(), e);
-        } catch (ArtifactNotFoundException e) {
+        } catch (ArtifactResolutionException | ArtifactNotFoundException e) {
             throw new MojoExecutionException(e.getMessage(), e);
         }
 
@@ -253,13 +251,7 @@ public class RunMojo extends AbstractMojo {
                 }
             }
 
-        } catch (ProjectBuildingException e) {
-            throw new MojoExecutionException(e.getMessage(), e);
-        } catch (ArtifactNotFoundException e) {
-            throw new MojoExecutionException(e.getMessage(), e);
-        } catch (ArtifactResolutionException e) {
-            throw new MojoExecutionException(e.getMessage(), e);
-        } catch (InvalidDependencyVersionException e) {
+        } catch (ProjectBuildingException | InvalidDependencyVersionException | ArtifactResolutionException | ArtifactNotFoundException e) {
             throw new MojoExecutionException(e.getMessage(), e);
         }
 
@@ -363,9 +355,7 @@ public class RunMojo extends AbstractMojo {
                 try {
                     checkInput();
                     Thread.sleep(100);
-                } catch (IOException e) {
-                    getLog().error(e);
-                } catch (InterruptedException e) {
+                } catch (IOException | InterruptedException e) {
                     getLog().error(e);
                 }
             }
