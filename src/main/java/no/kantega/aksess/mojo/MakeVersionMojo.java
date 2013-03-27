@@ -16,16 +16,14 @@
 
 package no.kantega.aksess.mojo;
 
+import no.kantega.aksess.MakeVersion;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 
+import javax.xml.parsers.ParserConfigurationException;
 import java.io.File;
 import java.io.FileNotFoundException;
-
-import no.kantega.aksess.MakeVersion;
-
-import javax.xml.parsers.ParserConfigurationException;
 
 /**
  * @goal makeversion
@@ -61,9 +59,7 @@ public class MakeVersionMojo extends AbstractMojo {
         try {
             versionFile.getParentFile().mkdirs();
             MakeVersion.main(new String[] {entriesFile.getAbsolutePath(), versionFile.getAbsolutePath(), version});
-        } catch (ParserConfigurationException e) {
-            throw new MojoExecutionException(e.getMessage(), e);
-        } catch (FileNotFoundException e) {
+        } catch (ParserConfigurationException | FileNotFoundException e) {
             throw new MojoExecutionException(e.getMessage(), e);
         }
 

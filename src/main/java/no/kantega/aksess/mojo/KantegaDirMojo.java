@@ -16,31 +16,21 @@
 
 package no.kantega.aksess.mojo;
 
+import org.apache.commons.io.FileUtils;
+import org.apache.maven.artifact.metadata.ArtifactMetadataSource;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
-import org.apache.maven.artifact.metadata.ArtifactMetadataSource;
-import org.apache.maven.artifact.versioning.VersionRange;
-import org.apache.maven.artifact.Artifact;
-import org.apache.maven.artifact.resolver.ArtifactResolutionException;
-import org.apache.maven.artifact.resolver.ArtifactNotFoundException;
 import org.apache.maven.project.MavenProject;
-import org.apache.commons.io.IOUtils;
-import org.apache.commons.io.FileUtils;
-import org.codehaus.plexus.archiver.jar.JarArchiver;
-import org.codehaus.plexus.archiver.zip.ZipUnArchiver;
-import org.codehaus.plexus.archiver.ArchiverException;
-import org.codehaus.plexus.components.io.fileselectors.FileSelector;
-import org.codehaus.plexus.components.io.fileselectors.FileInfo;
 
-import java.io.*;
-import java.util.Properties;
+import java.io.File;
+import java.io.FileFilter;
+import java.io.IOException;
 
 /**
  * @goal kantegadir
  * @phase process-resources
  * @requiresProject
-
  */
 public class KantegaDirMojo extends AbstractMojo {
 
