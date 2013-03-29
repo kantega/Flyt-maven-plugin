@@ -30,6 +30,7 @@ public class MakeAksessTemplateConfigMojo extends AbstractMojo {
     /**
      * @parameter expression="${project.groupId}"
      * @required
+     * @readonly
      */
     private String projectPackage;
 

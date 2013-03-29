@@ -18,8 +18,9 @@ import static org.apache.commons.lang3.StringUtils.isNotBlank;
 public class MakeAksessTemplateConfig {
 
     private static final int STATIC_FINAL = JMod.PUBLIC | JMod.STATIC | JMod.FINAL;
+    public static final String AKSESS_TEMPLATE_CONFIG_JAVA = "AksessTemplateConfig";
 
-    public static void createAksessTemplateConfigSources(File aksessTemplateConfigXml, String projectPackage, File destinationFolder ) throws ParserConfigurationException, IOException, SAXException, JClassAlreadyExistsException, XPathExpressionException {
+    public static File createAksessTemplateConfigSources(File aksessTemplateConfigXml, String projectPackage, File destinationFolder ) throws ParserConfigurationException, IOException, SAXException, JClassAlreadyExistsException, XPathExpressionException {
         DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
         DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
         Document doc = dBuilder.parse(aksessTemplateConfigXml);
@@ -29,7 +30,7 @@ public class MakeAksessTemplateConfig {
 
         JCodeModel jCodeModel = new JCodeModel();
         JPackage jp = jCodeModel._package(projectPackage);
-        JDefinedClass jc = jp._class(JMod.PUBLIC | JMod.FINAL, "AksessTemplateConfig");
+        JDefinedClass jc = jp._class(JMod.PUBLIC | JMod.FINAL, AKSESS_TEMPLATE_CONFIG_JAVA);
 
         setSites(doc,xpath, jCodeModel, jc);
 
@@ -42,6 +43,16 @@ public class MakeAksessTemplateConfig {
 
         setDisplayTemplates(doc, xpath, jCodeModel, jc);
         jCodeModel.build(destinationFolder);
+
+        File generatedFile = new File(destinationFolder, projectPackage.replaceAll("\\.", "/") + "/" + AKSESS_TEMPLATE_CONFIG_JAVA + ".java");
+        throwIfDoesNotExist(generatedFile);
+        return generatedFile;
+    }
+
+    private static void throwIfDoesNotExist(File generatedFile) {
+        if(!generatedFile.exists()){
+            throw new IllegalStateException(generatedFile.getAbsolutePath() + " was not generated not exist!");
+        }
     }
 
     private static void setDisplayTemplates(Document doc, XPath xpath, JCodeModel jCodeModel, JDefinedClass jc) throws JClassAlreadyExistsException, XPathExpressionException {

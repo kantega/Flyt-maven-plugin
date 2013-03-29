@@ -16,7 +16,9 @@
 
 package no.kantega.aksess.mojo;
 
+import com.sun.codemodel.JClassAlreadyExistsException;
 import no.kantega.aksess.JettyStarter;
+import no.kantega.aksess.MakeAksessTemplateConfig;
 import org.apache.maven.artifact.Artifact;
 import org.apache.maven.artifact.metadata.ArtifactMetadataSource;
 import org.apache.maven.artifact.resolver.ArtifactNotFoundException;
@@ -35,13 +37,18 @@ import org.codehaus.plexus.archiver.ArchiverException;
 import org.codehaus.plexus.archiver.UnArchiver;
 import org.codehaus.plexus.components.io.fileselectors.FileSelector;
 import org.codehaus.plexus.components.io.fileselectors.IncludeExcludeFileSelector;
+import org.xml.sax.SAXException;
 
+import javax.tools.*;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.xpath.XPathExpressionException;
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.nio.file.*;
+import java.util.*;
+
+import static java.nio.file.StandardWatchEventKinds.ENTRY_MODIFY;
+import static java.util.Arrays.asList;
 
 /**
  * @goal run
@@ -71,6 +78,11 @@ public class RunMojo extends AbstractMojo {
      */
     private String contextPath;
 
+    /**
+     * @parameter expression="${project.groupId}"
+     * @readonly
+     */
+    private String projectPackage;
 
     /**
      * @parameter default-value="${project.build.Directory}/aksessrun/jettywork"
@@ -86,6 +98,13 @@ public class RunMojo extends AbstractMojo {
      * @parameter default-value="${basedir}/src/conf/aksess-webapp.conf"
      */
     private File aksessConfigFile;
+
+    /**
+     * Path to the module containing all java files. E.g. ../core
+     * @parameter
+     * @readonly
+     */
+    private File coreModulePath;
 
     /**
      * The maven project.
@@ -161,11 +180,10 @@ public class RunMojo extends AbstractMojo {
     private int port;
     private JettyStarter starter;
 
-
     public void execute() throws MojoExecutionException, MojoFailureException {
         getLog().info("Running Jetty");
 
-        List<Artifact> wars = new ArrayList<Artifact>();
+        List<Artifact> wars = new ArrayList<>();
 
         final Artifact aksessWarArtifact;
         try {
@@ -201,28 +219,22 @@ public class RunMojo extends AbstractMojo {
             }
         }
 
-
-
-
         for(Artifact artifact : wars) {
             File dir = unpackArtifact(artifact);
             starter.getAdditionalBases().add(dir.getAbsolutePath());
         }
 
-
-
-        List<File> dependencyFiles = new ArrayList<File>();
+        List<File> dependencyFiles = new ArrayList<>();
         dependencyFiles.add(classesDirectory);
-
 
         try {
 
-            Set<String> dependencyIds = new HashSet<String>();
+            Set<String> dependencyIds = new HashSet<>();
             {
                 final MavenProject aksessWarProject = mavenProjectBuilder.buildFromRepository(aksessWarArtifact, remoteRepositories, localRepository);
 
 
-                Set<Artifact> artifacts = new HashSet<Artifact>();
+                Set<Artifact> artifacts = new HashSet<>();
                 artifacts.addAll(aksessWarProject.createArtifacts(artifactFactory, null, null));
 
 
@@ -270,6 +282,17 @@ public class RunMojo extends AbstractMojo {
 
         configureStarter(starter);
 
+        addRestartConsoleScanner();
+        addAksessTemplateConfigChangeListener();
+
+        try {
+            starter.start();
+        } catch (Exception e) {
+            throw new MojoExecutionException(e.getMessage(), e);
+        }
+    }
+
+    private void addRestartConsoleScanner() {
         Thread t = new ConsoleScanner() {
             protected void restart() {
                 try {
@@ -281,35 +304,79 @@ public class RunMojo extends AbstractMojo {
             }
         };
         t.start();
+    }
 
-        try {
-            starter.start();
-        } catch (Exception e) {
-            throw new MojoExecutionException(e.getMessage(), e);
+    private void addAksessTemplateConfigChangeListener() {
+        if(coreModulePath != null && projectPackage != null){
+            getLog().info("Watching aksess-templateconfig.xml");
+            new Thread(new Runnable() {
+
+                @Override
+                public void run() {
+                    try {
+                        Path templateConfigDir = Paths.get(srcDir.getAbsolutePath(), "/WEB-INF");
+                        File generatedSourcesDir = new File(coreModulePath, "/target/generated-sources/aksess");
+                        File targetClassFile = new File(coreModulePath, "target/classes/");
+
+
+                        WatchService watcher = FileSystems.getDefault().newWatchService();
+                        WatchKey watchKey = templateConfigDir.register(watcher, ENTRY_MODIFY);
+                        loopOverWatchKeys(templateConfigDir, generatedSourcesDir, targetClassFile, watcher);
+                    } catch (Exception e) {
+                        getLog().error(e);
+                    }
+                }
+
+                private void loopOverWatchKeys(Path templateConfigDir, File generatedSourcesDir, File targetClassFile, WatchService watcher) {
+                    for (;;) {
+                        try {
+                            WatchKey key = watcher.take();
+                            for (WatchEvent<?> event : key.pollEvents()) {
+                                WatchEvent<Path> ev = (WatchEvent<Path>)event;
+                                Path filename = ev.context();
+                                handleModifiedFile(templateConfigDir, generatedSourcesDir, targetClassFile, filename);
+                            }
+                            boolean valid = key.reset();
+                            if (!valid) {
+                                break;
+                            }
+                        } catch (Exception e) {
+                            getLog().error(e);
+                        }
+                    }
+                }
+
+                private void handleModifiedFile(Path templateConfigDir, File generatedSourcesDir, File targetClassFile, Path filename) throws ParserConfigurationException, IOException, SAXException, JClassAlreadyExistsException, XPathExpressionException {
+                    if(filename.getFileName().toString().equals("aksess-templateconfig.xml")){
+                        getLog().info("aksess-templateconfig.xml changed, recompiling to " + targetClassFile);
+
+                        Path templateConfig = templateConfigDir.resolve(filename);
+                        File aksessTemplateConfigSources = MakeAksessTemplateConfig.createAksessTemplateConfigSources(
+                                templateConfig.toFile(), projectPackage, generatedSourcesDir);
+
+                        JavaCompiler compiler = ToolProvider.getSystemJavaCompiler();
+                        MyDiagnosticListener listener = new MyDiagnosticListener();
+                        StandardJavaFileManager fileManager  = compiler.getStandardFileManager(listener, null, null);
+                        Iterable<? extends JavaFileObject> fileObjects =  fileManager.getJavaFileObjects(
+                                aksessTemplateConfigSources);
+
+                        JavaCompiler.CompilationTask task = compiler.getTask(null, fileManager, listener,
+                                asList("-d", targetClassFile.getAbsolutePath()), null, fileObjects);
+
+                        boolean success  = task.call();
+                        if(!success){
+                            getLog().error("Compilation failed!");
+                        } else {
+                            getLog().info("Compilation success!");
+                        }
+                    }
+                }
+            }).start();
         }
-
-
     }
 
     protected void configureStarter(JettyStarter starter) {
         starter.setOpenBrowser(true);
-    }
-
-    private void waitForUnpack(Artifact a) {
-        long last = a.getFile().lastModified();
-        for(int i = 0; i < 10; i++) {
-            try {
-                Thread.sleep(200);
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
-            }
-
-            if(last == a.getFile().lastModified()) {
-                break;
-            } else {
-                last = a.getFile().lastModified();
-            }
-        }
     }
 
     private File unpackArtifact(Artifact artifact) throws MojoExecutionException {
@@ -407,6 +474,20 @@ public class RunMojo extends AbstractMojo {
             }
         } catch (IOException e) {
             getLog().error("Error emptying buffer", e);
+        }
+    }
+
+    private class MyDiagnosticListener implements DiagnosticListener<JavaFileObject> {
+        public void report(Diagnostic diagnostic) {
+            getLog().error("Code -> " +  diagnostic.getCode());
+            getLog().error("Column Number -> " + diagnostic.getColumnNumber());
+            getLog().error("End Position -> " + diagnostic.getEndPosition());
+            getLog().error("Kind -> " + diagnostic.getKind());
+            getLog().error("Line Number -> " + diagnostic.getLineNumber());
+            getLog().error("Message -> "+ diagnostic.getMessage(Locale.ENGLISH));
+            getLog().error("Position -> " + diagnostic.getPosition());
+            getLog().error("Source -> " + diagnostic.getSource());
+            getLog().error("Start Position -> " + diagnostic.getStartPosition());
         }
     }
 }
