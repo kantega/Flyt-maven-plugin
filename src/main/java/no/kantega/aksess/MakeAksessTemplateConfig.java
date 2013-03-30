@@ -44,6 +44,10 @@ public class MakeAksessTemplateConfig {
             "try", "void", "volatile", "while" );
 
     public static File createAksessTemplateConfigSources(File aksessTemplateConfigXml, String projectPackage, File destinationFolder ) throws MojoExecutionException {
+        return createAksessTemplateConfigSources(aksessTemplateConfigXml, projectPackage, destinationFolder, false);
+    }
+
+    public static File createAksessTemplateConfigSources(File aksessTemplateConfigXml, String projectPackage, File destinationFolder, boolean includeAllAttributes ) throws MojoExecutionException {
         try {
             Document doc = getDocument(aksessTemplateConfigXml);
 
@@ -58,7 +62,7 @@ public class MakeAksessTemplateConfig {
             setDocumentTypes(doc, xpath, jCodeModel, jc);
 
             File templates = getTemplateRootDir(aksessTemplateConfigXml);
-            setContentTemplates(doc, xpath, jCodeModel, jc, templates);
+            setContentTemplates(doc, xpath, jCodeModel, jc, templates, includeAllAttributes);
             setMetaDateTemplates(doc, xpath, jCodeModel, jc, templates);
 
             setDisplayTemplates(doc, xpath, jCodeModel, jc);
@@ -122,70 +126,77 @@ public class MakeAksessTemplateConfig {
         }
     }
 
-    private static void setContentTemplates(Document doc, XPath xpath, JCodeModel jCodeModel, JDefinedClass jc, File templates) throws JClassAlreadyExistsException, XPathExpressionException, ParserConfigurationException, IOException, SAXException {
+    private static void setContentTemplates(Document doc, XPath xpath, JCodeModel jCodeModel, JDefinedClass jc, File templates, boolean includeAllAttributes) throws JClassAlreadyExistsException, XPathExpressionException, ParserConfigurationException, IOException, SAXException {
         JDefinedClass contentTemplatesClass = jc._class(STATIC_FINAL, "contentTemplates");
         NodeList contentTemplates = getNodeList(doc, xpath, "contentTemplates", "contentTemplate");
-        addContentTemplates(jCodeModel, contentTemplatesClass, contentTemplates, templates);
+        addContentTemplates(jCodeModel, contentTemplatesClass, contentTemplates, templates, includeAllAttributes);
     }
 
     private static void setMetaDateTemplates(Document doc, XPath xpath, JCodeModel jCodeModel, JDefinedClass jc, File templates) throws JClassAlreadyExistsException, XPathExpressionException, ParserConfigurationException, IOException, SAXException {
         JDefinedClass contentTemplatesClass = jc._class(STATIC_FINAL, "metaDataTemplates");
         NodeList contentTemplates = getNodeList(doc, xpath, "metadataTemplates", "contentTemplate");
-        addContentTemplates(jCodeModel, contentTemplatesClass, contentTemplates, templates);
+        addContentTemplates(jCodeModel, contentTemplatesClass, contentTemplates, templates, false);
     }
 
-    private static void addContentTemplates(JCodeModel jCodeModel, JDefinedClass contentTemplatesClass, NodeList contentTemplates, File templates) throws JClassAlreadyExistsException, ParserConfigurationException, IOException, SAXException, XPathExpressionException {
+    private static void addContentTemplates(JCodeModel jCodeModel, JDefinedClass contentTemplatesClass, NodeList contentTemplates, File templates, boolean includeAllAttributes) throws JClassAlreadyExistsException, ParserConfigurationException, IOException, SAXException, XPathExpressionException {
         for(int i = 0; i < contentTemplates.getLength(); i++){
             Element contentTemplate = (Element) contentTemplates.item(i);
             String databaseId = contentTemplate.getAttribute("databaseId");
             String id = contentTemplate.getAttribute("id");
-            String contentType = contentTemplate.getAttribute("contentType");
-            String expireAction = contentTemplate.getAttribute("expireAction");
-            String expireMonths = contentTemplate.getAttribute("expireMonths");
-            String isDefaultSearchable = contentTemplate.getAttribute("isDefaultSearchable");
-            String isHearingEnabled = contentTemplate.getAttribute("isHearingEnabled");
-            String isSearchable = contentTemplate.getAttribute("isSearchable");
-            String keepVersions = contentTemplate.getAttribute("keepVersions");
-
-
-            String name = getSingleValueFromTagWithName("name", contentTemplate);
-            String templateFile = getSingleValueFromTagWithName("templateFile", contentTemplate);
-            String defaultPageUrlAlias = getSingleValueFromTagWithName("defaultPageUrlAlias", contentTemplate);
-            String documentType = getAttributeFromTagWithName("documentType", "id", contentTemplate);
-            String documentTypeForChildren = getAttributeFromTagWithName("documentTypeForChildren", "id", contentTemplate);
-
 
             JDefinedClass contentTemplateClass = contentTemplatesClass._class(STATIC_FINAL, cleanFieldName(id));
+            String name = getSingleValueFromTagWithName("name", contentTemplate);
             setIdNameAndDatabaseId(jCodeModel, databaseId, id, name, contentTemplateClass);
-            contentTemplateClass.field(STATIC_FINAL, String.class, "templateFile", JExpr.lit(templateFile));
+            String contentType = contentTemplate.getAttribute("contentType");
             contentTemplateClass.field(STATIC_FINAL, String.class, "contentType", JExpr.lit(contentType));
-            if (isNotBlank(expireAction)){
-                contentTemplateClass.field(STATIC_FINAL, jCodeModel.INT, "expireAction", JExpr.lit(Integer.parseInt(expireAction)));
-            }
-            if (isNotBlank(expireMonths)){
-                contentTemplateClass.field(STATIC_FINAL, jCodeModel.INT, "expireMonths", JExpr.lit(Integer.parseInt(expireMonths)));
-            }
-            contentTemplateClass.field(STATIC_FINAL, jCodeModel.BOOLEAN, "isDefaultSearchable", JExpr.lit(isDefaultSearchable == null || Boolean.parseBoolean(isDefaultSearchable)));
-            contentTemplateClass.field(STATIC_FINAL, jCodeModel.BOOLEAN, "isSearchable", JExpr.lit(isSearchable == null || Boolean.parseBoolean(isSearchable)));
-            contentTemplateClass.field(STATIC_FINAL, jCodeModel.BOOLEAN, "isHearingEnabled", JExpr.lit(Boolean.parseBoolean(isHearingEnabled)));
-            if (isNotBlank(keepVersions)){
-                contentTemplateClass.field(STATIC_FINAL, jCodeModel.INT, "keepVersions", JExpr.lit(Integer.parseInt(keepVersions)));
-            }
 
-            if (isNotBlank(defaultPageUrlAlias)){
-                contentTemplateClass.field(STATIC_FINAL, String.class, "defaultPageUrlAlias", JExpr.lit(defaultPageUrlAlias));
-            }
+            addClassAndFieldsForSubNodesWithId(contentTemplate, contentTemplateClass, "associationCategories", "associationCategory");
 
+            String templateFile = getSingleValueFromTagWithName("templateFile", contentTemplate);
+            String documentType = getAttributeFromTagWithName("documentType", "id", contentTemplate);
             if (isNotBlank(documentType)){
                 contentTemplateClass.field(STATIC_FINAL, String.class, "documentType", JExpr.lit(documentType));
             }
-            if (isNotBlank(documentTypeForChildren)){
-                contentTemplateClass.field(STATIC_FINAL, String.class, "documentTypeForChildren", JExpr.lit(documentTypeForChildren));
-            }
-            addClassAndFieldsForSubNodesWithId(contentTemplate, contentTemplateClass, "allowedParentTemplates", "contentTemplate");
-            addClassAndFieldsForSubNodesWithId(contentTemplate, contentTemplateClass, "associationCategories", "associationCategory");
 
             addContentTemplateAttributes(templates, contentTemplateClass, templateFile);
+            contentTemplateClass.field(STATIC_FINAL, String.class, "templateFile", JExpr.lit(templateFile));
+
+            if (includeAllAttributes) {
+                String expireAction = contentTemplate.getAttribute("expireAction");
+                if (isNotBlank(expireAction)){
+                    contentTemplateClass.field(STATIC_FINAL, jCodeModel.INT, "expireAction", JExpr.lit(Integer.parseInt(expireAction)));
+                }
+
+                String expireMonths = contentTemplate.getAttribute("expireMonths");
+                if (isNotBlank(expireMonths)){
+                    contentTemplateClass.field(STATIC_FINAL, jCodeModel.INT, "expireMonths", JExpr.lit(Integer.parseInt(expireMonths)));
+                }
+
+                String isDefaultSearchable = contentTemplate.getAttribute("isDefaultSearchable");
+                contentTemplateClass.field(STATIC_FINAL, jCodeModel.BOOLEAN, "isDefaultSearchable", JExpr.lit(isDefaultSearchable == null || Boolean.parseBoolean(isDefaultSearchable)));
+
+                String isSearchable = contentTemplate.getAttribute("isSearchable");
+                contentTemplateClass.field(STATIC_FINAL, jCodeModel.BOOLEAN, "isSearchable", JExpr.lit(isSearchable == null || Boolean.parseBoolean(isSearchable)));
+
+                String isHearingEnabled = contentTemplate.getAttribute("isHearingEnabled");
+                contentTemplateClass.field(STATIC_FINAL, jCodeModel.BOOLEAN, "isHearingEnabled", JExpr.lit(Boolean.parseBoolean(isHearingEnabled)));
+
+                String keepVersions = contentTemplate.getAttribute("keepVersions");
+                if (isNotBlank(keepVersions)){
+                    contentTemplateClass.field(STATIC_FINAL, jCodeModel.INT, "keepVersions", JExpr.lit(Integer.parseInt(keepVersions)));
+                }
+
+                String defaultPageUrlAlias = getSingleValueFromTagWithName("defaultPageUrlAlias", contentTemplate);
+                if (isNotBlank(defaultPageUrlAlias)){
+                    contentTemplateClass.field(STATIC_FINAL, String.class, "defaultPageUrlAlias", JExpr.lit(defaultPageUrlAlias));
+                }
+
+                String documentTypeForChildren = getAttributeFromTagWithName("documentTypeForChildren", "id", contentTemplate);
+                if (isNotBlank(documentTypeForChildren)){
+                    contentTemplateClass.field(STATIC_FINAL, String.class, "documentTypeForChildren", JExpr.lit(documentTypeForChildren));
+                }
+                addClassAndFieldsForSubNodesWithId(contentTemplate, contentTemplateClass, "allowedParentTemplates", "contentTemplate");
+            }
         }
     }
 
@@ -224,12 +235,14 @@ public class MakeAksessTemplateConfig {
     }
 
     private static void addClassAndFieldsForSubNodesWithId(Element parentNode, JDefinedClass parentClass, String containingNode, String targetNodeName) throws JClassAlreadyExistsException {
-        JDefinedClass allowedParentTemplatesClass = parentClass._class(STATIC_FINAL, containingNode);
         NodeList allowedParentTemplates = parentNode.getElementsByTagName(targetNodeName);
-        for(int j = 0; j < allowedParentTemplates.getLength(); j++){
-            Element allowedParent = (Element) allowedParentTemplates.item(j);
-            String allowedParentId = allowedParent.getAttribute("id");
-            allowedParentTemplatesClass.field(STATIC_FINAL, String.class, cleanFieldName(allowedParentId), JExpr.lit(allowedParentId));
+        if (allowedParentTemplates.getLength() > 0) {
+            JDefinedClass allowedParentTemplatesClass = parentClass._class(STATIC_FINAL, containingNode);
+            for(int j = 0; j < allowedParentTemplates.getLength(); j++){
+                Element allowedParent = (Element) allowedParentTemplates.item(j);
+                String allowedParentId = allowedParent.getAttribute("id");
+                allowedParentTemplatesClass.field(STATIC_FINAL, String.class, cleanFieldName(allowedParentId), JExpr.lit(allowedParentId));
+            }
         }
     }
 
