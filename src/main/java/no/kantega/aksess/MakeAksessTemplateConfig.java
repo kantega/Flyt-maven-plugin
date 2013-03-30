@@ -65,7 +65,7 @@ public class MakeAksessTemplateConfig {
             setContentTemplates(doc, xpath, jCodeModel, jc, templates, includeAllAttributes);
             setMetaDateTemplates(doc, xpath, jCodeModel, jc, templates);
 
-            setDisplayTemplates(doc, xpath, jCodeModel, jc);
+            setDisplayTemplates(doc, xpath, jCodeModel, jc, includeAllAttributes);
             jCodeModel.build(destinationFolder);
         } catch (Exception e) {
             throw new MojoExecutionException("Failed to create AksessTemplateConfig.java", e);
@@ -94,35 +94,45 @@ public class MakeAksessTemplateConfig {
         }
     }
 
-    private static void setDisplayTemplates(Document doc, XPath xpath, JCodeModel jCodeModel, JDefinedClass jc) throws JClassAlreadyExistsException, XPathExpressionException {
+    private static void setDisplayTemplates(Document doc, XPath xpath, JCodeModel jCodeModel, JDefinedClass jc, boolean includeAllAttributes) throws JClassAlreadyExistsException, XPathExpressionException {
         JDefinedClass displayTemplatesClass = jc._class(STATIC_FINAL, "displayTemplates");
         NodeList displayTemplates = getNodeList(doc, xpath, "displayTemplates", "displayTemplate");
         for(int i = 0; i < displayTemplates.getLength(); i++){
             Element displayTemplate = (Element) displayTemplates.item(i);
-            String allowMultipleUsages = displayTemplate.getAttribute("allowMultipleUsages");
+
             String databaseId = displayTemplate.getAttribute("databaseId");
             String id = displayTemplate.getAttribute("id");
-            String description = displayTemplate.getAttribute("description");
-            String isNewGroup = displayTemplate.getAttribute("isNewGroup");
+
             String contentTemplate = getAttributeFromTagWithName("contentTemplate", "id", displayTemplate);
             String metaDataTemplate = getAttributeFromTagWithName("metaDataTemplate", "id", displayTemplate);
             String name = getSingleValueFromTagWithName("name", displayTemplate);
-            String view = getSingleValueFromTagWithName("view", displayTemplate);
-            String miniView = getSingleValueFromTagWithName("miniView", displayTemplate);
-            String rssView = getSingleValueFromTagWithName("rssView", displayTemplate);
 
             JDefinedClass displayTemplateClass = displayTemplatesClass._class(STATIC_FINAL, cleanFieldName(id));
             setIdNameAndDatabaseId(jCodeModel, databaseId, id, name, displayTemplateClass);
-            displayTemplateClass.field(STATIC_FINAL, jCodeModel.BOOLEAN, "allowMultipleUsages", JExpr.lit(Boolean.parseBoolean(allowMultipleUsages)));
-            displayTemplateClass.field(STATIC_FINAL, jCodeModel.BOOLEAN, "isNewGroup", JExpr.lit(Boolean.parseBoolean(isNewGroup)));
+
             displayTemplateClass.field(STATIC_FINAL, String.class, "contentTemplate", JExpr.lit(contentTemplate));
-            displayTemplateClass.field(STATIC_FINAL, String.class, "metaDataTemplate", JExpr.lit(metaDataTemplate));
-            displayTemplateClass.field(STATIC_FINAL, String.class, "description", JExpr.lit(description));
-            displayTemplateClass.field(STATIC_FINAL, String.class, "view", JExpr.lit(view));
-            displayTemplateClass.field(STATIC_FINAL, String.class, "rssView", JExpr.lit(rssView));
-            displayTemplateClass.field(STATIC_FINAL, String.class, "miniView", JExpr.lit(miniView));
-            addClassAndFieldsForSubNodesWithId(displayTemplate, displayTemplateClass, "sites", "site");
-            addClassAndFieldsForSubNodesWithTextContent(displayTemplate, displayTemplateClass, "controllers", "controller");
+            if (isNotBlank(metaDataTemplate)) {
+                displayTemplateClass.field(STATIC_FINAL, String.class, "metaDataTemplate", JExpr.lit(metaDataTemplate));
+            }
+
+            if (includeAllAttributes) {
+                String allowMultipleUsages = displayTemplate.getAttribute("allowMultipleUsages");
+                displayTemplateClass.field(STATIC_FINAL, jCodeModel.BOOLEAN, "allowMultipleUsages", JExpr.lit(Boolean.parseBoolean(allowMultipleUsages)));
+                String isNewGroup = displayTemplate.getAttribute("isNewGroup");
+                displayTemplateClass.field(STATIC_FINAL, jCodeModel.BOOLEAN, "isNewGroup", JExpr.lit(Boolean.parseBoolean(isNewGroup)));
+
+                String description = displayTemplate.getAttribute("description");
+                displayTemplateClass.field(STATIC_FINAL, String.class, "description", JExpr.lit(description));
+
+                String view = getSingleValueFromTagWithName("view", displayTemplate);
+                displayTemplateClass.field(STATIC_FINAL, String.class, "view", JExpr.lit(view));
+                String rssView = getSingleValueFromTagWithName("rssView", displayTemplate);
+                displayTemplateClass.field(STATIC_FINAL, String.class, "rssView", JExpr.lit(rssView));
+                String miniView = getSingleValueFromTagWithName("miniView", displayTemplate);
+                displayTemplateClass.field(STATIC_FINAL, String.class, "miniView", JExpr.lit(miniView));
+                addClassAndFieldsForSubNodesWithId(displayTemplate, displayTemplateClass, "sites", "site");
+                addClassAndFieldsForSubNodesWithTextContent(displayTemplate, displayTemplateClass, "controllers", "controller");
+            }
         }
     }
 
