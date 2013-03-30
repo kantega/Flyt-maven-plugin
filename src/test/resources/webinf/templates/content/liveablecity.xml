@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE template [
+        <!ENTITY vis-blogg SYSTEM "vis-blogg.xml"> ]>
+<template xmlns="http://www.kantega.no" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.kantega.no http://www.kantega.no/aksess/aksess-template.xsd">
+<attributes>
+   <attribute name="tittel" mapto="title" type="text" mandatory="true"/>
+   <attribute name="overskrift" type="text" mandatory="true">
+       <helptext>Overskrift vises før teksten på siden, tittel brukes for lenker til denne siden</helptext>
+   </attribute>
+   <attribute name="ingress" type="text" maxlength="300"/>
+   <attribute name="tekst" type="htmltext"/>
+
+   <attribute name="trondheim" type="htmltext"/>
+   <attribute name="trondheim_bilde" title="Bilde for Trondheim" type="image"/>
+   <attribute name="odense" type="htmltext"/>
+   <attribute name="odense_bilde" title="Bilde for Odense" type="image"/>
+   <attribute name="emden" type="htmltext"/>
+   <attribute name="emden_bilde" title="Bilde for Emden" type="image"/>
+   <attribute name="gent" type="htmltext"/>
+   <attribute name="gent_bilde" title="Bilde for Gent" type="image"/>
+   <attribute name="norwich" type="htmltext"/>
+   <attribute name="norwich_bilde" title="Bilde for Norwich" type="image"/>
+   <attribute name="lincoln" type="htmltext"/>
+   <attribute name="lincoln_bilde" title="Bilde for Lincoln" type="image"/>
+
+    </attributes>
+</template>

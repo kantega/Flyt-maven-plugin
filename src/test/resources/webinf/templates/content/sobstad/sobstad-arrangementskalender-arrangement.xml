@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE template >
+<template xmlns="http://www.kantega.no" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.kantega.no http://www.kantega.no/aksess/aksess-template.xsd">
+    <attributes>
+        <attribute name="tittel" title="Arrangement" type="text" mandatory="true"/>
+        <attribute name="startdato" title="Starttidspunkt" type="datetime" mandatory="true">
+            <helptext>Starttidspunkt for arrangementet. Må være en dato i fremtiden.</helptext>
+        </attribute>
+        <attribute name="sluttdato" title="Slutttidspunkt" type="datetime" mapto="expiredate" mandatory="true">
+            <helptext>Slutttindspunkt for arrangementet. Må være etter starttidspunktet.</helptext>
+        </attribute>
+        <attribute name="important" title="Viktig hendelse (Vektes opp i utlisting)" type="list">
+            <options>
+                <option value="false">Ikke viktig</option>
+                <option value="true">Viktig</option>
+            </options>
+        </attribute>
+        <attribute name="beskrivelse" mapto="description" type="text" maxlength="300"/>
+
+        <attribute name="bilde" type="image" mediafolder="Arrangementskalender" />
+        <attribute name="info" title="Mer informasjon (lenke til nettside med mer info)" type="url" maxlength="300"/>
+         <attribute name="relatedText" title="Høyrespaltetekst" type="htmltext" />
+    </attributes>
+</template>

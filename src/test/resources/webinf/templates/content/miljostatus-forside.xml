@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<template xmlns="http://www.kantega.no" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:schemaLocation="http://www.kantega.no http://www.kantega.no/aksess/aksess-template.xsd">
+    <attributes>
+        <attribute name="tittel" type="text" mandatory="true"/>
+        <attribute name="topicon" type="media" mandatory="false">
+            <helptext>Bildet bør være 70-100 (bredde) x 70 (høyde)</helptext>
+        </attribute>
+        <repeater name="forsidebilder" title="Slider på forsiden" minoccurs="0">
+            <attribute name="title" type="text"/>
+            <attribute name="beskrivelse" type="htmltext"/>
+            <attribute name="bilde" type="image">
+                <helptext>Bildet bør være ca 450 (bredde) x 300 (høyde)</helptext>
+            </attribute>
+            <attribute name="lenke" type="url">
+                <helptext>Lenke som det linkes til fra bildet</helptext>
+            </attribute>
+        </repeater>
+        <repeater name="lenker_nede_venstre" title="Lenker under 'Kommunens miljøpåvirkning'" minoccurs="0">
+            <attribute name="valgt_lenke" title="Valgt side/lenke" type="url">
+                <helptext>Velg lenke til intern side eller angi url til ekstern side, f.eks. http://www.vg.no</helptext>
+            </attribute>
+            <attribute name="lenke_tittel" title="Tittel på lenka" type="text">
+                <helptext>Tittelen til lenka, som vises til brukeren. </helptext>
+            </attribute>
+        </repeater>
+        <repeater name="lenker_nede_midt" title="Lenker under 'Indikatorer, kart og miljødata'" minoccurs="0">
+            <attribute name="valgt_lenke" title="Valgt side/lenke" type="url">
+                <helptext>Velg lenke til intern side eller angi url til ekstern side, f.eks. http://www.vg.no</helptext>
+            </attribute>
+            <attribute name="lenke_tittel" title="Tittel på lenka" type="text">
+                <helptext>Tittelen til lenka, som vises til brukeren. </helptext>
+            </attribute>
+        </repeater>
+        <repeater name="lenker_nede_hoyre" title="Lenker under 'Annen miljøinformasjon'" minoccurs="0">
+            <attribute name="valgt_lenke" title="Valgt side/lenke" type="url">
+                <helptext>Velg lenke til intern side eller angi url til ekstern side, f.eks. http://www.vg.no</helptext>
+            </attribute>
+            <attribute name="lenke_tittel" title="Tittel på lenka" type="text">
+                <helptext>Tittelen til lenka, som vises til brukeren. </helptext>
+            </attribute>
+        </repeater>
+
+        <attribute name="footer_text" title="Bunntekst: tekst" type="htmltext"/>
+
+        <attribute name="footer_kol_1_headline" title="Bunntekst: overskrift kolonne 1" type="text" maxlength="25"/>
+        <repeater name="footer_kol_1_links" title="Bunntekst: lenker kolonne 1">
+            <attribute name="valgt_lenke" title="Valgt side/lenke" type="url">
+                <helptext>Velg lenke til intern side eller angi url til ekstern side, f.eks. http://www.vg.no</helptext>
+            </attribute>
+            <attribute name="lenke_tittel" title="Tittel på lenka" type="text">
+                <helptext>Tittelen til lenka, som vises til brukeren. </helptext>
+            </attribute>
+        </repeater>
+
+        <attribute name="footer_kol_2_headline" title="Bunntekst: overskrift kolonne 2" type="text" maxlength="25"/>
+        <repeater name="footer_kol_2_links" title="Bunntekst: lenker kolonne 2">
+            <attribute name="valgt_lenke" title="Valgt side/lenke" type="url">
+                <helptext>Velg lenke til intern side eller angi url til ekstern side, f.eks. http://www.vg.no</helptext>
+            </attribute>
+            <attribute name="lenke_tittel" title="Tittel på lenka" type="text">
+                <helptext>Tittelen til lenka, som vises til brukeren. </helptext>
+            </attribute>
+        </repeater>
+
+        <attribute name="footer_kol_3_headline" title="Bunntekst: overskrift kolonne 3" type="text" maxlength="25"/>
+        <repeater name="footer_kol_3_links" title="Bunntekst: lenker kolonne 3">
+            <attribute name="valgt_lenke" title="Valgt side/lenke" type="url">
+                <helptext>Velg lenke til intern side eller angi url til ekstern side, f.eks. http://www.vg.no</helptext>
+            </attribute>
+            <attribute name="lenke_tittel" title="Tittel på lenka" type="text">
+                <helptext>Tittelen til lenka, som vises til brukeren. </helptext>
+            </attribute>
+        </repeater>
+
+    </attributes>
+</template>

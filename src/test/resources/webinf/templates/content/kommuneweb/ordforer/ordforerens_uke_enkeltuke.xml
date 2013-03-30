@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<template xmlns="http://www.kantega.no" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.kantega.no http://www.kantega.no/aksess/aksess-template.xsd">
+    <attributes>
+        <attribute name="tittel" type="text" mandatory="true" default="Ordførerens uke - WEEK"/>
+        <attribute name="ukenummer"  type="number" mandatory="true" default="WEEK"/>
+        <attribute name="aar" title="År" type="number" mandatory="true" default="YEAR"/>
+        <attribute name="mandag"  title="Mandag" type="htmltext" mandatory="false"/>
+        <attribute name="tirsdag" title="Tirsdag" type="htmltext" mandatory="false"/>
+        <attribute name="onsdag" title="Onsdag" type="htmltext" mandatory="false"/>
+        <attribute name="torsdag" title="Torsdag" type="htmltext" mandatory="false"/>
+        <attribute name="fredag" title="Fredag" type="htmltext" mandatory="false"/>
+        <attribute name="lordag" title="Lørdag" type="htmltext" mandatory="false"/>
+        <attribute name="sondag" title="Søndag" type="htmltext" mandatory="false"/>
+    </attributes>
+</template>

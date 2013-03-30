@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE template [
+        <!ENTITY vis-blogg SYSTEM "vis-blogg.xml"> ]>
+<template xmlns="http://www.kantega.no" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.kantega.no http://www.kantega.no/aksess/aksess-template.xsd">
+    <attributes>
+        <attribute name="tittel" mapto="title" type="text" mandatory="true"/>
+        <attribute name="fra dato" type="date" mandatory="true"/>
+        <attribute name="fra tid" type="text" regexp="\d\d:\d\d" maxlength="5">
+            <helptext>Format tt:mm</helptext>
+        </attribute>
+        <attribute name="til dato" type="date"/>
+        <attribute name="til tid" type="text" regexp="\d\d:\d\d" maxlength="5">
+            <helptext>Format tt:mm</helptext>
+        </attribute>
+        <attribute name="beskrivelse" type="htmltext"/>
+        <attribute name="minimum antall deltakere" type="number" maxlength="8"/>
+        <attribute name="maksimum antall deltakere" type="number" maxlength="8" mandatory="true"/>
+        <attribute name="maksimum antall venteliste" title="Maksimum antall på venteliste" type="number" maxlength="8" />
+        &vis-blogg;
+    </attributes>
+</template>

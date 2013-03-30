@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<template xmlns="http://www.kantega.no" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.kantega.no http://www.kantega.no/aksess/aksess-template.xsd">
+    <attributes>
+        <repeater name="viktige_meldinger" title="Viktige meldinger, vises i uthevet boks på forsiden" minoccurs="0">
+            <attribute name="viktig_melding_side" title="Lenke til artikkel med informasjon" type="contentid" multiple="false" mandatory="true">
+                <helptext>Tittelen på valgt side blir overskrift i varselsboksen.</helptext>
+            </attribute>
+            <attribute name="viktig_melding_tekst" title="Kort tekst" type="text">
+                <helptext>Kort, beskrivende tekst om innholdet.</helptext>
+            </attribute>
+        </repeater>
+
+        <attribute name="intro_overskrift" title="Overskrift" type="text"/>
+        <attribute name="intro_tekst" title="Mindre overskrift" type="text"/>
+        <attribute name="sosial_overskrift" title="Overskrift sosiale medier" type="text"/>
+        <attribute name="sosial_tekst" title="Overskrift 2 sosiale medier" type="text"/>
+
+        <attribute name="tittel" title="Tittel" type="text" mandatory="true"/>
+        <attribute name="utvalgtesider" title="Utvalgte sider i nyhetskarusell" type="contentid" multiple="true"/>
+
+        <attribute name="nyheter_overskrift" title="Overskrift, nyheter" type="text"/>
+
+        <attribute name="lenketekst_nyhetsarkiv" title="Lenketekst nyhetsarkiv" type="text" default="Gå til nyhetsarkiv"/>
+        <attribute name="nyhetsarkiv" type="contentid" title="Nyhetsarkiv">
+            <helptext>Velg nyhetsarkivet hvor nyheter skal hentes fra.</helptext>
+        </attribute>
+
+        <attribute name="placeholdersearch" title="Tekst i søkefelt midt på siden" type="text"/>
+        <attribute name="helptextsearch" title="Tekst under søkefelt midt på siden" type="htmltext"/>
+
+        <attribute name="url_facebook" title="Lenke til Facebook" type="url"/>
+        <attribute name="url_chat" title="Lenke til chat" type="url"/>
+        <attribute name="url_twitter" title="Lenke til Twitter" type="url"/>
+
+        <attribute name="undertittel_facebook" title="Undertittel til lenke Facebook-ikon" type="text"/>
+        <attribute name="undertittel_twitter" title="Undertittel til lenke Twitter-ikon" type="text"/>
+        <attribute name="undertittel_chat" title="Undertittel til lenke Chat-ikon" type="text"/>
+
+        <attribute name="footer_text" title="Bunntekst: tekst" type="htmltext"/>
+        <attribute name="footer_kol_1_headline" title="Bunntekst: overskrift kolonne 1" type="text"/>
+        <attribute name="footer_kol_1_links" title="Bunntekst: lenker kolonne 1" type="contentid" multiple="true"/>
+        <attribute name="footer_kol_2_headline" title="Bunntekst: overskrift kolonne 2" type="text"/>
+        <attribute name="footer_kol_2_links" title="Bunntekst: lenker kolonne 2" type="contentid" multiple="true"/>
+        <attribute name="footer_kol_3_headline" title="Bunntekst: overskrift kolonne 3" type="text"/>
+        <attribute name="footer_kol_3_links" title="Bunntekst: lenker kolonne 3" type="contentid" multiple="true"/>
+
+    </attributes>
+</template>

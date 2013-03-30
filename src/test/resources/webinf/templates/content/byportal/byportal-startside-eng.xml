@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE template [
+        <!ENTITY vis-blogg SYSTEM "../vis-blogg.xml"> ]>
+<template xmlns="http://www.kantega.no" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.kantega.no http://www.kantega.no/aksess/aksess-template.xsd">
+    <attributes>
+        <attribute name="tittel" type="text" mandatory="true"/>
+        <attribute name="overskrift" type="text" mandatory="true">
+            <helptext>Sideoverskrift.</helptext>
+        </attribute>
+        <attribute name="tekst_heading" title="Tekst overskrift" type="text">
+            <helptext>Overskrift vises før teksten under bildegalleriet.</helptext>
+        </attribute>
+        <attribute name="tekst" type="text" mandatory="false" maxlength="500"/>
+        <attribute name="velkommen" title="Velkommen til trondheim" type="contentid" multiple="true">
+            <helptext>Saker som skal profileres under "Velkommen til Trondheim" med tekst og bilde.</helptext>
+        </attribute>
+        <attribute name="bildegalleri" type="contentlist" multiple="true" contenttemplate="Fotoalbum">
+            <helptext>Velg bildegalleri(er) som skal vises på førstesida. Det vil bli vist et tilfeldig galleri for hver visning.</helptext>
+        </attribute>
+        <attribute name="event_bilde" title="Bilde til arrangement 1" type="image">
+        </attribute>
+        <attribute name="event_ingress" title="Ingress til arrangement 1" type="text" maxlength="200">
+        </attribute>
+        <attribute name="event_url" title="Lenke til arrangement 1" type="url">
+        </attribute>
+        <attribute name="event_bilde_2" title="Bilde til arrangement 2" type="image">
+        </attribute>
+        <attribute name="event_ingress_2" title="Ingress til arrangement 2" type="text" maxlength="200">
+        </attribute>
+        <attribute name="event_url_2" title="Lenke til arrangement 2" type="url">
+        </attribute>
+        <attribute name="news_heading" title="Nyheter overskrift" type="text" maxlength="200">
+            <helptext>Overskrift i spalten nyheter.</helptext>
+        </attribute>
+        <attribute name="around_heading" title="Til og fra overskrift" type="text" maxlength="200">
+            <helptext>Overskrift i spalten til og fra i Trondheim.</helptext>
+        </attribute>
+        <attribute name="turist_info_heading" title="Turistinformasjon overskrift" type="text" maxlength="200">
+            <helptext>Overskrift i spalten turistinformasjon.</helptext>
+        </attribute>
+        <attribute name="boks_heading" title="Overskrift i boks" type="text" maxlength="200">
+            <helptext>Boks øverst til høyre.</helptext>
+        </attribute>
+        <attribute name="boks_bilde" title="Bilde i boks" type="image">
+        </attribute>
+        <attribute name="boks_lenketekst" title="Lenketekst i boks" type="text" maxlength="200">
+        </attribute>
+        <attribute name="boks_url" title="Lenke i boks" type="url">
+        </attribute>
+
+
+        <attribute name="Webcam1" title="Webkamera 1 - bilde" type="url">
+            <helptext>Lenke til webkamerabilde</helptext>
+        </attribute>
+        <attribute name="Webcam1url" title="Webkamera 1 - lenke" type="url">
+            <helptext>Lenke til webkameraside</helptext>
+        </attribute>
+        <attribute name="Webdesc1" title="Webkamera 1 - beskrivelse" type="text"/>
+
+        <attribute name="Webcam2" title="Webkamera 2 - bilde" type="url">
+            <helptext>Lenke til webkamerabilde</helptext>
+        </attribute>
+        <attribute name="Webcam2url" title="Webkamera 2 - lenke" type="url">
+            <helptext>Lenke til webkameraside</helptext>
+        </attribute>
+        <attribute name="Webdesc2" title="Webkamera 2 - beskrivelse" type="text"/>
+
+        <attribute name="Webcam3" title="Webkamera 3 - bilde" type="url">
+            <helptext>Lenke til webkamerabilde</helptext>
+        </attribute>
+        <attribute name="Webcam3url" title="Webkamera 3 - lenke" type="url">
+            <helptext>Lenke til webkameraside</helptext>
+        </attribute>
+        <attribute name="Webdesc3" title="Webkamera 3 - beskrivelse" type="text"/>
+
+        <attribute name="Webcam4" title="Webkamera 4 - bilde" type="url">
+            <helptext>Lenke til webkamerabilde</helptext>
+        </attribute>
+        <attribute name="Webcam4url" title="Webkamera 4 - lenke" type="url">
+            <helptext>Lenke til webkameraside</helptext>
+        </attribute>
+        <attribute name="Webdesc4" title="Webkamera 4 - beskrivelse" type="text"/>
+
+        <attribute name="Webcam5" title="Webkamera 5 - bilde" type="url">
+            <helptext>Lenke til webkamerabilde</helptext>
+        </attribute>
+        <attribute name="Webcam5url" title="Webkamera 5 - lenke" type="url">
+            <helptext>Lenke til webkameraside</helptext>
+        </attribute>
+        <attribute name="Webdesc5" title="Webkamera 5 - beskrivelse" type="text"/>
+
+        <attribute name="bunntekst" type="htmltext"/>
+
+    </attributes>
+</template>

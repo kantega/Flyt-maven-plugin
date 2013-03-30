@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<template xmlns="http://www.kantega.no" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:schemaLocation="http://www.kantega.no http://www.kantega.no/aksess/aksess-template.xsd">
+    <attributes>
+        <attribute name="tittel" type="text" mapto="title" mandatory="true"/>
+        <attribute name="menysubtittel" title="Undertittel i hovedmeny" type="text" mandatory="false"/>
+        <attribute name="ingress" title="Kort ingress." type="text" mandatory="true" maxlength="300"/>
+        <attribute name="artikkel" type="htmltext" />
+        <attribute name="bilde" type="image" title="Artikkelbilde"/>
+        <attribute name="bildetekst" type="text" />
+        <attribute name="tillat kommentarer" type="list" default="nei">
+            <options>
+                <option value="nei">Nei</option>
+                <option value="ja">Ja</option>
+            </options>
+            <helptext>Angir om brukeren skal ha mulighet til å legge inn kommentarer på siden. Moderator må stå som eier på denne siden (i metadata), og eier må ha godkjenningsrettigheter på siden.</helptext>
+        </attribute>
+    </attributes>
+</template>

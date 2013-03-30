@@ -1,0 +1,2261 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templateConfiguration xmlns="http://www.kantega.no" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.kantega.no http://www.kantega.no/aksess/aksess-templateconfig.xsd">
+    <sites>
+        <site databaseId="2" alias="/byportal/" id="byportal" >
+            <name>Byportal</name>
+        </site>
+        <site databaseId="4" alias="/miljostatus/" id="miljostatus">
+            <name>Miljøstatus</name>
+        </site>
+        <site databaseId="5" alias="/folkebiblioteket/" id="Folkebiblioteket2">
+            <name>Folkebiblioteket2</name>
+        </site>
+        <site databaseId="6" alias="/sobstad_helsehus/" id="sobstad">
+            <name>Søbstad helsehus</name>
+        </site>
+        <site databaseId="7" alias="/kommuneweb2/" id="kommuneweb2" isDefault="true">
+            <name>Kommuneweb2</name>
+        </site>
+        <site databaseId="8" alias="/english/" id="english" displayTemplateId="Forside kommuneweb">
+            <name>English</name>
+        </site>
+    </sites>
+
+    <associationCategories>
+        <associationCategory databaseId="1" id="Venstremeny">
+            <name>Venstremeny</name>
+        </associationCategory>
+        <associationCategory databaseId="2" id="Midtspalte">
+            <name>Midtspalte</name>
+        </associationCategory>
+        <associationCategory databaseId="12" id="Høyrespalte">
+            <name>Høyrespalte</name>
+        </associationCategory>
+
+        <!-- Brukes i byportal -->
+        <associationCategory databaseId="15" id="Til og fra i Trondheim">
+            <name>Til og fra i Trondheim</name>
+        </associationCategory>
+        <associationCategory databaseId="16" id="Nyheter">
+            <name>Nyheter</name>
+        </associationCategory>
+        <associationCategory databaseId="20" id="Turistinformasjon">
+            <name>Turistinformasjon</name>
+        </associationCategory>
+        <associationCategory databaseId="21" id="Utguide">
+            <name>Utguide</name>
+        </associationCategory>
+        <associationCategory databaseId="23" id="Skjult">
+            <name>Skjult</name>
+            <description>Bruk denne kategorien for å publisere noe som ikke vises i menyen, men som du ønsker å legge
+                inn en lenke til manuelt i teksten.
+            </description>
+        </associationCategory>
+        <associationCategory databaseId="24" id="Lenker">
+            <name>Lenker</name>
+        </associationCategory>
+        <associationCategory databaseId="25" id="Nyttig å vite">
+            <name>Nyttig å vite</name>
+        </associationCategory>
+
+        <associationCategory databaseId="32" id="Hovedmeny">
+            <name>Hovedmeny</name>
+            <description>Hovedmeny</description>
+        </associationCategory>
+
+        <associationCategory databaseId="33" id="Tjenestemeny">
+            <name>Tjenestemeny</name>
+            <description>Tjenestemeny</description>
+        </associationCategory>
+
+        <associationCategory databaseId="4000" id="standard">
+            <name>Standard</name>
+            <description>Standard kategori. Brukes dersom det ikke er flere alternativer</description>
+        </associationCategory>
+    </associationCategories>
+
+    <documentTypes>
+        <documentType databaseId="87" id="Skjema">
+            <name>Skjema</name>
+        </documentType>
+        <documentType databaseId="88" id="Informasjonsside">
+            <name>Informasjonsside</name>
+        </documentType>
+        <documentType databaseId="166" id="Hovedside">
+            <name>Hovedside</name>
+        </documentType>
+        <documentType databaseId="178" id="Nyhetsmelding">
+            <name>Nyhetsmelding</name>
+        </documentType>
+        <documentType databaseId="2000" id="Plan">
+            <name>Plan</name>
+        </documentType>
+        <documentType databaseId="2001" id="Veiledning">
+            <name>Veiledning</name>
+        </documentType>
+        <documentType databaseId="2002" id="Lettlest">
+            <name>Lettlest</name>
+        </documentType>
+        <documentType databaseId="2003" id="Prosjekt">
+            <name>Prosjekt</name>
+        </documentType>
+        <documentType databaseId="2005" id="Liste">
+            <name>Liste</name>
+        </documentType>
+        <documentType databaseId="2006" id="Kartside">
+            <name>Kartside</name>
+        </documentType>
+        <documentType databaseId="2007" id="English">
+            <name>English</name>
+        </documentType>
+        <documentType databaseId="2008" id="Utfordringen-aktivitet">
+            <name>Utfordringen-aktivitet</name>
+        </documentType>
+        <documentType databaseId="2009" id="Skoledokument">
+            <name>Skoledokument</name>
+        </documentType>
+        <documentType databaseId="2010" id="kalenderaktivitet">
+            <name>Kalenderaktivitet</name>
+        </documentType>
+        <documentType databaseId="2011" id="Arrangementskalender - arrangement">
+            <name>Arrangement</name>
+        </documentType>
+        <documentType databaseId="2012" id="kalender">
+            <name>Kalender</name>
+        </documentType>
+        <documentType databaseId="3001" id="tfb-kampanje">
+            <name>Bibliotek-kampanje</name>
+        </documentType>
+        <documentType databaseId="3002" id="tfb-medieomtale">
+            <name>Bibliotek-medieomtale</name>
+        </documentType>
+        <documentType databaseId="3003" id="tfb-avdeling">
+            <name>Bibliotek-avdeling</name>
+        </documentType>
+        <documentType databaseId="3004" id="tfb-apningstid">
+            <name>Bibliotek-åpningstid</name>
+        </documentType>
+        <documentType databaseId="4001" id="fil">
+            <name>Fil</name>
+        </documentType>
+    </documentTypes>
+
+    <contentTemplates>
+        <contentTemplate contentType="PAGE" databaseId="5" id="Liste med nyhetsmeldinger">
+            <documentType id="Informasjonsside"/>
+            <name>Liste med nyhetsmeldinger</name>
+            <templateFile>arkiv.xml</templateFile>
+            <allowedParentTemplates>
+                <contentTemplate id="Mappe"/>
+                <contentTemplate id="Forside kommuneweb"/>
+            </allowedParentTemplates>
+            <associationCategories>
+                <associationCategory id="Midtspalte"/>
+            </associationCategories>
+        </contentTemplate>
+
+        <contentTemplate contentType="PAGE" expireMonths="1" expireAction="3" databaseId="8" id="Nyhetsmelding">
+            <documentType id="Nyhetsmelding"/>
+            <name>Nyhetsmelding</name>
+            <templateFile>underside.xml</templateFile>
+            <allowedParentTemplates>
+                <contentTemplate id="Liste med nyhetsmeldinger"/>
+            </allowedParentTemplates>
+            <associationCategories>
+                <associationCategory id="Midtspalte"/>
+            </associationCategories>
+        </contentTemplate>
+
+        <contentTemplate contentType="PAGE" expireAction="1" databaseId="17" id="Fotoalbum">
+            <documentType id="Informasjonsside"/>
+            <name>Fotoalbum</name>
+            <templateFile>byportal/fotoalbum.xml</templateFile>
+            <allowedParentTemplates>
+                <contentTemplate id="Byportal - Hovedside"/>
+                <contentTemplate id="Byportal - Underside"/>
+            </allowedParentTemplates>
+            <associationCategories/>
+        </contentTemplate>
+
+        <contentTemplate contentType="LINK" expireAction="1" databaseId="18" id="Lenke til annen nettside">
+            <name>Lenke til annen nettside</name>
+            <templateFile>lenke.xml</templateFile>
+            <allowedParentTemplates>
+                <contentTemplate id="Byportal - Forside"/>
+                <contentTemplate id="Byportal - 2 bilder og tekstblokker"/>
+                <contentTemplate id="Byportal - Hovedside"/>
+                <contentTemplate id="Byportal - Underside"/>
+                <contentTemplate id="Byportal - Engelsk forside"/>
+                <contentTemplate id="Byportal - Lenker underside"/>
+            </allowedParentTemplates>
+            <associationCategories/>
+        </contentTemplate>
+
+        <contentTemplate contentType="PAGE" databaseId="28" id="Byportal - Forside">
+            <name>Byportal - Forside</name>
+            <templateFile>byportal/byportal-startside.xml</templateFile>
+            <allowedParentTemplates/>
+            <associationCategories>
+                <associationCategory id="Venstremeny"/>
+                <associationCategory id="Høyrespalte"/>
+                <associationCategory id="Til og fra i Trondheim"/>
+                <associationCategory id="Nyheter"/>
+                <associationCategory id="Turistinformasjon"/>
+                <associationCategory id="Utguide"/>
+                <associationCategory id="Skjult"/>
+                <associationCategory id="Lenker"/>
+                <associationCategory id="Nyttig å vite"/>
+            </associationCategories>
+        </contentTemplate>
+
+        <contentTemplate contentType="PAGE" databaseId="29" id="Byportal - 2 bilder og tekstblokker">
+            <documentType id="Informasjonsside"/>
+            <name>Byportal - 2 bilder og tekstblokker</name>
+            <templateFile>byportal/byportal-2bilder.xml</templateFile>
+            <allowedParentTemplates>
+                <contentTemplate id="Byportal - Hovedside"/>
+                <contentTemplate id="Byportal - Underside"/>
+                <contentTemplate id="Byportal - 2 bilder og tekstblokker"/>
+            </allowedParentTemplates>
+            <associationCategories>
+                <associationCategory id="Venstremeny"/>
+                <associationCategory id="Høyrespalte"/>
+            </associationCategories>
+        </contentTemplate>
+
+        <contentTemplate contentType="PAGE" databaseId="30" id="Byportal - Hovedside">
+            <documentType id="Informasjonsside"/>
+            <name>Byportal - Hovedside</name>
+            <templateFile>byportal/byportal-hovedside.xml</templateFile>
+            <allowedParentTemplates>
+                <contentTemplate id="Byportal - Forside"/>
+                <contentTemplate id="Byportal - Engelsk forside"/>
+            </allowedParentTemplates>
+            <associationCategories>
+                <associationCategory id="Venstremeny"/>
+                <associationCategory id="Høyrespalte"/>
+                <associationCategory id="Skjult"/>
+            </associationCategories>
+        </contentTemplate>
+
+        <contentTemplate contentType="PAGE" databaseId="31" id="Byportal - Underside">
+            <documentType id="Informasjonsside"/>
+            <name>Byportal - Underside</name>
+            <templateFile>byportal/byportal-underside.xml</templateFile>
+            <allowedParentTemplates>
+                <contentTemplate id="Byportal - Forside"/>
+                <contentTemplate id="Byportal - 2 bilder og tekstblokker"/>
+                <contentTemplate id="Byportal - Hovedside"/>
+                <contentTemplate id="Byportal - Underside"/>
+                <contentTemplate id="Byportal - Engelsk forside"/>
+                <contentTemplate id="Byportal - Lenker"/>
+                <contentTemplate id="Byportal - Lenker underside"/>
+            </allowedParentTemplates>
+            <associationCategories>
+                <associationCategory id="Venstremeny"/>
+                <associationCategory id="Midtspalte"/>
+                <associationCategory id="Høyrespalte"/>
+                <associationCategory id="Skjult"/>
+            </associationCategories>
+        </contentTemplate>
+
+        <contentTemplate contentType="PAGE" databaseId="32" id="Byportal - Trondhjemmer">
+            <documentType id="Informasjonsside"/>
+            <name>Byportal - Trondhjemmer</name>
+            <templateFile>byportal/byportal-trondhjemmer.xml</templateFile>
+            <allowedParentTemplates>
+                <contentTemplate id="Byportal - Trondhjemmere"/>
+            </allowedParentTemplates>
+            <associationCategories/>
+        </contentTemplate>
+
+        <contentTemplate contentType="PAGE" databaseId="33" id="Byportal - Trondhjemmere">
+            <documentType id="Informasjonsside"/>
+            <name>Byportal - Trondhjemmere</name>
+            <templateFile>byportal/byportal-trondhjemmere.xml</templateFile>
+            <allowedParentTemplates>
+                <contentTemplate id="Byportal - Hovedside"/>
+            </allowedParentTemplates>
+            <associationCategories>
+                <associationCategory id="Midtspalte"/>
+            </associationCategories>
+        </contentTemplate>
+
+        <contentTemplate contentType="FILE" databaseId="35" id="Fil (f.eks Word eller PDF)">
+            <name>Fil (f.eks Word eller PDF)</name>
+            <templateFile>fil.xml</templateFile>
+            <allowedParentTemplates>
+                <contentTemplate id="Byportal - Hovedside"/>
+                <contentTemplate id="Byportal - Underside"/>
+            </allowedParentTemplates>
+            <associationCategories/>
+        </contentTemplate>
+
+        <contentTemplate contentType="PAGE" databaseId="40" id="Byportal - Engelsk forside">
+            <name>Byportal - Engelsk forside</name>
+            <templateFile>byportal/byportal-startside-eng.xml</templateFile>
+            <allowedParentTemplates>
+                <contentTemplate id="Byportal - Forside"/>
+            </allowedParentTemplates>
+            <associationCategories>
+                <associationCategory id="Venstremeny"/>
+                <associationCategory id="Høyrespalte"/>
+                <associationCategory id="Til og fra i Trondheim"/>
+                <associationCategory id="Nyheter"/>
+                <associationCategory id="Turistinformasjon"/>
+                <associationCategory id="Utguide"/>
+                <associationCategory id="Skjult"/>
+                <associationCategory id="Lenker"/>
+            </associationCategories>
+        </contentTemplate>
+
+        <contentTemplate contentType="PAGE" databaseId="42" id="Byportal - Nyheter fra Opoint">
+            <name>Byportal - Nyheter fra Opoint</name>
+            <templateFile>byportal/byportal-nyheter.xml</templateFile>
+            <allowedParentTemplates>
+                <contentTemplate id="Byportal - Forside"/>
+            </allowedParentTemplates>
+            <associationCategories>
+                <associationCategory id="Venstremeny"/>
+                <associationCategory id="Høyrespalte"/>
+            </associationCategories>
+        </contentTemplate>
+
+        <contentTemplate contentType="PAGE" databaseId="52" id="Byportal - Lenker">
+            <name>Byportal - Lenker</name>
+            <templateFile>byportal/byportal-linker.xml</templateFile>
+            <allowedParentTemplates>
+                <contentTemplate id="Byportal - Forside"/>
+                <contentTemplate id="Byportal - Hovedside"/>
+                <contentTemplate id="Byportal - Underside"/>
+            </allowedParentTemplates>
+            <associationCategories>
+                <associationCategory id="Midtspalte"/>
+            </associationCategories>
+        </contentTemplate>
+
+        <contentTemplate contentType="PAGE" databaseId="53" id="Byportal - Lenker underside">
+            <name>Byportal - Lenker underside</name>
+            <templateFile>byportal/byportal-linker_underside.xml</templateFile>
+            <allowedParentTemplates>
+                <contentTemplate id="Byportal - Lenker"/>
+            </allowedParentTemplates>
+            <associationCategories>
+                <associationCategory id="Midtspalte"/>
+            </associationCategories>
+        </contentTemplate>
+
+        <contentTemplate contentType="PAGE" databaseId="54" id="Byportal - Enkel">
+            <name>Byportal - Enkel</name>
+            <templateFile>byportal/byportal-enkel.xml</templateFile>
+            <allowedParentTemplates>
+                <contentTemplate id="Byportal - Forside"/>
+            </allowedParentTemplates>
+            <associationCategories>
+                <associationCategory id="Midtspalte"/>
+            </associationCategories>
+        </contentTemplate>
+
+        <contentTemplate contentType="PAGE" databaseId="64" id="Byportal - Liveable City">
+            <name>Byportal - Liveable City</name>
+            <templateFile>liveablecity.xml</templateFile>
+            <allowedParentTemplates>
+                <contentTemplate id="Byportal - Hovedside"/>
+            </allowedParentTemplates>
+            <associationCategories>
+                <associationCategory id="Venstremeny"/>
+                <associationCategory id="Høyrespalte"/>
+            </associationCategories>
+        </contentTemplate>
+
+        <contentTemplate contentType="PAGE" databaseId="73" id="Søk">
+            <name>Søk - Byportal</name>
+            <templateFile>titteltekst.xml</templateFile>
+            <allowedParentTemplates>
+                <contentTemplate id="Byportal - Forside"/>
+            </allowedParentTemplates>
+            <associationCategories/>
+        </contentTemplate>
+
+        <contentTemplate contentType="PAGE" databaseId="74" id="Byportal - Wallpaper">
+            <name>Byportal - Wallpaper</name>
+            <templateFile>titteltekst.xml</templateFile>
+            <allowedParentTemplates>
+                <contentTemplate id="Byportal - Underside"/>
+            </allowedParentTemplates>
+            <associationCategories/>
+        </contentTemplate>
+        <contentTemplate contentType="PAGE" databaseId="75" id="Kurs">
+            <name>Kurs</name>
+            <templateFile>kurs.xml</templateFile>
+            <allowedParentTemplates>
+                <contentTemplate id="Kurs - tema"/>
+            </allowedParentTemplates>
+            <associationCategories>
+                <associationCategory id="standard"/>
+            </associationCategories>
+        </contentTemplate>
+        <contentTemplate contentType="PAGE" databaseId="76" id="Kurs - gjennomføring">
+            <name>Kurs - gjennomføring</name>
+            <templateFile>kurs-gjennomforing.xml</templateFile>
+            <allowedParentTemplates>
+                <contentTemplate id="Kurs"/>
+            </allowedParentTemplates>
+            <associationCategories>
+                <associationCategory id="standard"/>
+            </associationCategories>
+        </contentTemplate>
+        <contentTemplate contentType="PAGE" databaseId="77" id="Kurs - liste">
+            <name>Kurs - liste</name>
+            <templateFile>titteltekst.xml</templateFile>
+            <allowedParentTemplates>
+                <contentTemplate id="Forside kommuneweb"/>
+                <contentTemplate id="Mappe"/>
+            </allowedParentTemplates>
+            <associationCategories>
+                <associationCategory id="standard"/>
+            </associationCategories>
+        </contentTemplate>
+        <contentTemplate contentType="PAGE" databaseId="78" id="Kurs - tema">
+            <name>Kurs - tema</name>
+            <templateFile>titteltekst.xml</templateFile>
+            <allowedParentTemplates>
+                <contentTemplate id="Kurs - liste"/>
+            </allowedParentTemplates>
+            <associationCategories>
+                <associationCategory id="standard"/>
+            </associationCategories>
+        </contentTemplate>
+
+        <contentTemplate contentType="PAGE" databaseId="82" id="Byportal - Innovation week">
+            <name>Byportal - Innovation week</name>
+            <templateFile>byportal/byportal-arrangementsliste.xml</templateFile>
+            <allowedParentTemplates>
+                <contentTemplate id="Byportal - Hovedside"/>
+                <contentTemplate id="Byportal - Enkel"/>
+            </allowedParentTemplates>
+            <associationCategories>
+                <associationCategory id="Midtspalte"/>
+            </associationCategories>
+        </contentTemplate>
+
+        <contentTemplate contentType="PAGE" databaseId="83" id="Byportal - Innovation week arrangement">
+            <name>Byportal - Innovation week arrangement</name>
+            <templateFile>byportal/byportal-arrangement.xml</templateFile>
+            <allowedParentTemplates>
+                <contentTemplate id="Byportal - Innovation week"/>
+            </allowedParentTemplates>
+            <associationCategories/>
+        </contentTemplate>
+
+        <contentTemplate contentType="PAGE" databaseId="95" id="Byportal - Sidekart">
+            <name>Byportal - Sidekart</name>
+            <templateFile>titteltekst.xml</templateFile>
+            <allowedParentTemplates>
+                <contentTemplate id="Byportal - Forside"/>
+                <contentTemplate id="Byportal - Engelsk forside"/>
+                <contentTemplate id="Byportal - Sidekart"/>
+            </allowedParentTemplates>
+            <associationCategories>
+                <associationCategory id="Venstremeny"/>
+                <associationCategory id="Midtspalte"/>
+                <associationCategory id="Høyrespalte"/>
+            </associationCategories>
+        </contentTemplate>
+        <contentTemplate contentType="PAGE" databaseId="96" id="Byportal - Tips redaktøren">
+            <name>Byportal - Tips redaktøren</name>
+            <templateFile>titteltekst.xml</templateFile>
+            <allowedParentTemplates>
+                <contentTemplate id="Byportal - Forside"/>
+                <contentTemplate id="Byportal - Engelsk forside"/>
+            </allowedParentTemplates>
+            <associationCategories/>
+        </contentTemplate>
+
+        <contentTemplate contentType="PAGE" databaseId="98" id="Kurs - instans">
+            <name>Kurs - instans</name>
+            <templateFile>titteltekst.xml</templateFile>
+            <allowedParentTemplates>
+                <contentTemplate id="Kurs - meny"/>
+            </allowedParentTemplates>
+            <associationCategories/>
+        </contentTemplate>
+        <contentTemplate contentType="PAGE" databaseId="99" id="Kurs - meny">
+            <name>Kurs - meny</name>
+            <templateFile>titteltekst.xml</templateFile>
+            <allowedParentTemplates>
+                <contentTemplate id="Kurs - liste"/>
+            </allowedParentTemplates>
+            <associationCategories>
+                <associationCategory id="standard"/>
+            </associationCategories>
+        </contentTemplate>
+        <contentTemplate contentType="PAGE" databaseId="100" id="Kurs - sesjon">
+            <name>Kurs - sesjon</name>
+            <templateFile>kurs-sesjon.xml</templateFile>
+            <allowedParentTemplates>
+                <contentTemplate id="Kurs - gjennomføring"/>
+            </allowedParentTemplates>
+            <associationCategories/>
+        </contentTemplate>
+
+        <contentTemplate contentType="PAGE" databaseId="111" id="Enkelt skjema">
+            <name>Enkelt skjema</name>
+            <templateFile>enkeltskjema.xml</templateFile>
+            <allowedParentTemplates>
+                <contentTemplate id="Byportal - Underside"/>
+                <contentTemplate id="Byportal - Hovedside"/>
+            </allowedParentTemplates>
+        </contentTemplate>
+
+        <contentTemplate contentType="PAGE" databaseId="114" id="Utfordringen forside">
+            <name>Utfordringen forside</name>
+            <templateFile>utfordringen/utfordringen-forside.xml</templateFile>
+            <allowedParentTemplates>
+                <contentTemplate id="Forside kommuneweb"/>
+                <contentTemplate id="Mappe"/>
+            </allowedParentTemplates>
+            <associationCategories>
+                <associationCategory id="standard"/>
+            </associationCategories>
+        </contentTemplate>
+
+        <contentTemplate contentType="PAGE" databaseId="115" id="Utfordringen aktivitet">
+            <name>Utfordringen aktivitet</name>
+            <templateFile>utfordringen/utfordringen-aktivitet.xml</templateFile>
+            <allowedParentTemplates>
+                <contentTemplate id="Utfordringen forside"/>
+            </allowedParentTemplates>
+            <associationCategories/>
+            <documentType id="Utfordringen-aktivitet"/>
+        </contentTemplate>
+
+        <contentTemplate contentType="PAGE" databaseId="116" id="Utfordringen log aktivitet">
+            <name>Utfordringen log aktivitet</name>
+            <templateFile>utfordringen/utfordringen_logaktivitet.xml</templateFile>
+            <allowedParentTemplates>
+                <contentTemplate id="Utfordringen forside"/>
+            </allowedParentTemplates>
+            <associationCategories/>
+        </contentTemplate>
+
+        <contentTemplate contentType="PAGE" databaseId="117" id="Utfordringen toppliste">
+            <name>Utfordringen toppliste</name>
+            <templateFile>utfordringen/utfordringen_toppliste.xml</templateFile>
+            <allowedParentTemplates>
+                <contentTemplate id="Utfordringen forside"/>
+            </allowedParentTemplates>
+            <associationCategories/>
+        </contentTemplate>
+
+        <contentTemplate contentType="PAGE" databaseId="118" id="Utfordringen mitt lag">
+            <name>Utfordringen mitt lag</name>
+            <templateFile>utfordringen/utfordringen_mittlag.xml</templateFile>
+            <allowedParentTemplates>
+                <contentTemplate id="Utfordringen forside"/>
+            </allowedParentTemplates>
+            <associationCategories/>
+        </contentTemplate>
+
+        <contentTemplate contentType="PAGE" databaseId="119" id="Utfordringen velg lag">
+            <name>Utfordringen velg lag</name>
+            <templateFile>utfordringen/utfordringen_velglag.xml</templateFile>
+            <allowedParentTemplates>
+                <contentTemplate id="Utfordringen forside"/>
+            </allowedParentTemplates>
+            <associationCategories/>
+        </contentTemplate>
+
+
+        <contentTemplate contentType="PAGE" databaseId="120" id="Utfordringen treningsdagbok">
+            <name>Utfordringen treningsdagbok</name>
+            <templateFile>utfordringen/utfordringen_treningsdagbok.xml</templateFile>
+            <allowedParentTemplates>
+                <contentTemplate id="Utfordringen forside"/>
+            </allowedParentTemplates>
+            <associationCategories/>
+        </contentTemplate>
+
+        <contentTemplate contentType="PAGE" databaseId="121" id="Utfordringen motivator intervall">
+            <name>Utfordringen motivator</name>
+            <templateFile>utfordringen/utfordringen_motivator_intervall.xml</templateFile>
+            <allowedParentTemplates>
+                <contentTemplate id="Utfordringen forside"/>
+            </allowedParentTemplates>
+            <associationCategories/>
+        </contentTemplate>
+
+        <contentTemplate contentType="PAGE" databaseId="122" id="Utfordringen admintools">
+            <name>Utfordringen admintools</name>
+            <templateFile>titteltekst.xml</templateFile>
+            <allowedParentTemplates>
+                <contentTemplate id="Utfordringen forside"/>
+            </allowedParentTemplates>
+            <associationCategories/>
+        </contentTemplate>
+
+        <!-- Miljøstatus -->
+        <contentTemplate contentType="PAGE" databaseId="1001" id="Miljostatus">
+            <name>Miljøstatus, forside</name>
+            <templateFile>miljostatus-forside.xml</templateFile>
+            <associationCategories>
+                <associationCategory id="Venstremeny"/>
+            </associationCategories>
+        </contentTemplate>
+
+        <contentTemplate contentType="PAGE" databaseId="1003" id="tema_samling">
+            <name>Samleside for tema</name>
+            <templateFile>miljostatus/tema-samling.xml</templateFile>
+            <allowedParentTemplates>
+                <contentTemplate id="Miljostatus"/>
+            </allowedParentTemplates>
+            <associationCategories>
+                <associationCategory id="Venstremeny"/>
+            </associationCategories>
+        </contentTemplate>
+
+        <contentTemplate contentType="PAGE" databaseId="1004" id="tema_artikkel">
+            <name>Miljøstatus temaside med kun standard tekst</name>
+            <templateFile>miljostatus/tema-artikkel.xml</templateFile>
+            <allowedParentTemplates>
+                <contentTemplate id="tema_samling"/>
+                <contentTemplate id="tema_artikkel"/>
+                <contentTemplate id="tema_dpsir"/>
+                <contentTemplate id="tema_side"/>
+            </allowedParentTemplates>
+            <associationCategories>
+                <associationCategory id="Venstremeny"/>
+            </associationCategories>
+        </contentTemplate>
+
+        <contentTemplate contentType="PAGE" databaseId="1005" id="tema_dpsir">
+            <name>Miljøstatus temaside med DPSIR oppsett</name>
+            <templateFile>miljostatus/tema-dpsir.xml</templateFile>
+            <allowedParentTemplates>
+                <contentTemplate id="tema_samling"/>
+                <contentTemplate id="tema_artikkel"/>
+                <contentTemplate id="tema_dpsir"/>
+                <contentTemplate id="tema_side"/>
+            </allowedParentTemplates>
+            <associationCategories>
+                <associationCategory id="Venstremeny"/>
+            </associationCategories>
+        </contentTemplate>
+
+        <contentTemplate contentType="PAGE" databaseId="1006" id="info_samling">
+            <name>Miljøstatus samleside for informasjonsartikler</name>
+            <templateFile>miljostatus/info-samling.xml</templateFile>
+            <allowedParentTemplates>
+                <contentTemplate id="Miljostatus"/>
+            </allowedParentTemplates>
+            <associationCategories>
+                <associationCategory id="Venstremeny"/>
+            </associationCategories>
+        </contentTemplate>
+
+        <contentTemplate contentType="PAGE" databaseId="1007" id="info_artikkel">
+            <name>Side for diverse informasjon som ikke er knyttet direkte til tema</name>
+            <templateFile>miljostatus/info-artikkel.xml</templateFile>
+            <allowedParentTemplates>
+                <contentTemplate id="info_samling"/>
+                <contentTemplate id="tema_side"/>
+            </allowedParentTemplates>
+            <associationCategories>
+                <associationCategory id="Venstremeny"/>
+            </associationCategories>
+        </contentTemplate>
+
+        <contentTemplate contentType="PAGE" databaseId="1008" id="tema_side">
+            <name>Side for å organisere og legge til undersider i meny punkt</name>
+            <templateFile>miljostatus/tema.xml</templateFile>
+            <allowedParentTemplates>
+                <contentTemplate id="Miljostatus"/>
+            </allowedParentTemplates>
+            <associationCategories>
+                <associationCategory id="Venstremeny"/>
+            </associationCategories>
+        </contentTemplate>
+
+        <contentTemplate contentType="LINK" databaseId="1009" id="miljostatus_lenke">
+            <name>Lenke til ekstern eller intern side</name>
+            <templateFile>lenke.xml</templateFile>
+            <allowedParentTemplates>
+                <contentTemplate id="tema_side"/>
+            </allowedParentTemplates>
+        </contentTemplate>
+
+        <!-- Bibioteket -->
+        <contentTemplate contentType="PAGE" databaseId="2001" id="Folkebiblioteket - forside">
+            <name>Forside</name>
+            <templateFile>tfb/tfb-forside.xml</templateFile>
+            <associationCategories>
+                <associationCategory id="Hovedmeny"/>
+                <associationCategory id="Skjult"/>
+                <associationCategory id="Tjenestemeny"/>
+            </associationCategories>
+
+        </contentTemplate>
+
+        <contentTemplate isSearchable="false" contentType="PAGE" databaseId="2002" id="Folkebiblioteket - kampanjer">
+            <name>Kampanjer</name>
+            <templateFile>tfb/tfb-container.xml</templateFile>
+            <associationCategories>
+                <associationCategory id="Skjult"/>
+            </associationCategories>
+            <allowedParentTemplates>
+                <contentTemplate id="Folkebiblioteket - forside"/>
+            </allowedParentTemplates>
+        </contentTemplate>
+
+        <contentTemplate isSearchable="false" contentType="PAGE" databaseId="2003" id="Folkebiblioteket - kampanje">
+            <name>Kampanje</name>
+            <templateFile>tfb/tfb-kampanje.xml</templateFile>
+            <documentType id="tfb-kampanje"/>
+            <allowedParentTemplates>
+                <contentTemplate id="Folkebiblioteket - kampanjer"/>
+            </allowedParentTemplates>
+        </contentTemplate>
+
+        <contentTemplate isSearchable="false" contentType="PAGE" databaseId="2005" id="Folkebiblioteket - blogg">
+            <name>Blogg</name>
+            <templateFile>tfb/tfb-blogg.xml</templateFile>
+            <documentType id="tfb-kampanje"/>
+            <associationCategories>
+                <associationCategory id="Hovedmeny"/>
+            </associationCategories>
+            <allowedParentTemplates>
+                <contentTemplate id="Folkebiblioteket - forside"/>
+            </allowedParentTemplates>
+        </contentTemplate>
+
+        <contentTemplate contentType="PAGE" databaseId="2006" id="Folkebiblioteket - hovedside">
+            <name>Hovedside</name>
+            <templateFile>tfb/tfb-hovedside.xml</templateFile>
+            <associationCategories>
+                <associationCategory id="Hovedmeny"/>
+                <associationCategory id="Midtspalte"/>
+            </associationCategories>
+            <allowedParentTemplates>
+                <contentTemplate id="Folkebiblioteket - forside"/>
+            </allowedParentTemplates>
+        </contentTemplate>
+
+        <contentTemplate contentType="PAGE" databaseId="2007" id="Folkebiblioteket - anmeldelse">
+            <name>Anmeldelse</name>
+            <templateFile>tfb/tfb-anmeldelse.xml</templateFile>
+            <associationCategories>
+                <associationCategory id="Hovedmeny"/>
+            </associationCategories>
+            <allowedParentTemplates>
+                <contentTemplate id="Folkebiblioteket - anmeldelser"/>
+            </allowedParentTemplates>
+        </contentTemplate>
+
+        <contentTemplate contentType="PAGE" databaseId="2008" id="Folkebiblioteket - artikkel">
+            <name>Artikkel</name>
+            <templateFile>tfb/tfb-artikkel.xml</templateFile>
+            <associationCategories>
+                <associationCategory id="Hovedmeny"/>
+                <associationCategory id="Tjenestemeny"/>
+            </associationCategories>
+            <allowedParentTemplates>
+                <contentTemplate id="Folkebiblioteket - forside"/>
+                <contentTemplate id="Folkebiblioteket - artikkel"/>
+                <contentTemplate id="Folkebiblioteket - hovedside"/>
+                <contentTemplate id="Folkebiblioteket - avdeling"/>
+                <contentTemplate id="Folkebiblioteket - blogg"/>
+            </allowedParentTemplates>
+        </contentTemplate>
+
+        <contentTemplate contentType="PAGE" databaseId="2010" id="Folkebiblioteket - Arrangementskalender">
+            <name>Arrangementskalender</name>
+            <templateFile>tfb/tfb-arrangementskalender.xml</templateFile>
+            <allowedParentTemplates>
+                <contentTemplate id="Folkebiblioteket - forside"/>
+            </allowedParentTemplates>
+            <associationCategories>
+                <associationCategory id="Hovedmeny"/>
+                <associationCategory id="Midtspalte"/>
+            </associationCategories>
+        </contentTemplate>
+
+        <contentTemplate contentType="PAGE" databaseId="2011" id="Folkebiblioteket - Arrangementskalender - arrangement"
+                         expireAction="3">
+            <name>Arrangement</name>
+            <documentType id="Arrangementskalender - arrangement"/>
+            <templateFile>tfb/tfb-arrangementskalender-arrangement.xml</templateFile>
+            <allowedParentTemplates>
+                <contentTemplate id="Folkebiblioteket - Arrangementskalender"/>
+            </allowedParentTemplates>
+        </contentTemplate>
+
+        <contentTemplate contentType="PAGE" databaseId="2012" id="Folkebiblioteket - anmeldelser">
+            <name>Anmeldelser</name>
+            <templateFile>tfb/tfb-anmeldelser.xml</templateFile>
+            <associationCategories>
+                <associationCategory id="Midtspalte"/>
+            </associationCategories>
+            <allowedParentTemplates>
+                <contentTemplate id="Folkebiblioteket - hovedside"/>
+            </allowedParentTemplates>
+        </contentTemplate>
+
+        <contentTemplate contentType="PAGE" databaseId="2013" id="Folkebiblioteket - søk">
+            <name>Søk - TFB</name>
+            <templateFile>tfb/tfb-search.xml</templateFile>
+            <allowedParentTemplates>
+                <contentTemplate id="Folkebiblioteket - forside"/>
+            </allowedParentTemplates>
+        </contentTemplate>
+
+        <contentTemplate contentType="PAGE" databaseId="2014" id="Folkebiblioteket - genresøk">
+            <name>Genre med egendefinert søk</name>
+            <templateFile>tfb/tfb-genre_sok.xml</templateFile>
+            <allowedParentTemplates>
+                <contentTemplate id="Folkebiblioteket - Hovedside"/>
+            </allowedParentTemplates>
+        </contentTemplate>
+
+        <contentTemplate contentType="PAGE" databaseId="2015" id="Folkebiblioteket - avdeling">
+            <name>Avdeling</name>
+            <templateFile>tfb/tfb-avdeling.xml</templateFile>
+            <documentType id="tfb-avdeling"/>
+            <allowedParentTemplates>
+                <contentTemplate id="Folkebiblioteket - avdelinger"/>
+            </allowedParentTemplates>
+            <associationCategories>
+                <associationCategory id="Hovedmeny"/>
+            </associationCategories>
+        </contentTemplate>
+
+        <contentTemplate contentType="PAGE" databaseId="2016" id="Folkebiblioteket - åpningstid">
+            <name>Åpningstid</name>
+            <templateFile>tfb/tfb-apningstid.xml</templateFile>
+            <documentType id="tfb-apningstid"/>
+            <associationCategories>
+                <associationCategory id="Tjenestemeny"/>
+            </associationCategories>
+            <allowedParentTemplates>
+                <contentTemplate id="Folkebiblioteket - åpningstider"/>
+            </allowedParentTemplates>
+        </contentTemplate>
+
+        <contentTemplate contentType="PAGE" databaseId="2017" id="Folkebiblioteket - avdelinger">
+            <name>Avdelinger</name>
+            <templateFile>titteltekst.xml</templateFile>
+            <associationCategories>
+                <associationCategory id="Hovedmeny"/>
+                <associationCategory id="Tjenestemeny"/>
+            </associationCategories>
+            <allowedParentTemplates>
+                <contentTemplate id="Folkebiblioteket - forside"/>
+            </allowedParentTemplates>
+        </contentTemplate>
+
+        <contentTemplate contentType="PAGE" databaseId="2018" id="Folkebiblioteket - åpningstider">
+            <name>Åpningstider</name>
+            <templateFile>titteltekst.xml</templateFile>
+            <associationCategories>
+                <associationCategory id="Tjenestemeny"/>
+            </associationCategories>
+            <allowedParentTemplates>
+                <contentTemplate id="Folkebiblioteket - forside"/>
+            </allowedParentTemplates>
+        </contentTemplate>
+
+        <contentTemplate contentType="PAGE" databaseId="3001" id="sobstad - forside">
+            <name>Forside - sobstad</name>
+            <templateFile>sobstad/sobstad-forside.xml</templateFile>
+            <associationCategories>
+                <associationCategory id="Hovedmeny"/>
+                <associationCategory id="Skjult"/>
+                <associationCategory id="Tjenestemeny"/>
+                <associationCategory id="Høyrespalte"/>
+            </associationCategories>
+        </contentTemplate>
+
+        <contentTemplate contentType="PAGE" databaseId="3002" id="sobstad - artikkel">
+            <name>Artikkel - sobstad</name>
+            <templateFile>sobstad/sobstad-artikkel.xml</templateFile>
+            <associationCategories>
+                <associationCategory id="Hovedmeny"/>
+                <associationCategory id="Høyrespalte"/>
+                <associationCategory id="Skjult"/>
+            </associationCategories>
+            <allowedParentTemplates>
+                <contentTemplate id="sobstad - forside"/>
+                <contentTemplate id="sobstad - artikkel"/>
+                <contentTemplate id="sobstad - liste"/>
+            </allowedParentTemplates>
+        </contentTemplate>
+
+
+        <contentTemplate contentType="PAGE" databaseId="3003" id="sobstad - liste">
+            <name>Artikkelliste - sobstad</name>
+            <templateFile>sobstad/sobstad-liste.xml</templateFile>
+            <associationCategories>
+                <associationCategory id="Høyrespalte"/>
+                <associationCategory id="Midtspalte"/>
+                <associationCategory id="Skjult"/>
+            </associationCategories>
+            <allowedParentTemplates>
+                <contentTemplate id="sobstad - forside"/>
+                <contentTemplate id="sobstad - artikkel"/>
+            </allowedParentTemplates>
+        </contentTemplate>
+
+
+        <contentTemplate contentType="PAGE" databaseId="3004" id="sobstad - Arrangementskalender">
+            <name>Arrangementskalender</name>
+            <templateFile>sobstad/sobstad-arrangementskalender.xml</templateFile>
+            <allowedParentTemplates>
+                <contentTemplate id="sobstad - forside"/>
+                <contentTemplate id="sobstad - artikkel"/>
+            </allowedParentTemplates>
+            <associationCategories>
+                <associationCategory id="Midtspalte"/>
+            </associationCategories>
+        </contentTemplate>
+
+        <contentTemplate contentType="PAGE" databaseId="3005" id="sobstad - Arrangementskalender - arrangement"
+                         expireAction="3">
+            <name>Arrangement</name>
+            <documentType id="Arrangementskalender - arrangement"/>
+            <templateFile>sobstad/sobstad-arrangementskalender-arrangement.xml</templateFile>
+            <allowedParentTemplates>
+                <contentTemplate id="sobstad - Arrangementskalender"/>
+            </allowedParentTemplates>
+        </contentTemplate>
+
+        <contentTemplate contentType="PAGE" databaseId="3006" id="sobstad - sok">
+            <name>Søk - Sobstad</name>
+            <templateFile>sobstad/sobstad-search.xml</templateFile>
+            <allowedParentTemplates>
+                <contentTemplate id="sobstad - forside"/>
+            </allowedParentTemplates>
+        </contentTemplate>
+
+
+        <!-- K2 -->
+        <contentTemplate contentType="PAGE" databaseId="4001" id="Forside kommuneweb">
+            <name>Forside</name>
+            <templateFile>kommuneweb/forside.xml</templateFile>
+            <allowedParentTemplates/>
+            <associationCategories>
+                <associationCategory id="standard"/>
+            </associationCategories>
+        </contentTemplate>
+
+        <contentTemplate contentType="PAGE" databaseId="4002" id="Kjerneside kommuneweb">
+            <name>Kjerneside</name>
+            <templateFile>kommuneweb/kjerneside.xml</templateFile>
+            <allowedParentTemplates>
+                <contentTemplate id="Tema"/>
+                <contentTemplate id="Mappe"/>
+            </allowedParentTemplates>
+            <associationCategories>
+                <associationCategory id="standard"/>
+            </associationCategories>
+        </contentTemplate>
+
+        <contentTemplate contentType="PAGE" databaseId="4003" id="Artikkelside">
+            <name>Artikkel</name>
+            <templateFile>kommuneweb/artikkel.xml</templateFile>
+            <allowedParentTemplates>
+                <contentTemplate id="Undertema"/>
+                <contentTemplate id="Artikkelside"/>
+                <contentTemplate id="Alfabetisk liste"/>
+            </allowedParentTemplates>
+            <associationCategories>
+                <associationCategory id="standard"/>
+            </associationCategories>
+        </contentTemplate>
+
+        <contentTemplate contentType="PAGE" databaseId="4004" id="Tema" isSearchable="false">
+            <name>Tema</name>
+            <templateFile>kommuneweb/tema.xml</templateFile>
+            <allowedParentTemplates>
+                <contentTemplate id="Forside kommuneweb"/>
+            </allowedParentTemplates>
+            <associationCategories>
+                <associationCategory id="standard"/>
+            </associationCategories>
+        </contentTemplate>
+
+        <contentTemplate contentType="PAGE" databaseId="4006" id="Fotoalbum K2">
+            <name>Fotoalbum</name>
+            <templateFile>kommuneweb/fotoalbum.xml</templateFile>
+            <allowedParentTemplates>
+                <contentTemplate id="Undertema"/>
+                <contentTemplate id="Albumsamling"/>
+                <contentTemplate id="Artikkelside"/>
+            </allowedParentTemplates>
+            <associationCategories>
+                <associationCategory id="standard"/>
+            </associationCategories>
+        </contentTemplate>
+
+        <contentTemplate contentType="PAGE" databaseId="4007" id="Albumsamling">
+            <name>Albumsamling</name>
+            <templateFile>kommuneweb/albumsamling.xml</templateFile>
+            <allowedParentTemplates>
+                <contentTemplate id="Undertema"/>
+                <contentTemplate id="Artikkelside"/>
+            </allowedParentTemplates>
+            <associationCategories>
+                <associationCategory id="standard"/>
+            </associationCategories>
+        </contentTemplate>
+
+        <contentTemplate contentType="PAGE" databaseId="4008" id="Enhetsside K2" isDefaultSearchable="false">
+            <name>Enhetsside</name>
+            <templateFile>kommuneweb/enhetsside.xml</templateFile>
+            <allowedParentTemplates>
+                <contentTemplate id="Mappe"/>
+                <contentTemplate id="Undertema"/>
+            </allowedParentTemplates>
+            <associationCategories>
+                <associationCategory id="standard"/>
+            </associationCategories>
+        </contentTemplate>
+
+        <contentTemplate contentType="PAGE" databaseId="4009" id="Undertema" isSearchable="false">
+            <name>Undertema</name>
+            <templateFile>kommuneweb/undertema.xml</templateFile>
+            <allowedParentTemplates>
+                <contentTemplate id="Kjerneside kommuneweb"/>
+                <contentTemplate id="Enhetsside K2"/>
+            </allowedParentTemplates>
+            <associationCategories>
+                <associationCategory id="standard"/>
+            </associationCategories>
+        </contentTemplate>
+
+        <contentTemplate contentType="PAGE" databaseId="4010" id="ansattliste">
+            <name>Ansattliste</name>
+            <templateFile>kommuneweb/tittel_og_ingress.xml</templateFile>
+            <allowedParentTemplates>
+                <contentTemplate id="Undertema"/>
+            </allowedParentTemplates>
+            <associationCategories>
+                <associationCategory id="standard"/>
+            </associationCategories>
+        </contentTemplate>
+
+        <contentTemplate contentType="PAGE" databaseId="4011" id="Mappe" isSearchable="false">
+            <name>Mappe</name>
+            <templateFile>kommuneweb/mappe.xml</templateFile>
+            <allowedParentTemplates>
+                <contentTemplate id="Forside kommuneweb"/>
+                <contentTemplate id="Mappe"/>
+                <contentTemplate id="Tema"/>
+            </allowedParentTemplates>
+            <associationCategories>
+                <associationCategory id="standard"/>
+            </associationCategories>
+        </contentTemplate>
+
+        <contentTemplate contentType="PAGE" databaseId="4012" id="Kalender">
+            <name>Kalender</name>
+            <templateFile>kommuneweb/kalender.xml</templateFile>
+            <documentType id="kalender"/>
+            <allowedParentTemplates>
+                <contentTemplate id="Artikkelside"/>
+                <contentTemplate id="Undertema"/>
+            </allowedParentTemplates>
+            <associationCategories>
+                <associationCategory id="Skjult"/>
+            </associationCategories>
+        </contentTemplate>
+
+        <contentTemplate contentType="PAGE" databaseId="4013" id="Kalenderinnslag" expireAction="3">
+            <name>Kalenderinnslag</name>
+            <templateFile>kommuneweb/kalenderinnslag.xml</templateFile>
+            <documentType id="kalenderaktivitet"/>
+            <allowedParentTemplates>
+                <contentTemplate id="Kalender"/>
+            </allowedParentTemplates>
+        </contentTemplate>
+
+        <contentTemplate contentType="PAGE" databaseId="4014" id="Enhetsliste_K2">
+            <name>Enhetsliste</name>
+            <templateFile>kommuneweb/enhetsliste.xml</templateFile>
+            <allowedParentTemplates>
+                <contentTemplate id="Undertema"/>
+                <contentTemplate id="Mappe"/>
+            </allowedParentTemplates>
+            <associationCategories>
+                <associationCategory id="standard"/>
+            </associationCategories>
+        </contentTemplate>
+
+
+        <contentTemplate contentType="PAGE" databaseId="4017" id="søk_k2" isSearchable="false">
+            <name>Søk - Kommuneweb</name>
+            <templateFile>kommuneweb/sok.xml</templateFile>
+            <allowedParentTemplates>
+                <contentTemplate id="Forside kommuneweb"/>
+            </allowedParentTemplates>
+            <associationCategories>
+                <associationCategory id="standard"/>
+            </associationCategories>
+        </contentTemplate>
+
+        <contentTemplate contentType="PAGE" databaseId="4018" id="ordforers_uke_kalender">
+            <name>Ordførers uke kalender</name>
+            <templateFile>kommuneweb/ordforer/ordforerens_uke_kalender.xml</templateFile>
+            <allowedParentTemplates>
+                <contentTemplate id="Undertema"/>
+            </allowedParentTemplates>
+            <associationCategories>
+                <associationCategory id="standard"/>
+            </associationCategories>
+        </contentTemplate>
+
+        <contentTemplate contentType="PAGE" databaseId="4019" id="ordforers_uke_enkeltuke">
+            <name>Ordførers uke enkeltuke</name>
+            <templateFile>kommuneweb/ordforer/ordforerens_uke_enkeltuke.xml</templateFile>
+            <allowedParentTemplates>
+                <contentTemplate id="ordforers_uke_kalender"/>
+            </allowedParentTemplates>
+            <associationCategories>
+                <associationCategory id="standard"/>
+            </associationCategories>
+        </contentTemplate>
+
+        <contentTemplate contentType="LINK" databaseId="4020" id="Lenke" isSearchable="false">
+            <name>Lenke</name>
+            <templateFile>kommuneweb/lenke.xml</templateFile>
+            <allowedParentTemplates>
+                <contentTemplate id="Tema"/>
+                <contentTemplate id="Undertema"/>
+                <contentTemplate id="Alfabetisk liste"/>
+                <contentTemplate id="Mappe"/>
+                <contentTemplate id="Artikkelside"/>
+                <contentTemplate id="Forside kommuneweb"/>
+            </allowedParentTemplates>
+            <associationCategories>
+                <associationCategory id="standard"/>
+            </associationCategories>
+        </contentTemplate>
+
+        <contentTemplate contentType="PAGE" databaseId="4021" id="Alfabetisk liste">
+            <name>Alfabetisk liste</name>
+            <templateFile>kommuneweb/tittel_og_ingress.xml</templateFile>
+            <allowedParentTemplates>
+                <contentTemplate id="Forside kommuneweb"/>
+                <contentTemplate id="Undertema"/>
+                <contentTemplate id="Mappe"/>
+            </allowedParentTemplates>
+            <associationCategories>
+                <associationCategory id="standard"/>
+            </associationCategories>
+        </contentTemplate>
+
+        <contentTemplate contentType="FILE" databaseId="4022" id="Fil">
+            <name>Fil</name>
+            <templateFile>kommuneweb/fil.xml</templateFile>
+            <allowedParentTemplates>
+                <contentTemplate id="Undertema"/>
+                <contentTemplate id="Artikkelside"/>
+                <contentTemplate id="Alfabetisk liste"/>
+            </allowedParentTemplates>
+            <associationCategories>
+                <associationCategory id="standard"/>
+            </associationCategories>
+            <documentType id="fil"/>
+        </contentTemplate>
+
+        <contentTemplate contentType="PAGE" databaseId="4024" id="Redigerbart skjema">
+            <name>Redigerbart skjema</name>
+            <documentType id="Skjema"/>
+            <templateFile>kommuneweb/skjema-redigerbart.xml</templateFile>
+            <allowedParentTemplates>
+                <contentTemplate id="Alfabetisk liste"/>
+            </allowedParentTemplates>
+        </contentTemplate>
+
+        <contentTemplate contentType="PAGE" databaseId="4025" id="Webcruiter_ads" isSearchable="false">
+            <name>Stillingsannonser fra Webcruiter</name>
+            <templateFile>kommuneweb/webcruiter.xml</templateFile>
+            <allowedParentTemplates>
+                <contentTemplate id="Undertema"/>
+                <contentTemplate id="Artikkelside"/>
+                <contentTemplate id="Alfabetisk liste"/>
+            </allowedParentTemplates>
+        </contentTemplate>
+
+        <contentTemplate contentType="PAGE" databaseId="4027" id="Webcruiter_ad" isSearchable="true" expireAction="2">
+            <name>Stillingsannonse fra Webcruiter</name>
+            <templateFile>kommuneweb/webcruiter_ad.xml</templateFile>
+            <allowedParentTemplates>
+                <contentTemplate id="Webcruiter_ads"/>
+            </allowedParentTemplates>
+        </contentTemplate>
+
+        <contentTemplate databaseId="4026" id="Abonnement" isSearchable="false">
+            <name>Abonnement</name>
+            <templateFile>kommuneweb/abonnement.xml</templateFile>
+            <allowedParentTemplates>
+                <contentTemplate id="Forside kommuneweb"/>
+            </allowedParentTemplates>
+        </contentTemplate>
+
+    </contentTemplates>
+
+    <metadataTemplates>
+        <contentTemplate databaseId="142" id="Beskrivelse">
+            <name>Beskrivelse</name>
+            <templateFile>metadata.xml</templateFile>
+        </contentTemplate>
+    </metadataTemplates>
+
+    <displayTemplates>
+        <displayTemplate databaseId="12" id="Liste med nyhetsmeldinger">
+            <contentTemplate id="Liste med nyhetsmeldinger"/>
+            <metaDataTemplate id="Beskrivelse"/>
+            <name>Liste med nyhetsmeldinger</name>
+            <description>Liste med nyheter med arkiv som gjør det mulig å finne eldre nyheter</description>
+            <view>/WEB-INF/jsp$SITE/arkiv.jsp</view>
+            <miniView>/WEB-INF/jsp$SITE/mini/arkiv.jsp</miniView>
+        </displayTemplate>
+
+        <displayTemplate databaseId="14" id="Nyhetsmelding">
+            <contentTemplate id="Nyhetsmelding"/>
+            <metaDataTemplate id="Beskrivelse"/>
+            <name>Nyhetsmelding</name>
+            <description>Nyhetsmelding med ingress, tekst, eventuelt bilde. (Dato vises automatisk).</description>
+            <view>/WEB-INF/jsp$SITE/nyhetkunngjoring.jsp</view>
+            <miniView>/kommuneweb/maler/mini/standard.jsp</miniView>
+            <defaultForumId>0</defaultForumId>
+        </displayTemplate>
+
+        <displayTemplate databaseId="24" id="Fotoalbum">
+            <contentTemplate id="Fotoalbum"/>
+            <metaDataTemplate id="Beskrivelse"/>
+            <name>Fotoalbum</name>
+            <description>Mal for å vise en samling bilder der brukeren kan navigere ved hjelp av miniatyrbilder.
+            </description>
+            <view>$SITE/maler/fotoalbum.jsp</view>
+        </displayTemplate>
+
+        <displayTemplate allowMultipleUsages="false" databaseId="37" id="Byportal - Startside" >
+            <contentTemplate id="Byportal - Forside"/>
+            <metaDataTemplate id="Beskrivelse"/>
+            <name>Byportal - Startside</name>
+            <view>/byportal/index.jsp</view>
+            <miniView>/byportal/maler/mini/standard.jsp</miniView>
+            <defaultForumId>0</defaultForumId>
+            <sites>
+                <site id="byportal"/>
+            </sites>
+        </displayTemplate>
+
+        <displayTemplate isNewGroup="true" databaseId="38" id="Byportal - Hovedside">
+            <contentTemplate id="Byportal - Hovedside"/>
+            <metaDataTemplate id="Beskrivelse"/>
+            <name>Byportal - Hovedside</name>
+            <view>/byportal/maler/hovedside.jsp</view>
+            <miniView>/byportal/maler/mini/standard.jsp</miniView>
+            <defaultForumId>0</defaultForumId>
+            <sites>
+                <site id="byportal"/>
+            </sites>
+        </displayTemplate>
+
+        <displayTemplate databaseId="39" id="Byportal - Underside">
+            <contentTemplate id="Byportal - Underside"/>
+            <metaDataTemplate id="Beskrivelse"/>
+            <name>Byportal - Underside</name>
+            <description>Standard mal for undersider med ingress, brødtekst, bilde og bildetekst.</description>
+            <view>/byportal/maler/underside.jsp</view>
+            <miniView>$SITE/maler/mini/standard.jsp</miniView>
+            <defaultForumId>0</defaultForumId>
+            <sites>
+                <site id="byportal"/>
+            </sites>
+        </displayTemplate>
+
+        <displayTemplate databaseId="40" id="Byportal - Liste over Trondhjemmere">
+            <contentTemplate id="Byportal - Trondhjemmere"/>
+            <metaDataTemplate id="Beskrivelse"/>
+            <name>Byportal - Liste over Trondhjemmere</name>
+            <view>/byportal/maler/trondhjemmere.jsp</view>
+            <miniView>/byportal/maler/trondhjemmer.jsp</miniView>
+            <defaultForumId>0</defaultForumId>
+            <sites>
+                <site id="byportal"/>
+            </sites>
+        </displayTemplate>
+
+        <displayTemplate databaseId="41" id="Byportal - Trondhjemmer">
+            <contentTemplate id="Byportal - Trondhjemmer"/>
+            <metaDataTemplate id="Beskrivelse"/>
+            <name>Byportal - Trondhjemmer</name>
+            <view>/byportal/maler/trondhjemmer.jsp</view>
+            <miniView>/byportal/maler/mini/standard.jsp</miniView>
+            <defaultForumId>0</defaultForumId>
+            <sites>
+                <site id="byportal"/>
+            </sites>
+        </displayTemplate>
+
+        <displayTemplate databaseId="42" id="Byportal - 2 bilder og tekstblokker">
+            <contentTemplate id="Byportal - 2 bilder og tekstblokker"/>
+            <metaDataTemplate id="Beskrivelse"/>
+            <name>Byportal - 2 bilder og tekstblokker</name>
+            <view>/byportal/maler/2bilder.jsp</view>
+            <miniView>/byportal/maler/mini/standard.jsp</miniView>
+            <defaultForumId>0</defaultForumId>
+            <sites>
+                <site id="byportal"/>
+            </sites>
+        </displayTemplate>
+
+        <displayTemplate allowMultipleUsages="false" databaseId="49" id="Byportal - Engelsk forside">
+            <contentTemplate id="Byportal - Engelsk forside"/>
+            <metaDataTemplate id="Beskrivelse"/>
+            <name>Byportal - Engelsk forside</name>
+            <view>/byportal/index_eng.jsp</view>
+            <miniView>$SITE/maler/mini/standard.jsp</miniView>
+            <defaultForumId>0</defaultForumId>
+            <sites>
+                <site id="byportal"/>
+            </sites>
+        </displayTemplate>
+
+        <displayTemplate allowMultipleUsages="false" databaseId="51" id="Byportal - Nyheter fra Opoint">
+            <contentTemplate id="Byportal - Nyheter fra Opoint"/>
+            <metaDataTemplate id="Beskrivelse"/>
+            <name>Byportal - Nyheter fra Opoint</name>
+            <description>Liste med nyheter fra Opoint</description>
+            <view>/byportal/maler/nyheter_opoint.jsp</view>
+            <miniView>$SITE/maler/mini/standard.jsp</miniView>
+            <defaultForumId>0</defaultForumId>
+            <sites>
+                <site id="byportal"/>
+            </sites>
+        </displayTemplate>
+
+        <displayTemplate databaseId="54" id="Byportal - Værmelding">
+            <contentTemplate id="Byportal - Underside"/>
+            <metaDataTemplate id="Beskrivelse"/>
+            <name>Byportal - Værmelding</name>
+            <view>/byportal/maler/vaermelding.jsp</view>
+            <miniView>/byportal/maler/mini/standard.jsp</miniView>
+            <defaultForumId>0</defaultForumId>
+            <sites>
+                <site id="byportal"/>
+            </sites>
+        </displayTemplate>
+
+        <displayTemplate databaseId="65" id="Byportal - Lenkesamling (med kategorier)">
+            <contentTemplate id="Byportal - Lenker"/>
+            <metaDataTemplate id="Beskrivelse"/>
+            <name>Byportal - Lenkesamling (med kategorier)</name>
+            <description>Mal for publisering av lenker der lenker er organisert i kategorier, kategorierne opprettes i
+                form av undersider.
+            </description>
+            <view>/byportal/maler/lenker.jsp</view>
+            <miniView>/byportal/maler/mini/standard.jsp</miniView>
+            <defaultForumId>0</defaultForumId>
+            <sites>
+                <site id="byportal"/>
+            </sites>
+        </displayTemplate>
+
+        <displayTemplate databaseId="66" id="Byportal - Lenkekategori">
+            <contentTemplate id="Byportal - Lenker underside"/>
+            <metaDataTemplate id="Beskrivelse"/>
+            <name>Byportal - Lenkekategori</name>
+            <view>/byportal/maler/lenker_underside.jsp</view>
+            <miniView>/byportal/maler/mini/standard.jsp</miniView>
+            <defaultForumId>0</defaultForumId>
+            <sites>
+                <site id="byportal"/>
+            </sites>
+        </displayTemplate>
+
+        <displayTemplate allowMultipleUsages="false" databaseId="77" id="Byportal - Liveable City spesialmal">
+            <contentTemplate id="Byportal - Liveable City"/>
+            <metaDataTemplate id="Beskrivelse"/>
+            <name>Byportal - Liveable City spesialmal</name>
+            <view>/byportal/maler/liveablecity.jsp</view>
+            <miniView>/byportal/maler/standard.jsp</miniView>
+            <defaultForumId>0</defaultForumId>
+            <sites>
+                <site id="byportal"/>
+            </sites>
+        </displayTemplate>
+
+        <displayTemplate databaseId="91" id="Byportal - Wallpaper">
+            <contentTemplate id="Byportal - Wallpaper"/>
+            <metaDataTemplate id="Beskrivelse"/>
+            <name>Byportal - Wallpaper</name>
+            <view>/byportal/maler/wallpaper.jsp</view>
+            <miniView>$SITE/maler/mini/standard.jsp</miniView>
+            <sites>
+                <site id="byportal"/>
+            </sites>
+        </displayTemplate>
+
+        <displayTemplate databaseId="92" id="Kurs">
+            <contentTemplate id="Kurs"/>
+            <metaDataTemplate id="Beskrivelse"/>
+            <name>Kurs</name>
+            <view>/kommuneweb/maler/kurs/kurs.jsp</view>
+            <miniView>/kommuneweb/maler/mini/standard.jsp</miniView>
+            <sites/>
+
+        </displayTemplate>
+        <displayTemplate databaseId="93" id="Kurs - gjennomføring">
+            <contentTemplate id="Kurs - gjennomføring"/>
+            <metaDataTemplate id="Beskrivelse"/>
+            <name>Kurs - gjennomføring</name>
+            <description>Denne malen bruker du for å legge inn de kursdatoer der kurset skal gjennomføres.</description>
+            <view>/course/participation</view>
+            <miniView>$SITE/maler/mini/standard.jsp</miniView>
+            <sites/>
+
+        </displayTemplate>
+        <displayTemplate databaseId="94" id="Kurs - liste">
+            <contentTemplate id="Kurs - liste"/>
+            <metaDataTemplate id="Beskrivelse"/>
+            <name>Kurs - liste</name>
+            <view>/kommuneweb/maler/kurs/liste.jsp</view>
+            <miniView>/kommuneweb/maler/mini/standard.jsp</miniView>
+            <sites/>
+            <controllers>
+                <controller>kurslisteController</controller>
+            </controllers>
+        </displayTemplate>
+        <displayTemplate databaseId="95" id="Kurs - tema">
+            <contentTemplate id="Kurs - tema"/>
+            <metaDataTemplate id="Beskrivelse"/>
+            <name>Kurs - tema</name>
+            <view>/kommuneweb/maler/kurs/tema.jsp</view>
+            <miniView>/kommuneweb/maler/kurs/mini/tema.jsp</miniView>
+            <sites/>
+
+        </displayTemplate>
+
+        <displayTemplate allowMultipleUsages="false" databaseId="98" id="Byportal - Innovation week">
+            <contentTemplate id="Byportal - Innovation week"/>
+            <metaDataTemplate id="Beskrivelse"/>
+            <name>Byportal - Innovation week</name>
+            <view>/byportal/maler/arrangementsliste.jsp</view>
+            <miniView>$SITE/maler/mini/standard.jsp</miniView>
+            <sites>
+                <site id="byportal"/>
+            </sites>
+
+        </displayTemplate>
+        <displayTemplate databaseId="99" id="Byportal - Innovation week arrangement">
+            <contentTemplate id="Byportal - Innovation week arrangement"/>
+            <metaDataTemplate id="Beskrivelse"/>
+            <name>Byportal - Innovation week arrangement</name>
+            <view>/byportal/maler/arrangement.jsp</view>
+            <miniView>$SITE/maler/mini/standard.jsp</miniView>
+            <sites>
+                <site id="byportal"/>
+            </sites>
+        </displayTemplate>
+
+        <displayTemplate databaseId="110" id="Byportal - Sidekart">
+            <contentTemplate id="Byportal - Sidekart"/>
+            <metaDataTemplate id="Beskrivelse"/>
+            <name>Byportal - Sidekart</name>
+            <description>Sidekart for Byportalen</description>
+            <view>/byportal/maler/sidekart.jsp</view>
+            <miniView>/byportal/maler/sidekart.jsp</miniView>
+            <sites>
+                <site id="byportal"/>
+            </sites>
+
+        </displayTemplate>
+        <displayTemplate databaseId="111" id="Byportal - Tips redaktøren">
+            <contentTemplate id="Byportal - Tips redaktøren"/>
+            <metaDataTemplate id="Beskrivelse"/>
+            <name>Byportal - Tips redaktøren</name>
+            <description>Skjema for å sende inn tips til redaktøren.</description>
+            <view>/byportal/tips/redaktor.jsp</view>
+            <miniView>/byportal/tips/redaktor.jsp</miniView>
+            <sites>
+                <site id="byportal"/>
+            </sites>
+
+        </displayTemplate>
+        <displayTemplate databaseId="112" id="Byportal - Tips redaktøren -Takk for tips.">
+            <contentTemplate id="Byportal - Tips redaktøren"/>
+            <metaDataTemplate id="Beskrivelse"/>
+            <name>Byportal - Tips redaktøren -Takk for tips.</name>
+            <description>Bekreftelsesside etter at brukeren har sendt inn et tips.</description>
+            <view>/byportal/tips/redaktor_send.jsp</view>
+            <miniView>/byportal/tips/redaktor_send.jsp</miniView>
+            <sites>
+                <site id="byportal"/>
+            </sites>
+        </displayTemplate>
+
+        <displayTemplate databaseId="117" id="Kurs - instans">
+            <contentTemplate id="Kurs - instans"/>
+            <metaDataTemplate id="Beskrivelse"/>
+            <name>Kurs - instans</name>
+            <view>/course/instance</view>
+            <miniView>/kommuneweb/maler/mini/standard.jsp</miniView>
+            <sites/>
+
+        </displayTemplate>
+        <displayTemplate allowMultipleUsages="false" databaseId="118" id="Kurs - meny">
+            <contentTemplate id="Kurs - meny"/>
+            <metaDataTemplate id="Beskrivelse"/>
+            <name>Kurs - meny</name>
+            <view>/course/menu</view>
+            <miniView>/kommuneweb/maler/mini/standard.jsp</miniView>
+            <sites/>
+
+        </displayTemplate>
+        <displayTemplate databaseId="119" id="Kurs - sesjon">
+            <contentTemplate id="Kurs - sesjon"/>
+            <metaDataTemplate id="Beskrivelse"/>
+            <name>Kurs - sesjon</name>
+            <view>/kommuneweb/maler/kurs/sesjon.jsp</view>
+            <miniView>/kommuneweb/maler/mini/standard.jsp</miniView>
+            <sites/>
+        </displayTemplate>
+
+        <displayTemplate databaseId="124" id="Byportal - søk">
+            <contentTemplate id="Søk"/>
+            <metaDataTemplate id="Beskrivelse"/>
+            <name>Byportal - søk</name>
+            <view>/WEB-INF/jsp/byportal/search/index.jsp</view>
+            <miniView>/WEB-INF/jsp/</miniView>
+            <sites>
+                <site id="byportal"/>
+            </sites>
+            <controllers>
+                <controller>contentSearchController</controller>
+            </controllers>
+        </displayTemplate>
+
+        <displayTemplate databaseId="133" id="Enkelt skjema">
+            <contentTemplate id="Enkelt skjema"/>
+            <metaDataTemplate id="Beskrivelse"/>
+            <name>Enkelt skjema</name>
+            <description>Redigerbart skjema som sendes på epost og lagres i database med eksport til Excel</description>
+            <view>$SITE/maler/enkeltskjema.jsp</view>
+            <miniView>$SITE/maler/mini/standard.jsp</miniView>
+            <controllers>
+                <controller>aksessSaveFormSubmissionController</controller>
+            </controllers>
+            <sites>
+                <site id="byportal"/>
+            </sites>
+        </displayTemplate>
+
+        <displayTemplate databaseId="136" id="Utfordringen forside" allowMultipleUsages="true" isNewGroup="true">
+            <contentTemplate id="Utfordringen forside"/>
+            <name>Utfordringen forside</name>
+            <description>Forside og hovedside for treningsmodulen Utfordringen</description>
+            <view>/WEB-INF/jsp/utfordringen/utfordringen_forside.jsp</view>
+            <miniView>/kommuneweb/maler/mini/standard.jsp</miniView>
+        </displayTemplate>
+
+        <displayTemplate databaseId="137" id="Utfordringen aktivitet" allowMultipleUsages="true">
+            <contentTemplate id="Utfordringen aktivitet"/>
+            <metaDataTemplate id="Beskrivelse"/>
+            <name>Utfordringen aktivitet</name>
+            <description>Representerer en aktivitet som kan loggføres i Utfordringen</description>
+            <view>/WEB-INF/jsp/utfordringen/utfordringen_aktivitet.jsp</view>
+            <miniView>/kommuneweb/maler/mini/standard.jsp</miniView>
+        </displayTemplate>
+
+        <displayTemplate databaseId="138" id="Utfordringen log aktivitet" allowMultipleUsages="false">
+            <contentTemplate id="Utfordringen log aktivitet"/>
+            <name>Utfordringen log aktivitet</name>
+            <description>Denne siden som lar brukere logge aktiviteter</description>
+            <view>/WEB-INF/jsp/utfordringen/utfordringen_logaktivitet.jsp</view>
+            <miniView>/kommuneweb/maler/mini/standard.jsp</miniView>
+        </displayTemplate>
+
+        <displayTemplate databaseId="139" id="Utfordringen toppliste" allowMultipleUsages="true">
+            <contentTemplate id="Utfordringen toppliste"/>
+            <name>Utfordringen toppliste</name>
+            <description>Statisikk som viser lagene med flest loggførte poeng</description>
+            <view>/WEB-INF/jsp/utfordringen/utfordringen_toppliste.jsp</view>
+            <miniView>/kommuneweb/maler/mini/standard.jsp</miniView>
+        </displayTemplate>
+
+        <displayTemplate databaseId="140" id="Utfordringen mitt lag" allowMultipleUsages="false">
+            <contentTemplate id="Utfordringen mitt lag"/>
+            <name>Utfordringen mitt lag</name>
+            <description>Gir brukeren oversikt over sitt lag og dets loger</description>
+            <view>/WEB-INF/jsp/utfordringen/utfordringen_mittlag.jsp</view>
+            <miniView>/kommuneweb/maler/mini/standard.jsp</miniView>
+        </displayTemplate>
+
+        <displayTemplate databaseId="141" id="Utfordringen velg lag" allowMultipleUsages="false">
+            <contentTemplate id="Utfordringen velg lag"/>
+            <name>Utfordringen velg lag</name>
+            <description>Gir brukeren mulighet til å opprette og velge lag</description>
+            <view>/WEB-INF/jsp/utfordringen/utfordringen_velglag.jsp</view>
+            <miniView>/kommuneweb/maler/mini/standard.jsp</miniView>
+        </displayTemplate>
+
+        <displayTemplate databaseId="142" id="Utfordringen Treningsdagbok" allowMultipleUsages="false">
+            <contentTemplate id="Utfordringen Treningsdagbok"/>
+            <name>Utfordringen treningsdagbok</name>
+            <description>Gir brukeren mulighet til å vise tidligere aktiviteter med statistikk og mulighet til å slette
+                logger
+            </description>
+            <view>/WEB-INF/jsp/utfordringen/utfordringen_treningsdagbok.jsp</view>
+            <miniView>/kommuneweb/maler/mini/standard.jsp</miniView>
+        </displayTemplate>
+
+        <displayTemplate databaseId="143" id="Utfordringen motivator intervall" allowMultipleUsages="false" isNewGroup="true">
+            <contentTemplate id="Utfordringen motivator intervall"/>
+            <name>Utfordringen motivator intervall</name>
+            <description>Gir mulighet for å sette opp motiverende beskjeder basert på poengintervall</description>
+            <view>/WEB-INF/jsp/utfordringen/utfordringen_forside.jsp</view>
+            <miniView>/kommuneweb/maler/mini/standard.jsp</miniView>
+        </displayTemplate>
+
+        <displayTemplate databaseId="144" id="Utfordringen admintools" allowMultipleUsages="false">
+            <contentTemplate id="Utfordringen admintools"/>
+            <name>Utfordringen admintools</name>
+            <description>Gir tilgang til administratorverktøy for utfordringen, f.eks. å hente totalscore basert på
+                datointervall
+            </description>
+            <view>/WEB-INF/jsp/utfordringen/utfordringen_admintools.jsp</view>
+            <miniView>/kommuneweb/maler/mini/standard.jsp</miniView>
+        </displayTemplate>
+
+        <!-- K2 -->
+        <displayTemplate allowMultipleUsages="false" databaseId="4001" id="Forside kommuneweb">
+            <contentTemplate id="Forside kommuneweb"/>
+            <metaDataTemplate id="Beskrivelse"/>
+            <name>Forside</name>
+            <description>Mal for startsiden, dvs www.trondheim.kommune.no</description>
+            <view>/WEB-INF/jsp/kommuneweb2/index.jsp</view>
+            <sites>
+                <site id="kommuneweb2"/>
+                <site id="english"/>
+            </sites>
+        </displayTemplate>
+
+        <displayTemplate databaseId="4002" id="Kjerneside kommuneweb" isNewGroup="true">
+            <contentTemplate id="Kjerneside kommuneweb"/>
+            <metaDataTemplate id="Beskrivelse"/>
+            <name>Kjerneside</name>
+            <description>Kjerneside nye eksternsider</description>
+            <view>/WEB-INF/jsp/kommuneweb2/kjerneside.jsp</view>
+            <sites>
+                <site id="kommuneweb2"/>
+                <site id="english"/>
+            </sites>
+        </displayTemplate>
+
+        <displayTemplate databaseId="4003" id="Artikkelside kommuneweb">
+            <contentTemplate id="Artikkelside"/>
+            <metaDataTemplate id="Beskrivelse"/>
+            <name>Artikkelside</name>
+            <description>Artikkelside, nye eksternsider</description>
+            <view>/WEB-INF/jsp/kommuneweb2/article.jsp</view>
+            <sites>
+                <site id="kommuneweb2"/>
+                <site id="english"/>
+            </sites>
+            <controllers>
+                <controller>itslearningAndRssController</controller>
+                <controller>skoleplanController</controller>
+            </controllers>
+        </displayTemplate>
+
+        <displayTemplate databaseId="4004" id="Tema">
+            <contentTemplate id="Tema"/>
+            <name>Temameny</name>
+            <description>Innhold som vises i megameny på toppen</description>
+            <view>/WEB-INF/jsp/kommuneweb2/admin/tema.jsp</view>
+            <sites>
+                <site id="kommuneweb2"/>
+                <site id="english"/>
+            </sites>
+        </displayTemplate>
+
+        <displayTemplate databaseId="4005" id="Enhetsliste_K2">
+            <contentTemplate id="Enhetsliste_K2"/>
+            <metaDataTemplate id="Beskrivelse"/>
+            <name>Enhetsliste</name>
+            <description>Liste med enheter, du velger selv kategori og styringsformer som skal vises.</description>
+            <view>/WEB-INF/jsp/kommuneweb2/enhet/enhetsliste.jsp</view>
+            <sites>
+                <site id="kommuneweb2"/>
+                <site id="english"/>
+            </sites>
+            <controllers>
+                <controller>enhetslisteController</controller>
+            </controllers>
+        </displayTemplate>
+
+        <displayTemplate databaseId="4006" id="Fotoalbum K2">
+            <contentTemplate id="Fotoalbum K2"/>
+            <metaDataTemplate id="Beskrivelse"/>
+            <name>Fotoalbum</name>
+            <description>Visning av bildemappe fra multimediaarkivet</description>
+            <view>/WEB-INF/jsp/kommuneweb2/fotoalbum.jsp</view>
+            <sites>
+                <site id="kommuneweb2"/>
+                <site id="english"/>
+            </sites>
+        </displayTemplate>
+
+        <displayTemplate databaseId="4007" id="Albumsamling">
+            <contentTemplate id="Albumsamling"/>
+            <metaDataTemplate id="Beskrivelse"/>
+            <name>Albumsamling</name>
+            <description>Er en samling fotoalbum fra multimediaarkivet</description>
+            <view>/WEB-INF/jsp/kommuneweb2/albumsamling.jsp</view>
+            <sites>
+                <site id="kommuneweb2"/>
+                <site id="english"/>
+            </sites>
+            <controllers>
+                <controller>albumsamlingController</controller>
+            </controllers>
+        </displayTemplate>
+
+
+        <displayTemplate databaseId="4008" id="Enhetsside K2" isNewGroup="true">
+            <contentTemplate id="Enhetsside K2"/>
+            <metaDataTemplate id="Beskrivelse"/>
+            <name>Enhetsside</name>
+            <description>Hjemmeside for en enhet.</description>
+            <view>/WEB-INF/jsp/kommuneweb2/enhet/enhetsside.jsp</view>
+            <sites>
+                <site id="kommuneweb2"/>
+                <site id="english"/>
+            </sites>
+            <controllers>
+                <controller>enhetsSideKontroller</controller>
+                <controller>itslearningAndRssController</controller>
+            </controllers>
+        </displayTemplate>
+
+        <displayTemplate databaseId="4009" id="Undertema">
+            <contentTemplate id="Undertema"/>
+            <name>Undertema</name>
+            <description>Et undertema (fungerer som en mappe)</description>
+            <view>/WEB-INF/jsp/kommuneweb2/admin/undertema.jsp</view>
+            <sites>
+                <site id="kommuneweb2"/>
+                <site id="english"/>
+            </sites>
+        </displayTemplate>
+
+        <displayTemplate databaseId="4010" id="ansattliste">
+            <contentTemplate id="ansattliste"/>
+            <metaDataTemplate id="Beskrivelse"/>
+            <name>Ansattliste</name>
+            <description>Liste over ansatte, må ligge under en enhetsside.</description>
+            <view>/WEB-INF/jsp/kommuneweb2/ansatt/ansattliste.jsp</view>
+            <sites>
+                <site id="kommuneweb2"/>
+                <site id="english"/>
+            </sites>
+            <controllers>
+                <controller>ansattKontroller</controller>
+            </controllers>
+        </displayTemplate>
+
+        <displayTemplate databaseId="4011" id="Mappe">
+            <contentTemplate id="Mappe"/>
+            <name>Mappe</name>
+            <description>Mappe for å ordne enheter.</description>
+            <view>/WEB-INF/jsp/kommuneweb2/enhet/mappe.jsp</view>
+            <sites>
+                <site id="kommuneweb2"/>
+                <site id="english"/>
+            </sites>
+        </displayTemplate>
+
+        <displayTemplate databaseId="4012" id="Kalender">
+            <contentTemplate id="Kalender"/>
+            <metaDataTemplate id="Beskrivelse"/>
+            <name>Kalender</name>
+            <description>En kalender det er mulig å publisere hendelser under, eller importere hendelser fra Google Calendar</description>
+            <view>/WEB-INF/jsp/kommuneweb2/kalender/view.jsp</view>
+            <sites>
+                <site id="kommuneweb2"/>
+                <site id="english"/>
+            </sites>
+        </displayTemplate>
+
+        <displayTemplate databaseId="4013" id="Kalenderinnslag">
+            <contentTemplate id="Kalenderinnslag"/>
+            <name>Kalenderinnslag</name>
+            <description>Et innslag i kalenderen</description>
+            <view>/WEB-INF/jsp/kommuneweb2/kalender/event.jsp</view>
+            <sites>
+                <site id="kommuneweb2"/>
+                <site id="english"/>
+            </sites>
+        </displayTemplate>
+
+
+        <displayTemplate databaseId="4017" id="søk_k2" allowMultipleUsages="false">
+            <contentTemplate id="søk_k2"/>
+            <name>Søkeside</name>
+            <description>Søkeside for kommuneweb 2.</description>
+            <view>/WEB-INF/jsp/kommuneweb2/sok/sok.jsp</view>
+            <sites>
+                <site id="kommuneweb2"/>
+                <site id="english"/>
+            </sites>
+        </displayTemplate>
+
+        <displayTemplate databaseId="4018" id="ordforers_uke_kalender" allowMultipleUsages="false">
+            <contentTemplate id="ordforers_uke_kalender"/>
+            <metaDataTemplate id="Beskrivelse"/>
+            <name>Ordførers uke kalender</name>
+            <description>Viser ordførers uke</description>
+            <view>/WEB-INF/jsp/kommuneweb2/ordforer/ordforers_uke_kalender.jsp</view>
+            <sites>
+                <site id="kommuneweb2"/>
+                <site id="english"/>
+            </sites>
+            <controllers>
+                <controller>ordforerensUkeController</controller>
+            </controllers>
+        </displayTemplate>
+
+        <displayTemplate databaseId="4019" id="ordforers_uke_enkeltuke">
+            <contentTemplate id="ordforers_uke_enkeltuke"/>
+            <name>En uke i ordførers-uke-kalender</name>
+            <description>Inneholder en uke av ordføreres uke</description>
+            <view>/WEB-INF/jsp/kommuneweb2/ordforer/ordforers_uke_enkeltuke.jsp</view>
+            <sites>
+                <site id="kommuneweb2"/>
+                <site id="english"/>
+            </sites>
+            <controllers>
+                <controller>ordforerensEnkeltUkeController</controller>
+            </controllers>
+        </displayTemplate>
+
+        <displayTemplate databaseId="4020" id="Alfabetisk liste">
+            <contentTemplate id="Alfabetisk liste"/>
+            <metaDataTemplate id="Beskrivelse"/>
+            <name>Alfabetisk liste</name>
+            <description>Lister opp undersider etter forbokstav</description>
+            <view>/WEB-INF/jsp/kommuneweb2/alfabetiskliste.jsp</view>
+            <sites>
+                <site id="kommuneweb2"/>
+                <site id="english"/>
+            </sites>
+        </displayTemplate>
+
+        <displayTemplate databaseId="4021" id="Redigerbart skjema">
+            <contentTemplate id="Redigerbart skjema"/>
+            <name>Skjema - redigerbart</name>
+            <description>Redigerbart skjema som sendes på epost og lagres i database med eksport til Excel</description>
+            <view>/WEB-INF/jsp/kommuneweb2/skjema/redigerbartskjema.jsp</view>
+            <controllers>
+                <controller>aksessSaveFormSubmissionController</controller>
+            </controllers>
+            <sites>
+                <site id="kommuneweb2"/>
+                <site id="english"/>
+            </sites>
+        </displayTemplate>
+
+        <displayTemplate databaseId="4022" id="Abonnement">
+            <name>Nyhetsbrev</name>
+            <description>Mal for håndtering av nyhetsbrev</description>
+            <view>/WEB-INF/jsp/kommuneweb2/abonnement.jsp</view>
+            <contentTemplate id="Abonnement"/>
+            <controllers>
+                <controller>subscriptionController</controller>
+            </controllers>
+            <sites>
+                <site id="kommuneweb2"/>
+                <site id="english"/>
+            </sites>
+        </displayTemplate>
+        <displayTemplate databaseId="4025" id="Webcruiter_ads">
+            <name>Stillingsannonser fra Webcruiter</name>
+            <description>RSS feed fra webcruiter</description>
+            <view>/WEB-INF/jsp/kommuneweb2/webcruiter/webcruiter_ads.jsp</view>
+            <contentTemplate id="Webcruiter_ads"/>
+            <sites>
+                <site id="kommuneweb2"/>
+                <site id="english"/>
+            </sites>
+        </displayTemplate>
+
+        <displayTemplate databaseId="4027" id="Webcruiter_ad">
+            <name>Stillingsannonse fra Webcruiter</name>
+            <description>Stillingsannonse fra Webcruiter</description>
+            <view>/WEB-INF/jsp/kommuneweb2/webcruiter/webcruiter_ad.jsp</view>
+            <contentTemplate id="Webcruiter_ad"/>
+            <sites>
+                <site id="kommuneweb2"/>
+                <site id="english"/>
+            </sites>
+        </displayTemplate>
+
+        <displayTemplate databaseId="4026" id="Artikkelside utfordringen">
+            <contentTemplate id="Artikkelside"/>
+            <metaDataTemplate id="Beskrivelse"/>
+            <name>Artikkelside for artikkelsider på utfordringen</name>
+            <description>Artikkelside, med simpel utlisting av undersider under hovedsiden for utfordringen.</description>
+            <view>/WEB-INF/jsp/utfordringen/utfordringen_artikkel.jsp</view>
+            <sites>
+                <site id="kommuneweb2"/>
+                <site id="english"/>
+            </sites>
+        </displayTemplate>
+
+        <!-- Miljøstatus -->
+        <displayTemplate databaseId="1001" id="Miljostatus" allowMultipleUsages="false">
+            <contentTemplate id="Miljostatus"/>
+            <name>Miljøstatus, forside</name>
+            <description>Forsidemal for nettstedet Miljøstatus</description>
+            <view>/WEB-INF/jsp/miljostatus/miljostatus.jsp</view>
+            <sites>
+                <site id="miljostatus"/>
+            </sites>
+        </displayTemplate>
+
+        <displayTemplate databaseId="1002" id="Miljostatus_old" allowMultipleUsages="true">
+            <contentTemplate id="Miljostatus"/>
+            <name>Miljøstatus, gammel versjon</name>
+            <description>Forsidemal for nettstedet Miljøstatus</description>
+            <view>/WEB-INF/jsp/miljostatus/miljostatus_old.jsp</view>
+            <sites>
+                <site id="miljostatus"/>
+            </sites>
+        </displayTemplate>
+
+
+        <displayTemplate databaseId="1003" id="tema_samling" allowMultipleUsages="false">
+            <contentTemplate id="tema_samling"/>
+            <name>Samleside for miljøtema</name>
+            <description>Side alle tema må legges under.</description>
+            <view>/WEB-INF/jsp/miljostatus/tema-samleside.jsp</view>
+            <sites>
+                <site id="miljostatus"/>
+            </sites>
+        </displayTemplate>
+
+        <displayTemplate databaseId="1004" id="tema_artikkel">
+            <contentTemplate id="tema_artikkel"/>
+            <name>Miljøtema artikkel</name>
+            <description>Beskrivelse av et miljøtema i fritekst</description>
+            <view>/WEB-INF/jsp/miljostatus/tema-artikkel.jsp</view>
+            <sites>
+                <site id="miljostatus"/>
+            </sites>
+        </displayTemplate>
+
+        <displayTemplate databaseId="1005" id="tema_dpsir">
+            <contentTemplate id="tema_dpsir"/>
+            <name>Miljøtema dpsir</name>
+            <description>Beskrivelse av et miljøtema etter DPSIR standarden</description>
+            <view>/WEB-INF/jsp/miljostatus/tema-dpsir.jsp</view>
+            <sites>
+                <site id="miljostatus"/>
+            </sites>
+        </displayTemplate>
+
+        <displayTemplate databaseId="1006" id="info_samling" allowMultipleUsages="false">
+            <contentTemplate id="info_samling"/>
+            <name>Samleside for informasjonsartikler</name>
+            <description>Samlesider for alle artikler som ikke er direkte knyttet til tema</description>
+            <view>/WEB-INF/jsp/miljostatus/info-samleside.jsp</view>
+            <sites>
+                <site id="miljostatus"/>
+            </sites>
+        </displayTemplate>
+
+        <displayTemplate databaseId="1007" id="info_artikkel">
+            <contentTemplate id="info_artikkel"/>
+            <name>Informasjonsartikkel</name>
+            <description>Artikkel med informasjon som ikke er direkte knyttet til miljøtema</description>
+            <view>/WEB-INF/jsp/miljostatus/info-artikkel.jsp</view>
+            <sites>
+                <site id="miljostatus"/>
+            </sites>
+        </displayTemplate>
+
+        <displayTemplate databaseId="1008" id="tema_side">
+            <contentTemplate id="tema_side"/>
+            <name>Tema side</name>
+            <description>Side for organisering av lenker i menypunkt</description>
+            <view>/WEB-INF/jsp/miljostatus/article.jsp</view>
+            <sites>
+                <site id="miljostatus"/>
+            </sites>
+        </displayTemplate>
+
+        <!-- Folkebiblioteket -->
+        <displayTemplate databaseId="2001" id="Folkebiblioteket - forside">
+            <contentTemplate id="Folkebiblioteket - forside"/>
+            <metaDataTemplate id="Beskrivelse"/>
+            <name>Folkebiblioteket - forside</name>
+            <description>Forside for Trondheim folkebibliotek</description>
+            <view>/WEB-INF/jsp/folkebiblioteket2/index.jsp</view>
+            <sites>
+                <site id="folkebiblioteket2"/>
+            </sites>
+        </displayTemplate>
+
+        <displayTemplate databaseId="2002" id="Folkebiblioteket - kampanjer">
+            <contentTemplate id="Folkebiblioteket - kampanjer"/>
+            <name>Folkebiblioteket - kampanjer</name>
+            <metaDataTemplate id="Beskrivelse"/>
+            <description>Samleside for alle forsidekampanjene på forsiden</description>
+            <view>/WEB-INF/jsp/folkebiblioteket2/redirect.jsp</view>
+            <sites>
+                <site id="folkebiblioteket2"/>
+            </sites>
+        </displayTemplate>
+
+
+        <displayTemplate databaseId="2003" id="Folkebiblioteket - Kampanje">
+            <contentTemplate id="Folkebiblioteket - kampanje"/>
+            <metaDataTemplate id="Beskrivelse"/>
+            <name>Folkebiblioteket - Kampanje</name>
+            <description>En kampanje med bilde, tekst og lenke som kan vises på forsiden</description>
+            <view>/WEB-INF/jsp/folkebiblioteket2/redirect.jsp</view>
+            <sites>
+                <site id="folkebiblioteket2"/>
+            </sites>
+        </displayTemplate>
+
+
+        <displayTemplate databaseId="2005" id="Folkebiblioteket - blogg">
+            <contentTemplate id="Folkebiblioteket - blogg"/>
+            <metaDataTemplate id="Beskrivelse"/>
+            <name>Folkebiblioteket - blogg</name>
+            <description>Bloggartikler og temasamlinger</description>
+            <view>/WEB-INF/jsp/folkebiblioteket2/artikkel.jsp</view>
+            <sites>
+                <site id="folkebiblioteket2"/>
+            </sites>
+        </displayTemplate>
+
+        <displayTemplate databaseId="2006" id="Folkebiblioteket - hovedside">
+            <contentTemplate id="Folkebiblioteket - hovedside"/>
+            <metaDataTemplate id="Beskrivelse"/>
+            <name>Folkebiblioteket - hovedside</name>
+            <view>/WEB-INF/jsp/folkebiblioteket2/hovedside.jsp</view>
+            <description>Hovedside (Lese, Høre, Se, Spille etc).</description>
+            <sites>
+                <site id="folkebiblioteket2"/>
+            </sites>
+        </displayTemplate>
+
+        <displayTemplate databaseId="2007" id="Folkebiblioteket - anmeldelse">
+            <contentTemplate id="Folkebiblioteket - anmeldelse"/>
+            <metaDataTemplate id="Beskrivelse"/>
+            <name>Folkebiblioteket - anmeldelse</name>
+            <view>/WEB-INF/jsp/folkebiblioteket2/anmeldelse.jsp</view>
+            <description>Produktanmeldelse</description>
+            <sites>
+                <site id="folkebiblioteket2"/>
+            </sites>
+        </displayTemplate>
+
+        <displayTemplate databaseId="2008" id="Folkebiblioteket - artikkel">
+            <contentTemplate id="Folkebiblioteket - artikkel"/>
+            <metaDataTemplate id="Beskrivelse"/>
+            <name>Folkebiblioteket - artikkel</name>
+            <view>/WEB-INF/jsp/folkebiblioteket2/artikkel.jsp</view>
+            <description>En standard artikkel</description>
+            <sites>
+                <site id="folkebiblioteket2"/>
+            </sites>
+        </displayTemplate>
+
+        <displayTemplate allowMultipleUsages="false" databaseId="2010" id="Folkebiblioteket - Arrangementskalender">
+            <contentTemplate id="Folkebiblioteket - Arrangementskalender"/>
+            <metaDataTemplate id="Beskrivelse"/>
+            <name>Arrangementskalender</name>
+            <description>Bibliotekets arrangementskalender. Arrangementene skal tagges med medietype fra emnekart.
+            </description>
+            <view>/WEB-INF/jsp/folkebiblioteket2/arrangementskalender.jsp</view>
+            <miniView>/WEB-INF/jsp/folkebiblioteket2/design/arrangementskalender-mini.jsp</miniView>
+            <sites>
+                <site id="folkebiblioteket2"/>
+            </sites>
+            <controllers>
+                <controller>arrangementskalenderControllerTFB</controller>
+            </controllers>
+        </displayTemplate>
+
+        <displayTemplate databaseId="2011" id="Folkebiblioteket - Arrangementskalender - arrangement">
+            <contentTemplate id="Folkebiblioteket - Arrangementskalender - arrangement"/>
+            <metaDataTemplate id="Beskrivelse"/>
+            <name>Arrangementskalender - arrangement</name>
+            <description>Arrangementet skal tagges med medietype fra emnekart</description>
+            <view>/WEB-INF/jsp/folkebiblioteket2/arrangement.jsp</view>
+            <sites>
+                <site id="folkebiblioteket2"/>
+            </sites>
+        </displayTemplate>
+
+        <displayTemplate databaseId="2012" id="Folkebiblioteket - anmeldelser">
+            <contentTemplate id="Folkebiblioteket - anmeldelser"/>
+            <metaDataTemplate id="Beskrivelse"/>
+            <name>Folkebiblioteket - anmeldelser</name>
+            <view>/WEB-INF/jsp/folkebiblioteket2/anmeldelser.jsp</view>
+            <description>Utlisting av anmeldelser</description>
+            <sites>
+                <site id="folkebiblioteket2"/>
+            </sites>
+        </displayTemplate>
+
+        <displayTemplate allowMultipleUsages="false" databaseId="2013" id="Folkebiblioteket - søk">
+            <contentTemplate id="Folkebiblioteket - søk"/>
+            <metaDataTemplate id="Beskrivelse"/>
+            <name>Søkeside og -resultater</name>
+            <view>/WEB-INF/jsp/folkebiblioteket2/search.jsp</view>
+            <description>Søkeside og søkeresultater for Biliotekssidene</description>
+            <sites>
+                <site id="folkebiblioteket2"/>
+            </sites>
+            <controllers>
+                <controller>contentSearchController</controller>
+            </controllers>
+        </displayTemplate>
+
+        <displayTemplate databaseId="2014" id="Folkebiblioteket - genresøk">
+            <contentTemplate id="Folkebiblioteket - genresøk"/>
+            <metaDataTemplate id="Beskrivelse"/>
+            <name>Genre med egendefinert søk</name>
+            <view>/WEB-INF/jsp/folkebiblioteket2/genre_sok.jsp</view>
+            <description>Mal for å koble sammen genre fra emnekartet med URL til søk i bibliofil.</description>
+            <sites>
+                <site id="folkebiblioteket2"/>
+            </sites>
+        </displayTemplate>
+
+        <displayTemplate databaseId="2015" id="Folkebiblioteket - avdeling">
+            <contentTemplate id="Folkebiblioteket - avdeling"/>
+            <metaDataTemplate id="Beskrivelse"/>
+            <name>Avdeling</name>
+            <view>/WEB-INF/jsp/folkebiblioteket2/avdeling.jsp</view>
+            <sites>
+                <site id="folkebiblioteket2"/>
+            </sites>
+        </displayTemplate>
+
+        <displayTemplate databaseId="2016" id="Folkebiblioteket - avdelinger">
+            <contentTemplate id="Folkebiblioteket - avdelinger"/>
+            <metaDataTemplate id="Beskrivelse"/>
+            <name>Folkebiblioteket - avdelinger</name>
+            <view>/WEB-INF/jsp/folkebiblioteket2/titteltekst.jsp</view>
+            <sites>
+                <site id="folkebiblioteket2"/>
+            </sites>
+        </displayTemplate>
+
+        <displayTemplate databaseId="2017" id="Folkebiblioteket - åpningstider">
+            <contentTemplate id="Folkebiblioteket - åpningstider"/>
+            <metaDataTemplate id="Beskrivelse"/>
+            <name>Folkebiblioteket - åpningstider</name>
+            <view>/WEB-INF/jsp/folkebiblioteket2/titteltekst.jsp</view>
+            <sites>
+                <site id="folkebiblioteket2"/>
+            </sites>
+        </displayTemplate>
+
+        <displayTemplate databaseId="2018" id="Folkebiblioteket - åpningstid">
+            <contentTemplate id="Folkebiblioteket - åpningstid"/>
+            <metaDataTemplate id="Beskrivelse"/>
+            <name>Folkebiblioteket - åpningstid</name>
+            <view>/WEB-INF/jsp/folkebiblioteket2/artikkel.jsp</view>
+            <description>Spesialside tilpasset publisering av åpningstider.</description>
+            <sites>
+                <site id="folkebiblioteket2"/>
+            </sites>
+        </displayTemplate>
+
+        <displayTemplate databaseId="3001" id="sobstad - forside">
+            <contentTemplate id="sobstad - forside"/>
+            <metaDataTemplate id="Beskrivelse"/>
+            <name>Forside</name>
+            <description>Forside for Sobstad Helsehus</description>
+            <view>/WEB-INF/jsp/sobstad_helsehus/index.jsp</view>
+            <sites>
+                <site id="sobstad"/>
+            </sites>
+        </displayTemplate>
+
+
+        <displayTemplate databaseId="3002" id="sobstad - artikkel">
+            <contentTemplate id="sobstad - artikkel"/>
+            <metaDataTemplate id="Beskrivelse"/>
+            <name>Artikkel</name>
+            <view>/WEB-INF/jsp/sobstad_helsehus/artikkel.jsp</view>
+            <miniView>/WEB-INF/jsp/sobstad_helsehus/mini/artikkel.jsp</miniView>
+            <description>En standard artikkel</description>
+            <sites>
+                <site id="sobstad"/>
+            </sites>
+        </displayTemplate>
+
+        <displayTemplate databaseId="3003" id="sobstad - liste">
+            <contentTemplate id="sobstad - liste"/>
+            <metaDataTemplate id="Beskrivelse"/>
+            <name>Artikkelliste</name>
+            <view>/WEB-INF/jsp/sobstad_helsehus/liste.jsp</view>
+            <miniView>/WEB-INF/jsp/sobstad_helsehus/mini/artikkel.jsp</miniView>
+            <description>En liste med Artikler, Nyhetsarkiv</description>
+            <sites>
+                <site id="sobstad"/>
+            </sites>
+        </displayTemplate>
+
+
+        <displayTemplate allowMultipleUsages="true" databaseId="3004" id="sobstad - Arrangementskalender">
+            <contentTemplate id="sobstad - Arrangementskalender"/>
+            <metaDataTemplate id="Beskrivelse"/>
+            <name>Arrangementskalender</name>
+            <description>Arrangementskalender. Arrangementene skal tagges med medietype fra emnekart.
+            </description>
+            <view>/WEB-INF/jsp/sobstad_helsehus/arrangementskalender.jsp</view>
+            <miniView>/WEB-INF/jsp/sobstad_helsehus/mini/kalender.jsp</miniView>
+            <sites>
+                <site id="sobstad"/>
+            </sites>
+        </displayTemplate>
+
+        <displayTemplate databaseId="3005" id="sobstad - Arrangementskalender - arrangement">
+            <contentTemplate id="sobstad - Arrangementskalender - arrangement"/>
+            <metaDataTemplate id="Beskrivelse"/>
+            <name>Arrangementskalender - arrangement</name>
+            <description>Arrangementet skal tagges med medietype fra emnekart</description>
+            <view>/WEB-INF/jsp/sobstad_helsehus/arrangement.jsp</view>
+            <miniView>/WEB-INF/jsp/sobstad_helsehus/mini/artikkel.jsp</miniView>
+            <sites>
+                <site id="sobstad"/>
+            </sites>
+        </displayTemplate>
+
+        <displayTemplate allowMultipleUsages="false" databaseId="3006" id="sobstad - sok">
+            <contentTemplate id="sobstad - sok"/>
+            <metaDataTemplate id="Beskrivelse"/>
+            <name>Søkeside og -resultater</name>
+            <view>/WEB-INF/jsp/sobstad_helsehus/search.jsp</view>
+            <description>Søkeside og søkeresultater</description>
+            <sites>
+                <site id="sobstad"/>
+            </sites>
+            <controllers>
+                <controller>contentSearchController</controller>
+            </controllers>
+        </displayTemplate>
+
+    </displayTemplates>
+</templateConfiguration>

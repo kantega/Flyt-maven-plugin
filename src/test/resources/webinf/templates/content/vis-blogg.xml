@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<attribute name="tillat kommentarer" type="list" default="nei">
+    <options>
+        <option value="nei">Nei</option>
+        <option value="ja">Ja</option>
+    </options>
+    <helptext>Angir om brukeren skal ha mulighet til å legge inn kommentarer på siden.</helptext>
+</attribute>

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<template xmlns="http://www.kantega.no" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.kantega.no http://www.kantega.no/aksess/aksess-template.xsd">
+    <attributes>
+        <attribute name="tittel" type="text" mapto="title" mandatory="true"/>
+        <attribute name="genre" mapto="topics" type="topic" topicmapid="Folkebiblioteket" topicinstanceof="sjanger"/>
+        <attribute name="searchurl" title="URL til egendefinert søk" type="text" maxlength="300">
+            <helptext> <![CDATA[
+                Egendefinert genre bør publiseres til midtspalte for å unngå at siden vises dobbelt i venstremeny.<br>
+                Gå til http://www.tfb.no/cgi-bin/websok-portal?mode=sok&amp;st=a#soket for å definere et søk, og lim URL til søket inn her.
+                ]]>
+            </helptext>
+        </attribute>
+    </attributes>
+</template>

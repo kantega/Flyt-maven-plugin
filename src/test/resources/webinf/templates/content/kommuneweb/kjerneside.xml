@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<template xmlns="http://www.kantega.no" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:schemaLocation="http://www.kantega.no http://www.kantega.no/aksess/aksess-template.xsd">
+    <attributes>
+
+        <attribute name="tittel" title="Tittel" type="text" mandatory="true" mapto="title" />
+        <attribute name="langtekst" title="Lang tekst" type="htmltext"/>
+        <attribute name="korttekst" title="Undertittel/ingress"  type="text" mapto="description"/>
+
+        <repeater name="utvalgte_sider_promoboks" title="Utvalgte sider med beskrivelse som vises i promoboks" minoccurs="0">
+            <attribute name="utvalgt_side_promoboks" title="Utvalgt side" type="contentid" multiple="false" mandatory="true">
+                <helptext>Tittelen på valgt side blir tittelen på promoboksen.</helptext>
+            </attribute>
+            <attribute name="utvalgt_side_tekst_promoboks" title="ledetekst" type="text">
+                <helptext>Kort, beskrivende tekst under tittel i promoboks.</helptext>
+            </attribute>
+        </repeater>
+
+        <repeater name="utvalgte_sider_hoyre" title="Utvalgte sider eller eksterne lenker med beskrivelse som vises i høyremeny" minoccurs="0">
+            <attribute name="utvalgt_side_hoyre" title="Utvalgt side eller ekstern lenke/url" type="url">
+                <helptext>Velg lenke til intern side eller angi url til ekstern side, f.eks http://www.vg.no </helptext>
+            </attribute>
+            <attribute name="tittel_hoyre" title="Tittel på utvalgt side eller ekstern lenke/url" type="text">
+                <helptext>Tittel som vises i høyremeny</helptext>
+            </attribute>
+            <attribute name="utvalgt_side_tekst_hoyre" title="Beskrivelse" type="text">
+                <helptext>Kort, beskrivende tekst om innholdet i utvalgt side eller ekstern lenke.</helptext>
+            </attribute>
+        </repeater>
+
+
+
+
+    </attributes>
+</template>

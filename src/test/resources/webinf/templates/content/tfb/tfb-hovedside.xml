@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<template xmlns="http://www.kantega.no" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:schemaLocation="http://www.kantega.no http://www.kantega.no/aksess/aksess-template.xsd">
+    <attributes>
+        <attribute name="tittel" title="Sidens tittel (Lese, Se, Høre, etc)." type="text" mapto="title" mandatory="true"/>
+        <attribute name="menysubtittel" title="Undertittel i hovedmeny" type="text" mandatory="true"/>
+        <attribute name="genre" type="topiclist" topicmapid="Folkebiblioteket" topicinstanceof="medium"  multiple="false"  title="Mediumtilknytning" mandatory="true" />
+        <attribute name="kikkhulloverskrift" type="text" title="Overskrift over kikkhullimporten i midtspalten"/>
+         <attribute name="bibliofiloverskrift" type="text" title="Overskrift over biliofilsøket"/>
+        <attribute name="rssFeedUrl" type="url" title="URL til RSS feed med nyheter fra kikkhullet"/>
+        <attribute name="iFrameUrl" type="url" title="Standard søkelenke" mandatory="false" >
+            <helptext>Legg inn lenke til søket som vil vises som en del av siden.</helptext>
+        </attribute>
+        <attribute name="alleAnmeldelserTittel" type="text" title="Tittel for alle anmeldelser-lenke" default="Alle anmeldelser"/>
+
+    </attributes>
+</template>

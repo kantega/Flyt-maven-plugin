@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<template xmlns="http://www.kantega.no" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:schemaLocation="http://www.kantega.no http://www.kantega.no/aksess/aksess-template.xsd">
+    <attributes>
+        <attribute name="tittel" type="text" mapto="title" mandatory="true">
+            <helptext>Anmeldelsens tittel.</helptext>
+        </attribute>
+        <attribute name="ingress" type="text" mandatory="true" maxlength="300">
+            <helptext>Kort ingress.</helptext>
+        </attribute>
+        <attribute name="anmeldelse" type="htmltext" mandatory="true">
+            <helptext>Selve anmeldelsesteksten</helptext>
+        </attribute>
+        <attribute name="produkttittel" type="text" mandatory="true">
+            <helptext>Tittel på produktet (bok, film, cd etc) som er anmeldt.</helptext>
+        </attribute>
+        <attribute name="utgivelsesår" type="text" >
+            <helptext>Året produktet ble utgitt.</helptext>
+        </attribute>
+        <attribute name="coverbilde" type="image" title="Omslagsbilde">
+            <helptext>Omslagsbilde av den anmeldte tittelen.</helptext>
+        </attribute>
+
+        <attribute name="verksansvarlig" type="text" title="Verksansvarlig">
+            <helptext>Forfatter, regissør og liknande.</helptext>
+        </attribute>
+
+        <attribute name="isbn" type="text" title="ISBN">
+                <helptext>Hvis produktet har ISBN legges det inn her. Må legges inn for å få lenke til bokelskere.no</helptext>
+                </attribute>
+
+        <attribute name="søkemotorid" type="number" title="tnr">
+            <helptext>Bruk tittelnummer for å lenke til en enkelt utgave i bibliofil-søket</helptext>
+        </attribute>
+        <attribute name="genre" type="topiclist" topicmapid="Folkebiblioteket" topicinstanceof="sjanger" multiple="true"  title="Sjanger" mandatory="true" mapto="topics" />
+
+        <attribute name="tillat kommentarer" type="list" default="nei">
+            <options>
+                <option value="nei">Nei</option>
+                <option value="ja">Ja</option>
+            </options>
+            <helptext>Angir om brukeren skal ha mulighet til å legge inn kommentarer på siden. Moderator må stå som eier på denne siden (i metadata), og eier må ha godkjenningsrettigheter på siden.</helptext>
+        </attribute>
+
+    </attributes>
+</template>

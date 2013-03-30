@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<template xmlns="http://www.kantega.no" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.kantega.no http://www.kantega.no/aksess/aksess-template.xsd">
+    <attributes>
+        <attribute name="enhetstittel" title="Tittel" type="text" mapto="title" mandatory="true"/>
+
+        <attribute name="banner" type="image" mapto="image" editablebyrole="admin">
+            <helptext>Hvis man ønsker eget bilde i toppen av siden kan man velge denne her.</helptext>
+        </attribute>
+
+        <attribute name="enhet" type="orgunit" mapto="owner" >
+            <helptext>Skriv inn navn på enhet eller enhetskode for å søke etter enhet, eller bruk "velg" knappen.</helptext>
+        </attribute>
+
+        <attribute name="fotomappe" type="mediafolder">
+            <helptext>Hvis man ønsker et fotogalleri øverst på siden kan man velge en mappe fra mediarkivet med bildene her.</helptext>
+        </attribute>
+
+        <attribute name="hide_fotomappe_text" title="Skjul tekst i fotomappe" type="list">
+            <helptext>Velg om du vil vise eller skjule bildeteksten fra mediearkivet.</helptext>
+            <options>
+                <option value="nei">Vis teksten</option>
+                <option value="ja">Skjul teksten</option>
+            </options>
+        </attribute>
+
+        <attribute name="tekst" title="Tekst" type="htmltext"/>
+
+        <repeater name="utvalgte_sider_promoboks" title="Utvalgte sider med beskrivelse i promoboks" minoccurs="0">
+            <attribute name="utvalgt_side_promoboks" title="Utvalgt side" type="contentid" multiple="false" mandatory="true">
+                <helptext>Tittelen på valgt side blir tittelen på promoboksen.</helptext>
+            </attribute>
+            <attribute name="utvalgt_side_tekst_promoboks" title="ledetekst" type="text">
+                <helptext>Kort, beskrivende tekst under tittel i promoboks.</helptext>
+            </attribute>
+        </repeater>
+
+        <repeater name="utvalgte_sider_hoyre" title="Utvalgte sider eller eksterne lenker med beskrivelse som vises i høyremeny" minoccurs="0">
+            <attribute name="utvalgt_side_hoyre" title="Utvalgt side eller ekstern lenke/url" type="url">
+                <helptext>Velg lenke til intern side eller angi url til ekstern side, f.eks http://www.vg.no</helptext>
+            </attribute>
+            <attribute name="tittel_hoyre" title="Tittel på utvalgt side eller ekstern lenke/url" type="text">
+                <helptext>Tittel som vises i høyremeny</helptext>
+            </attribute>
+            <attribute name="utvalgt_side_tekst_hoyre" title="Beskrivelse" type="text">
+                <helptext>Kort, beskrivende tekst om innholdet i utvalgt side eller ekstern lenke.</helptext>
+            </attribute>
+        </repeater>
+
+        <attribute name="lat" title="Breddegrad" type="text">
+            <helptext>Hvis automatisk lokalisering av adressen er feil, kan breddegraden skrives inn manuelt for å overstyre markør på kartet.</helptext>
+        </attribute>
+
+        <attribute name="long" title="Lengdegrad" type="text">
+            <helptext>Hvis automatisk lokalisering av adressen er feil, kan lengdegraden skrives inn manuelt for å overstyre markør på kartet.</helptext>
+        </attribute>
+
+        <attribute name="rssFeedTitle" title="Tittle for feed" type="text">
+            <helptext>Hvis du legger til en feed under, kan du velge tittelen på den her.</helptext>
+        </attribute>
+
+        <attribute name="rssFeedUrl" type="url" title="URL til RSS feed med nyheter for skolen fra It's Learning og andre rss-feeds">
+            <helptext>
+                <![CDATA[
+                         Her kan du skrive inn lenkemål for RSS feed for nyheter til skolen fra It's Learning og andre RSS feeds. Disse
+                         nyhetene vil da dukke opp på denne siden. Merk at det kan ta opptil tre timer fra du gjør endringer
+                         her til de trer i kraft, og at det kan ta opptil tre timer fra en nyhet publiseres i It's Learning
+                         til den dukker opp på denne siden. Eksempel på et slikt lenkemål er:
+                         <em>https://www.itslearning.com//Bulletin/RssFeed.aspx?LocationType=3&LocationID=49&PersonId=23753&CustomerId=1483&Guid=30f533bb241a3422255b77fafa9f2fe1&Culture=nb-NO</em>.
+                     ]]>
+            </helptext>
+        </attribute>
+
+        <attribute name="antallNyheter" type="list" title="Antall nyheter som skal vises" default="5">
+              <helptext>Antall nyheter som skal vises i rss-feeden</helptext>
+              <options>
+                 <option value="1">1</option>
+                 <option value="3">3</option>
+                 <option value="5">5</option>
+                 <option value="10">10</option>
+                 <option value="20">20</option>
+                 <option value="vis-alle">Vis alle</option>
+             </options>
+        </attribute>
+
+    </attributes>
+</template>

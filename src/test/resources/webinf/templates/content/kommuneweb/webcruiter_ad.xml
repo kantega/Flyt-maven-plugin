@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<template xmlns="http://www.kantega.no" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:schemaLocation="http://www.kantega.no http://www.kantega.no/aksess/aksess-template.xsd">
+    <attributes>
+        <attribute name="adid" type="text" mandatory="true" editable="false"/>
+        <attribute name="adtitle" mapto="title" type="text" mandatory="true"/>
+        <attribute name="description" type="text" mapto="description"/>
+        <attribute name="company_id" type="text" />
+        <attribute name="creator" type="text"/>
+        <attribute name="created_date" type="date"/>
+        <attribute name="apply_within_date" type="date" mapto="expiredate"/>
+        <attribute name="company_name" type="text"/>
+        <attribute name="workplaceCounties" type="text"/>
+        <attribute name="workplaceStreetAddress" type="text"/>
+        <attribute name="workplacePostno" type="text"/>
+        <attribute name="workplacePostaddress" type="text"/>
+        <attribute name="applicableCondition" type="text"/>
+        <attribute name="qualification" type="text"/>
+        <attribute name="personality" type="text"/>
+        <attribute name="refNr" type="text"/>
+        <attribute name="workhourPercentage" type="number"/>
+        <attribute name="educationTitle" type="text"/>
+        <attribute name="advertTextFree" type="text"/>
+        <attribute name="externalPositionCode" type="text"/>
+        <attribute name="numberOfPositions" type="number"/>
+        <attribute name="companyProfileText" type="htmltext"/>
+        <attribute name="companyLogoPath" type="url"/>
+        <attribute name="responsibility" type="text"/>
+        <attribute name="travelAmount" type="text"/>
+        <attribute name="applicationPostalAddress" type="text"/>
+        <attribute name="applicationLink" type="url"/>
+
+        <repeater name="jobtypes">
+            <attribute name="jobtype" type="text"/>
+        </repeater>
+        <repeater name="special_fields">
+            <attribute name="special_field" type="text"/>
+        </repeater>
+        <repeater name="industries">
+            <attribute name="industry" type="text"/>
+        </repeater>
+        <repeater name="education_branches">
+            <attribute name="education_branch" type="text"/>
+        </repeater>
+        <repeater name="education_levels">
+            <attribute name="education_level" type="text"/>
+        </repeater>
+        <repeater name="applicable_languages">
+            <attribute name="applicable_language" type="text"/>
+        </repeater>
+        <repeater name="contact_info">
+            <attribute name="contacttitle" type="text"/>
+            <attribute name="name" type="text"/>
+            <attribute name="phone" type="text"/>
+            <attribute name="email" type="email"/>
+        </repeater>
+    </attributes>
+</template>

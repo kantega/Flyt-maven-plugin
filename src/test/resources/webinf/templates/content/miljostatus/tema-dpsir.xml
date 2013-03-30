@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<template xmlns="http://www.kantega.no" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.kantega.no http://www.kantega.no/aksess/aksess-template.xsd">
+    <attributes>
+        <attribute name="tittel" type="text" mandatory="true"/>
+        <attribute name="ingress" type="htmltext" mandatory="false"/>
+        <attribute name="drivers" title="Drivkrefter" type="htmltext" mandatory="false"/>
+        <attribute name="pressure" title="Påvirkning" type="htmltext" mandatory="false"/>
+        <attribute name="states" title="Tilstand" type="htmltext" mandatory="false"/>
+        <attribute name="impacts" title="Konsekvenser" type="htmltext" mandatory="false"/>
+        <attribute name="response" title="Tiltak" type="htmltext" mandatory="false"/>
+        <repeater name="sidebox" title="Lenker">
+            <attribute name="tittel" type="text" title="Overskrift" multiple="true"/>
+            <attribute name="innhold" type="htmltext" title="Innhold"/>
+        </repeater>
+    </attributes>
+</template>

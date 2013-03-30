@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<template xmlns="http://www.kantega.no" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:schemaLocation="http://www.kantega.no http://www.kantega.no/aksess/aksess-template.xsd">
+    <attributes>
+        <attribute name="tittel" type="text" mandatory="true" mapto="title"/>
+        <attribute name="tekst" type="htmltext"/>
+        <attribute name="visning" type="list" default="Agendavisning">
+            <options>
+                <option value="agenda">Agendavisning</option>
+                <option value="maaned">Månedsvisning</option>
+            </options>
+            <helptext>I agendavisning vises hendelsene som en liste nedover, mens i månedsvisning vises hendelsene vist som en "fysisk" kalender</helptext>
+        </attribute>
+
+        <repeater name="googlecalendarlinks" title="iCalendar-lenker" minoccurs="0">
+            <attribute name="googlecalendarlink" title="iCalendar-lenke" type="url">
+                <helptext>
+                    Lenke til en kalender som er på iCalendar-format, for eksempel en Google Calendar.
+                    Eks: http://www.google.com/calendar/ical/09cj6a8ldugsg4ch67kflee9n4%40group.calendar.google.com/public/basic.ics
+                </helptext>
+            </attribute>
+        </repeater>
+
+        <attribute name="andrekalendere" title="Andre kalendere" type="contentlist" contenttemplate="Kalender" multiple="true">
+            <helptext>Vis hendelsene fra kalenderne publisert andre steder i nettstedet sammen med hendelsene publisert under denne kalenderen.
+                Det er bare hendelser som er publisert under denne kalenderen som vil vises, hendelser importert til denne kalenderen vil ikke
+                komme med i den kalenderen du redigerer akkurat nå.
+            </helptext>
+        </attribute>
+    </attributes>
+</template>

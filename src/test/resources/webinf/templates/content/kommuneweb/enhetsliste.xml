@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<template xmlns="http://www.kantega.no" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.kantega.no http://www.kantega.no/aksess/aksess-template.xsd">
+    <attributes>
+        <attribute name="tittel" title="Tittel" type="text" mandatory="true"/>
+        <attribute name="vis bydelsfilter" type="list" default="ja">
+            <helptext>Avgjør om det skal være mulig å filtrere lista på bydel. For at bydelsfiltrering skal være mulig må enheten være angitt med en bydel i PIE</helptext>
+            <options>
+                <option value="ja">Ja</option>
+                <option value="nei">Nei</option>
+            </options>
+        </attribute>
+        <attribute name="kategorier" title="Kategori(er)" type="Tkenhetskategori" multiple="true" mandatory="true">
+            <helptext>Her velger du hvilke kategorier som skal kunne vises i listen.</helptext>
+        </attribute>
+        <attribute name="vis kategorifilter" type="list" default="ja">
+            <helptext>
+                Avgjør om det skal være mulig å filtrere lista på kategori.
+                Selv om du velger Ja her vil filteret skjules hvis det bare er valgt én kategori i feltet Kategori(er).
+            </helptext>
+            <options>
+                <option value="ja">Ja</option>
+                <option value="nei">Nei</option>
+            </options>
+        </attribute>
+        <attribute name="styringsformer" title="Styringsform(er)" type="Tkenhetsstyringsform" multiple="true" mandatory="true">
+            <helptext>Her velger du hvilke styringsformer som skal kunne vises i listen.</helptext>
+        </attribute>
+        <attribute name="vis styringsformerfilter" type="list" default="ja">
+            <helptext>
+                Avgjør om det skal være mulig å filtrere lista på styringsform.
+                Selv om du velger Ja her vil filteret skjules hvis det bare er valgt én styringsform i feltet Styringsform(er).
+            </helptext>
+            <options>
+                <option value="ja">Ja</option>
+                <option value="nei">Nei</option>
+            </options>
+        </attribute>
+        <attribute name="vis overliggende enhet" type="list" default="nei">
+            <helptext>
+                Hvis noen av enhetene i lista er av type underenhet kan du velge å vise en kolonne i tabellen som viser overliggende enhet.
+                Hvis enheten er en underenhet vil navnet på overliggende enhet vises og klikk på overliggende enhets navn vil lenke til overliggende enhets hjemmeside.
+            </helptext>
+            <options>
+                <option value="ja">Ja</option>
+                <option value="nei">Nei</option>
+            </options>
+        </attribute>
+        <attribute name="enhetstyper" title="Enhetstype(r)" type="Tkenhetstype" multiple="true">
+            <helptext>Hvis du ikke begrenser utvalget av enhetstyper som vises vil lista inneholde alle enhetstyper som samsvarer med valgene ovenfor.</helptext>
+        </attribute>
+
+        <attribute name="tekst" type="htmltext"/>
+    </attributes>
+</template>

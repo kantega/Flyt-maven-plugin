@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE template [
+        <!ENTITY vis-blogg SYSTEM "../vis-blogg.xml"> ]>
+<template xmlns="http://www.kantega.no" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.kantega.no http://www.kantega.no/aksess/aksess-template.xsd">
+    <attributes>
+        <attribute name="tittel" title="Tittel" type="text" mandatory="true"/>
+        <attribute name="int_1_start" type="number"/>
+        <attribute name="int_1_end" type="number"/>
+        <attribute name="int_1_message" type="text"/>
+        <attribute name="int_2_start" type="number"/>
+        <attribute name="int_2_end" type="number"/>
+        <attribute name="int_2_message" type="text"/>
+        <attribute name="int_3_start" type="number"/>
+        <attribute name="int_3_end" type="number"/>
+        <attribute name="int_3_message" type="text"/>
+        <attribute name="int_4_start" type="number"/>
+        <attribute name="int_4_end" type="number"/>
+        <attribute name="int_4_message" type="text"/>
+        <attribute name="int_5_start" type="number"/>
+        <attribute name="int_5_end" type="number"/>
+        <attribute name="int_5_message" type="text"/>
+
+    </attributes>
+</template>

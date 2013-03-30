@@ -1,0 +1,55 @@
+<template xmlns="http://www.kantega.no" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.kantega.no http://www.kantega.no/aksess/aksess-template.xsd">
+    <attributes>
+        <attribute name="tittel" title="Navn" type="text" mandatory="true"/>
+        <attribute name="overskrift kjernsider" type="text" title="Overskrift for kjernesiderseksjonen" default="Kjernesider" showinsites="/kommuneweb2/"/>
+        <attribute name="overskrift aktuelt" type="text" title="Overskrift for aktueltseksjonen" default="Aktuelt" showinsites="/kommuneweb2/"/>
+        <attribute name="bilde" type="image" mapto="image" />
+
+        <repeater name="utvalgte_sider" title="Sider som blir lenket til under Aktuelt" minoccurs="0">
+                <attribute name="utvalgt_side" title="Utvalgt side" type="contentid" multiple="false">
+                    <helptext>Tittelen på siden du velger blir tittelen på lenken.</helptext>
+                </attribute>
+                <attribute name="utvalgt_side_tekst" title="ledetekst" type="text">
+                    <helptext>Kort, beskrivende tekst om innholdet.</helptext>
+                </attribute>
+        </repeater>
+
+        <attribute name="promotype" type="list" title="Visning for promofelt" default="PROMO_MED_BILDE_2_KOL">
+            <options>
+                <option value="PROMO_MED_BILDE_2_KOL">Promo-felt 2 kolonner, tekst venstre, bilde høyre</option>
+                <option value="PROMO_MED_BILDE_3_KOL">Promo-felt 3 kolonner, tekst venstre, bilde høyre</option>
+                <option value="PROMO_TO_SPALTER">To tekstfelter</option>
+            </options>
+            <script>
+                function activate_promo_med_bilde_layout(){
+                    $("#contentAttribute_promo_to_spalter_venstre,#contentAttribute_promo_to_spalter_hoyre").hide();
+                    //bilder har et textfelt, defor skjule text-feltet
+                    $("#contentAttribute_promo_med_bilde_tekst, #contentAttribute_promo_med_bilde_bilde").show();
+                }
+                function activate_promo_to_spalter_layout(){
+                $("#contentAttribute_promo_med_bilde_tekst, #contentAttribute_promo_med_bilde_bilde").hide();
+                $("#contentAttribute_promo_to_spalter_venstre,#contentAttribute_promo_to_spalter_hoyre").show();
+                }
+                function activateLayout(value){
+                    if(value.match(/^PROMO_MED_BILDE/)){
+                        activate_promo_med_bilde_layout();
+                    }else{
+                        activate_promo_to_spalter_layout();
+                    }
+                }
+                $(document).ready(function(){
+                    var $promotypeSelector = $("#attributeValue_promotype");
+                    activateLayout($promotypeSelector.val());
+                    $promotypeSelector.change(function(){
+                        activateLayout($promotypeSelector.val());
+                    })
+                });
+            </script>
+            <helptext>Velg hvilken type visning promofeltet skal ha. NB! 3 kolonner skjuler aktuelt-kolonnen</helptext>
+        </attribute>
+        <attribute name="promo_med_bilde_bilde" title="Bilde bredt promofelt (til høyre)" type="image"/>
+        <attribute name="promo_med_bilde_tekst" title="Tekst bredt promofelt (til venstre)" type="htmltext" featureset="utenbilde"/>
+        <attribute name="promo_to_spalter_venstre" title="Tekst venstre promofelt" type="htmltext" featureset="utenbilde"/>
+        <attribute name="promo_to_spalter_hoyre" title="Tekst høyre promofelt" type="htmltext" featureset="utenbilde"/>
+    </attributes>
+</template>

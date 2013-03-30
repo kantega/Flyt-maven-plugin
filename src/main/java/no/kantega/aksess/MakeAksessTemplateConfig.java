@@ -1,8 +1,10 @@
 package no.kantega.aksess;
 
 import com.sun.codemodel.*;
+import org.apache.maven.plugin.MojoExecutionException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
@@ -12,6 +14,8 @@ import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.xpath.*;
 import java.io.File;
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.List;
 
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
 
@@ -20,33 +24,64 @@ public class MakeAksessTemplateConfig {
     private static final int STATIC_FINAL = JMod.PUBLIC | JMod.STATIC | JMod.FINAL;
     public static final String AKSESS_TEMPLATE_CONFIG_JAVA = "AksessTemplateConfig";
 
-    public static File createAksessTemplateConfigSources(File aksessTemplateConfigXml, String projectPackage, File destinationFolder ) throws ParserConfigurationException, IOException, SAXException, JClassAlreadyExistsException, XPathExpressionException {
-        DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
-        DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
-        Document doc = dBuilder.parse(aksessTemplateConfigXml);
-        doc.getDocumentElement().normalize();
-        XPathFactory factory = XPathFactory.newInstance();
-        XPath xpath = factory.newXPath();
+    private static XPath xpath = XPathFactory.newInstance().newXPath();
+    private static DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
 
-        JCodeModel jCodeModel = new JCodeModel();
-        JPackage jp = jCodeModel._package(projectPackage);
-        JDefinedClass jc = jp._class(JMod.PUBLIC | JMod.FINAL, AKSESS_TEMPLATE_CONFIG_JAVA);
+    private static final List<String> reservedWords = Arrays.asList(
+            "assert",
+            "abstract", "boolean", "break", "byte",
+            "case", "catch", "char", "class",
+            "const", "continue", "default", "do",
+            "double", "else", "extends", "final",
+            "finally", "float", "for", "goto",
+            "if", "implements", "import",
+            "instanceof", "int", "interface",
+            "long", "native", "new", "package",
+            "private", "protected", "public",
+            "return", "short", "static", "super",
+            "switch", "synchronized", "this",
+            "throw", "throws", "transient",
+            "try", "void", "volatile", "while" );
 
-        setSites(doc,xpath, jCodeModel, jc);
+    public static File createAksessTemplateConfigSources(File aksessTemplateConfigXml, String projectPackage, File destinationFolder ) throws MojoExecutionException {
+        try {
+            Document doc = getDocument(aksessTemplateConfigXml);
 
-        setAssociationCategories(doc, xpath, jCodeModel, jc);
+            JCodeModel jCodeModel = new JCodeModel();
+            JPackage jp = jCodeModel._package(projectPackage);
+            JDefinedClass jc = jp._class(JMod.PUBLIC | JMod.FINAL, AKSESS_TEMPLATE_CONFIG_JAVA);
 
-        setDocumentTypes(doc, xpath, jCodeModel, jc);
+            setSites(doc,xpath, jCodeModel, jc);
 
-        setContentTemplates(doc, xpath, jCodeModel, jc);
-        setMetaDateTemplates(doc, xpath, jCodeModel, jc);
+            setAssociationCategories(doc, xpath, jCodeModel, jc);
 
-        setDisplayTemplates(doc, xpath, jCodeModel, jc);
-        jCodeModel.build(destinationFolder);
+            setDocumentTypes(doc, xpath, jCodeModel, jc);
+
+            File templates = getTemplateRootDir(aksessTemplateConfigXml);
+            setContentTemplates(doc, xpath, jCodeModel, jc, templates);
+            setMetaDateTemplates(doc, xpath, jCodeModel, jc, templates);
+
+            setDisplayTemplates(doc, xpath, jCodeModel, jc);
+            jCodeModel.build(destinationFolder);
+        } catch (Exception e) {
+            throw new MojoExecutionException("Failed to create AksessTemplateConfig.java", e);
+        }
 
         File generatedFile = new File(destinationFolder, projectPackage.replaceAll("\\.", "/") + "/" + AKSESS_TEMPLATE_CONFIG_JAVA + ".java");
         throwIfDoesNotExist(generatedFile);
         return generatedFile;
+    }
+
+    private static Document getDocument(File aksessTemplateConfigXml) throws ParserConfigurationException, SAXException, IOException {
+        DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
+        Document doc = dBuilder.parse(aksessTemplateConfigXml);
+        doc.getDocumentElement().normalize();
+        return doc;
+    }
+
+    private static File getTemplateRootDir(File aksessTemplateConfigXml) {
+        File webinf = aksessTemplateConfigXml.getParentFile();
+        return new File(webinf, "templates/content");
     }
 
     private static void throwIfDoesNotExist(File generatedFile) {
@@ -87,19 +122,19 @@ public class MakeAksessTemplateConfig {
         }
     }
 
-    private static void setContentTemplates(Document doc, XPath xpath, JCodeModel jCodeModel, JDefinedClass jc) throws JClassAlreadyExistsException, XPathExpressionException {
+    private static void setContentTemplates(Document doc, XPath xpath, JCodeModel jCodeModel, JDefinedClass jc, File templates) throws JClassAlreadyExistsException, XPathExpressionException, ParserConfigurationException, IOException, SAXException {
         JDefinedClass contentTemplatesClass = jc._class(STATIC_FINAL, "contentTemplates");
         NodeList contentTemplates = getNodeList(doc, xpath, "contentTemplates", "contentTemplate");
-        addContentTemplates(jCodeModel, contentTemplatesClass, contentTemplates);
+        addContentTemplates(jCodeModel, contentTemplatesClass, contentTemplates, templates);
     }
 
-    private static void setMetaDateTemplates(Document doc, XPath xpath, JCodeModel jCodeModel, JDefinedClass jc) throws JClassAlreadyExistsException, XPathExpressionException {
+    private static void setMetaDateTemplates(Document doc, XPath xpath, JCodeModel jCodeModel, JDefinedClass jc, File templates) throws JClassAlreadyExistsException, XPathExpressionException, ParserConfigurationException, IOException, SAXException {
         JDefinedClass contentTemplatesClass = jc._class(STATIC_FINAL, "metaDataTemplates");
         NodeList contentTemplates = getNodeList(doc, xpath, "metadataTemplates", "contentTemplate");
-        addContentTemplates(jCodeModel, contentTemplatesClass, contentTemplates);
+        addContentTemplates(jCodeModel, contentTemplatesClass, contentTemplates, templates);
     }
 
-    private static void addContentTemplates(JCodeModel jCodeModel, JDefinedClass contentTemplatesClass, NodeList contentTemplates) throws JClassAlreadyExistsException {
+    private static void addContentTemplates(JCodeModel jCodeModel, JDefinedClass contentTemplatesClass, NodeList contentTemplates, File templates) throws JClassAlreadyExistsException, ParserConfigurationException, IOException, SAXException, XPathExpressionException {
         for(int i = 0; i < contentTemplates.getLength(); i++){
             Element contentTemplate = (Element) contentTemplates.item(i);
             String databaseId = contentTemplate.getAttribute("databaseId");
@@ -150,7 +185,42 @@ public class MakeAksessTemplateConfig {
             addClassAndFieldsForSubNodesWithId(contentTemplate, contentTemplateClass, "allowedParentTemplates", "contentTemplate");
             addClassAndFieldsForSubNodesWithId(contentTemplate, contentTemplateClass, "associationCategories", "associationCategory");
 
+            addContentTemplateAttributes(templates, contentTemplateClass, templateFile);
         }
+    }
+
+    private static void addContentTemplateAttributes(File templates, JDefinedClass contentTemplateClass, String templateFile) throws JClassAlreadyExistsException, ParserConfigurationException, IOException, SAXException, XPathExpressionException {
+        JDefinedClass attributesClass = contentTemplateClass._class(STATIC_FINAL, "attributes");
+        File contentTemplate = new File(templates, templateFile);
+        Document document = getDocument(contentTemplate);
+        NodeList attributes = getAttributeNodeList(document, xpath, "attribute");
+        for(int i = 0; i < attributes.getLength(); i++){
+            Element attribute = (Element) attributes.item(i);
+            String name = attribute.getAttribute("name");
+            attributesClass.field(STATIC_FINAL, String.class, cleanFieldName(name), JExpr.lit(name));
+        }
+
+        NodeList repeaterattributes = getAttributeNodeList(document, xpath, "repeater");
+        for(int i = 0; i < repeaterattributes.getLength(); i++){
+            Element attribute = (Element) repeaterattributes.item(i);
+            String name = attribute.getAttribute("name");
+            JDefinedClass attributeClass = attributesClass._class(STATIC_FINAL, cleanFieldName(name));
+            attributeClass.field(STATIC_FINAL, String.class, "repeater_name", JExpr.lit(name));
+
+            NodeList repeatersubattributes = attribute.getChildNodes();
+            for(int j = 0; j < repeatersubattributes.getLength(); j++){
+                Node item = repeatersubattributes.item(j);
+                String localName = item.getNodeName();
+                if(localName != null && localName.equals("attribute")){
+                    Element subattribute = (Element) item;
+                    String subattributeName = subattribute.getAttribute("name");
+
+                    attributeClass.field(STATIC_FINAL, String.class, cleanFieldName(subattributeName), JExpr.lit(name));
+                }
+            }
+
+        }
+
     }
 
     private static void addClassAndFieldsForSubNodesWithId(Element parentNode, JDefinedClass parentClass, String containingNode, String targetNodeName) throws JClassAlreadyExistsException {
@@ -182,8 +252,9 @@ public class MakeAksessTemplateConfig {
         templateClass.field(STATIC_FINAL, jCodeModel.INT, "databaseId", JExpr.lit(Integer.parseInt(databaseId)));
     }
 
-    private static String cleanFieldName(String allowedParentId) {
-        return allowedParentId.replaceAll("[\\s-\\(\\)\\.,]+", "_").replaceAll("å", "a").replaceAll("ø", "o").replace("æ", "a");
+    private static String cleanFieldName(String fieldName) {
+        String cleaned = reservedWords.contains(fieldName) ? fieldName + "_" : fieldName;
+        return cleaned.replaceAll("[\\s-\\(\\)\\.,]+", "_").replaceAll("å", "a").replaceAll("ø", "o").replace("æ", "a");
     }
 
     private static void setDocumentTypes(Document doc, XPath xpath, JCodeModel jCodeModel, JDefinedClass jc) throws JClassAlreadyExistsException, XPathExpressionException {
@@ -247,7 +318,15 @@ public class MakeAksessTemplateConfig {
     }
 
     private static NodeList getNodeList(Document doc, XPath xpath, String parentNode, String nodeName) throws XPathExpressionException {
-        XPathExpression sitesExpression = xpath.compile("*[local-name() = 'templateConfiguration']/*[local-name() = '" + parentNode + "']/*[local-name() = '" + nodeName + "']");
+        return getNodeListXpath(doc, xpath, "templateConfiguration", parentNode, nodeName);
+    }
+
+    private static NodeList getAttributeNodeList(Document doc, XPath xpath, String nodeName) throws XPathExpressionException {
+        return getNodeListXpath(doc, xpath, "template", "attributes", nodeName);
+    }
+
+    private static NodeList getNodeListXpath(Document doc, XPath xpath, String root, String parentNode, String nodeName) throws XPathExpressionException {
+        XPathExpression sitesExpression = xpath.compile("*[local-name() = '" + root + "']/*[local-name() = '" + parentNode + "']/*[local-name() = '" + nodeName + "']");
         return (NodeList) sitesExpression.evaluate(doc, XPathConstants.NODESET);
     }
 

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<template xmlns="http://www.kantega.no" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:schemaLocation="http://www.kantega.no http://www.kantega.no/aksess/aksess-template.xsd">
+    <attributes>
+        <attribute name="tittel" title="Tittel" type="text" mandatory="true" mapto="title"/>
+        <attribute name="heldagshendelse" type="list" default="Nei">
+            <options>
+                <option>Ja</option>
+                <option>Nei</option>
+            </options>
+            <script>
+                <!-- TODO dersom ja velges, sett lytter på start og slutt, når startdato er valgt settes klokke til 00:01 for start
+                og 23:59 for slutt samme dag-->
+            </script>
+        </attribute>
+        <attribute name="starttidspunkt" title="Starttidspunkt" type="datetime" mandatory="true"/>
+        <attribute name="sluttidspunkt" title="Sluttidspunkt" type="datetime" mandatory="true" mapto="expiredate"/>
+        <attribute name="sted" title="Sted" type="text" />
+        <attribute name="kortbeskrivelse" title="Kort beskrivelse" type="text" mapto="description"/>
+        <attribute name="langbeskrivelse" title="Lang beskrivelse" type="htmltext" mandatory="false"/>
+        <attribute name="uid" type="text" editable="false"/>
+        <attribute name="kilde" type="text" editable="false"/>
+    </attributes>
+</template>

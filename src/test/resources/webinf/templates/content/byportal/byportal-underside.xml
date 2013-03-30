@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE template [
+        <!ENTITY vis-blogg SYSTEM "../vis-blogg.xml"> ]>
+<template xmlns="http://www.kantega.no" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.kantega.no http://www.kantega.no/aksess/aksess-template.xsd">
+    <attributes>
+        <attribute name="tittel" mapto="title" type="text" mandatory="true"/>
+        <attribute name="overskrift" type="text" mandatory="true">
+            <helptext>Overskrift vises før teksten på siden, tittel brukes for lenker til denne siden</helptext>
+        </attribute>
+        <attribute name="ingress" type="text" maxlength="300"/>
+        <attribute name="tekst" type="htmltext"/>
+        <attribute name="bilde" type="image"/>
+        <attribute name="lenke bilde" type="url">
+            <helptext>Angi en lenke som vises hvis brukeren klikker på bildet</helptext>
+        </attribute>
+        <attribute name="bildetekst" type="text"/>
+        <attribute name="overskrift lenker" type="text">
+            <helptext>Overskrift som viser over lenkene i høyre spalte</helptext>
+        </attribute>
+    </attributes>
+</template>

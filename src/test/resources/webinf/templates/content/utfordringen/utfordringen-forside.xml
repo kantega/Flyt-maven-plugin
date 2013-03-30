@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE template [
+        <!ENTITY vis-blogg SYSTEM "../vis-blogg.xml"> ]>
+<template xmlns="http://www.kantega.no" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.kantega.no http://www.kantega.no/aksess/aksess-template.xsd">
+    <attributes>
+        <attribute name="tittel" title="Tittel" type="text" mandatory="true"/>
+        <attribute name="tekst" type="htmltext"/>
+        <attribute name="innloggingtekst" title="Forklarende tekst til innloggingsboksen" type="htmltext"/>
+        <attribute name="motivatorMelding" type="htmltext"/>
+        <attribute name="motivatorFraDato" type="date"/>
+        <attribute name="motivatorTilDato" type="date"/>
+        <attribute name="sesongFraDato" type="date" mandatory="true" />
+        <attribute name="sesongTilDato" type="date" mandatory="true" />
+    </attributes>
+</template>

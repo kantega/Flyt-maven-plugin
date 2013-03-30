@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<template xmlns="http://www.kantega.no" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.kantega.no http://www.kantega.no/aksess/aksess-template.xsd">
+    <attributes>
+        <attribute name="tittel" type="text" mapto="title" mandatory="true"/>
+
+        <attribute name="photoalbum" title="Bildemappe for større visning på hovedsiden" type="mediafolder" mandatory="false">
+            <helptext>Bildemappen du velger her vil benyttes i bildegalleriet i midtspalten. Bildene i galleriet bytter automatisk hvert 5. sekund.</helptext>
+        </attribute>
+
+        <attribute name="utvalgte i midtspalte" title="Utvalgte sider i midtspalten" multiple="true" type="contentid" startid="group" max="3"/>
+        <attribute name="nyhetsarkiv" title="Nyhetsarkiv" type="contentid" multiple="false" >
+            <helptext>
+                Hvis det er mindre enn 3 utvalgte sider i midtspalten (i feltet over) vil det automatisk fylles på med nyheter fra dette nyhetsarkivet.
+            </helptext>
+        </attribute>
+         <attribute name="utvalgte sider" title="Utvalgte sider i høyrespalten" type="contentid" multiple="true" startid="group"/>
+        <attribute name="relatedText" title="Høyrespaltetekst" type="htmltext" />
+
+        <attribute name="ansvarlig enhet" type="orgunit" mapto="owner" mandatory="true" />
+
+        <attribute name="footertext" title="footer" type="htmltext" />
+
+    </attributes>
+</template>

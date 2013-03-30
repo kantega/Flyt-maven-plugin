@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<template xmlns="http://www.kantega.no" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.kantega.no http://www.kantega.no/aksess/aksess-template.xsd">
+    <attributes>
+        <attribute name="tittel" title="Tittel" type="text" mandatory="true" mapto="title"/>
+        <attribute name="ingress" type="text" mapto="description" />
+        <attribute name="passord" type="text" maxlength="15">
+            <helptext>
+                <![CDATA[
+                Hvis du legger inn passord m&aring; brukeren angi dette f&oslash;r han f&aring;r tilgang til &aring; se bildene.
+                Hvis du ikke angir passord blir bildene &aring;pent tilgjengelig for alle.
+                ]]>
+            </helptext>
+        </attribute>
+        <attribute name="melding til ikke-innlogget bruker" type="text" maxlength="300">
+            <helptext>Denne teksten vises hvis albumet er passordbeskyttet og brukeren ikke er logget inn.</helptext>
+        </attribute>
+    </attributes>
+</template>

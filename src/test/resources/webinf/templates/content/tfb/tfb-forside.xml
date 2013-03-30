@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<template xmlns="http://www.kantega.no" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.kantega.no http://www.kantega.no/aksess/aksess-template.xsd">
+    <attributes>
+        <attribute name="tittel" type="text" mapto="title" mandatory="true"/>
+
+        <attribute name="hvor finner du oss" type="htmltext"/>
+        <attribute name="mymapsoverlay" type="url" title="KML-Lenke til egendefinert kartlag">
+            <helptext>
+                <![CDATA[
+                       Kartet er forhåndsinnstilit til å være sentrert på hovedbiblioteket.<br>
+                       For å lage et eget kart med flere elementer, se <a style="text-decoration: underline; color: #008;" href="http://youtu.be/TftFnot5uXw">http://youtu.be/TftFnot5uXw</a>.<br>
+                       KML-lenken til kartlaget ditt skal legges inn i dette feltet.<br>
+                       Du finner KML-lenken i venstremenyen på google maps, når kartlaget er lagret: Høyreklikk og kopier KML-lenkeadressen og lim den inn her.
+                       ]]>
+            </helptext>
+
+        </attribute>
+
+        <attribute name="TFB informerer" title="TFB informerer" type="htmltext"/>
+        <attribute name="visstedu" type="htmltext" title="Visste du at?" />
+
+        <attribute name="rsstitle1" type="text" title="Tittel på utlisting av forsidebilder fra RSS-feed 1">
+            <helptext>Det vises bare bøker med bilder av forside. Hvis det ikke er noen bøker med bilder i feeden, vil oversikten være tom.</helptext>
+        </attribute>
+        <attribute name="rssFeedUrl1" type="url" title="URL til RSS-feed 1 med nyheter fra kikkhullet"/>
+        <attribute name="rsstitle2" type="text" title="Tittel på utlisting av RSS-feed 2"/>
+        <attribute name="rssFeedUrl2" type="url" title="URL til RSS-feed 2 med nyheter fra kikkhullet"/>
+        <attribute name="rsstitle3" type="text" title="Tittel på utlisting av RSS-feed 3"/>
+        <attribute name="rssFeedUrl3" type="url" title="URL til RSS-feed 3 med nyheter fra kikkhullet"/>
+        <attribute name="rsstitle4" type="text" title="Tittel på utlisting av RSS-feed 4"/>
+        <attribute name="rssFeedUrl4" type="url" title="URL til RSS-feed 4 med nyheter fra kikkhullet"/>
+
+        <attribute name="footerInfo" title="Footer - midtspalte" type="htmltext"/>
+        <attribute name="footerRelated" title="Footer - høyrespalte" type="htmltext"/>
+
+        <attribute name="english front page" title="Engelsk hovedside" type="contentid"/>
+        <attribute name="apningstider sentrum" title="Åpningstider sentrum" type="contentid"/>
+
+    </attributes>
+</template>

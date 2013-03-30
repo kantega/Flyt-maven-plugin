@@ -16,7 +16,6 @@
 
 package no.kantega.aksess.mojo;
 
-import com.sun.codemodel.JClassAlreadyExistsException;
 import no.kantega.aksess.JettyStarter;
 import no.kantega.aksess.MakeAksessTemplateConfig;
 import org.apache.maven.artifact.Artifact;
@@ -37,11 +36,8 @@ import org.codehaus.plexus.archiver.ArchiverException;
 import org.codehaus.plexus.archiver.UnArchiver;
 import org.codehaus.plexus.components.io.fileselectors.FileSelector;
 import org.codehaus.plexus.components.io.fileselectors.IncludeExcludeFileSelector;
-import org.xml.sax.SAXException;
 
 import javax.tools.*;
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.xpath.XPathExpressionException;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.*;
@@ -346,7 +342,7 @@ public class RunMojo extends AbstractMojo {
                     }
                 }
 
-                private void handleModifiedFile(Path templateConfigDir, File generatedSourcesDir, File targetClassFile, Path filename) throws ParserConfigurationException, IOException, SAXException, JClassAlreadyExistsException, XPathExpressionException {
+                private void handleModifiedFile(Path templateConfigDir, File generatedSourcesDir, File targetClassFile, Path filename) throws MojoExecutionException {
                     if(filename.getFileName().toString().equals("aksess-templateconfig.xml")){
                         getLog().info("aksess-templateconfig.xml changed, recompiling to " + targetClassFile);
 

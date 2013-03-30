@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<template xmlns="http://www.kantega.no" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.kantega.no http://www.kantega.no/aksess/aksess-template.xsd">
+    <attributes>
+        <attribute name="tittel" type="text" mandatory="true"/>
+        <attribute name="tekst" type="htmltext" height="200"/>
+        <attribute name="bekreftelsestekst" type="htmltext" height="200">
+            <helptext>Teksten som vises til brukeren når skjemaet er sendt inn</helptext>
+        </attribute>
+        <attribute name="skjema" type="editableform"/>
+        <attribute name="epost" title="Epost for innsendte skjema" type="email"/>
+    </attributes>
+</template>

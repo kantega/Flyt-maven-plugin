@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE template [
+        <!ENTITY vis-blogg SYSTEM "vis-blogg.xml"> ]>
+<template xmlns="http://www.kantega.no" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.kantega.no http://www.kantega.no/aksess/aksess-template.xsd">
+    <attributes>
+        <attribute name="tittel" title="Tittel" type="text" mandatory="true"/>
+        <attribute name="sted" type="text"/>
+        <attribute name="varighet" type="text"/>
+        <attribute name="pris" type="text"/>
+        <attribute name="kontaktperson" type="user">
+            <helptext>Hvis ikke kontaktperson er angitt benyttes verdiene fra ekstern kontaktperson nedenunder.</helptext>
+        </attribute>
+        <attribute name="ekstern kontaktperson" type="text"/>
+        <attribute name="epost ekstern kontaktperson" type="email"/>
+        <attribute name="målgruppe" type="text" maxlength="200"/>
+        <attribute name="forkunnskaper" type="text" maxlength="200"/>
+        <attribute name="innhold" type="htmltext" />
+        <attribute name="beskrivelse" type="htmltext"/>
+        &vis-blogg;
+    </attributes>
+</template>

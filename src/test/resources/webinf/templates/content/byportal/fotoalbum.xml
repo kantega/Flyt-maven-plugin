@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE template [
+        <!ENTITY vis-blogg SYSTEM "../vis-blogg.xml"> ]>
+<template xmlns="http://www.kantega.no" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.kantega.no http://www.kantega.no/aksess/aksess-template.xsd">
+    <attributes>
+        <attribute name="tittel" mapto="title" type="text" mandatory="true"/>
+        <attribute name="ingress" mapto="description" type="text" maxlength="300"/>
+        <attribute name="bildemappe" type="Mediafolder">
+            <helptext>Her velger du en mappe fra multimediaarkivet med bilder i.  Alle
+                bildene som legges i denne mappen vil bli synlig i dette fotoalbumet.</helptext>
+        </attribute>
+        <attribute name="mellomside" title="Tillatt brukeren å laste ned bilde" type="list">
+            <options>
+                <option>Nei</option>
+                <option>Ja</option>
+            </options>
+            <helptext>Dersom man velger Ja her vil brukeren få opp en mellomside der vilkår
+                for bruk av bildene vises før nedlasting.  Hvis Nei velges får ikke brukeren valget
+                om å laste ned bilder i albumet.</helptext>
+        </attribute>
+        &vis-blogg;
+    </attributes>
+</template>
