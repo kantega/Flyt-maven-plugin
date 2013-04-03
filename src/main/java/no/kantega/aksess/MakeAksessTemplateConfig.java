@@ -27,21 +27,19 @@ public class MakeAksessTemplateConfig {
     private static XPath xpath = XPathFactory.newInstance().newXPath();
     private static DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
 
+    // http://docs.oracle.com/javase/specs/jls/se5.0/html/lexical.html#3.9
     private static final List<String> reservedWords = Arrays.asList(
-            "assert",
-            "abstract", "boolean", "break", "byte",
-            "case", "catch", "char", "class",
-            "const", "continue", "default", "do",
-            "double", "else", "extends", "final",
-            "finally", "float", "for", "goto",
-            "if", "implements", "import",
-            "instanceof", "int", "interface",
-            "long", "native", "new", "package",
-            "private", "protected", "public",
-            "return", "short", "static", "super",
-            "switch", "synchronized", "this",
-            "throw", "throws", "transient",
-            "try", "void", "volatile", "while" );
+            "abstract","continue","for","new",
+            "switch","assert","default","if",
+            "package","synchronized","boolean",
+            "do","goto","private","this","break",
+            "double","implements","protected","throw",
+            "byte","else","import","public","throws",
+            "case","enum","instanceof","return","transient",
+            "catch","extends","int","short","try","char",
+            "final","interface","static","void","class",
+            "finally","long","strictfp","volatile","const",
+            "float","native","super","while");
 
     public static File createAksessTemplateConfigSources(File aksessTemplateConfigXml, String projectPackage, File destinationFolder ) throws MojoExecutionException {
         return createAksessTemplateConfigSources(aksessTemplateConfigXml, projectPackage, destinationFolder, false);
