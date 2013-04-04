@@ -234,7 +234,7 @@ public class MakeAksessTemplateConfig {
                     Element subattribute = (Element) item;
                     String subattributeName = subattribute.getAttribute("name");
 
-                    attributeClass.field(STATIC_FINAL, String.class, cleanFieldName(subattributeName), JExpr.lit(name));
+                    attributeClass.field(STATIC_FINAL, String.class, cleanFieldName(subattributeName), JExpr.lit(subattributeName));
                 }
             }
 
@@ -275,7 +275,7 @@ public class MakeAksessTemplateConfig {
 
     private static String cleanFieldName(String fieldName) {
         String cleaned = reservedWords.contains(fieldName) ? fieldName + "_" : fieldName;
-        return cleaned.replaceAll("[\\s-\\(\\)\\.,]+", "_").replaceAll("å", "a").replaceAll("ø", "o").replace("æ", "a");
+        return cleaned.replaceAll("[\\s\\-\\(\\)\\.,]+", "_").replaceAll("å", "a").replaceAll("ø", "o").replace("æ", "a");
     }
 
     private static void setDocumentTypes(Document doc, XPath xpath, JCodeModel jCodeModel, JDefinedClass jc) throws JClassAlreadyExistsException, XPathExpressionException {
