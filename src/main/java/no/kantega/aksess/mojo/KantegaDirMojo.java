@@ -17,15 +17,14 @@
 package no.kantega.aksess.mojo;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.IOUtils;
 import org.apache.maven.artifact.metadata.ArtifactMetadataSource;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.project.MavenProject;
 
-import java.io.File;
-import java.io.FileFilter;
-import java.io.IOException;
+import java.io.*;
 
 /**
  * @goal kantegadir
@@ -67,9 +66,9 @@ public class KantegaDirMojo extends AbstractMojo {
 
 
     /**
-     * @parameter expression="${basedir}/src/conf/log4j.xml"
+     * @parameter expression="${basedir}/src/conf/logback.xml"
      */
-    private File log4j;
+    private File logConfigFile;
 
     /**
      * @parameter expression="${basedir}/src/conf/aksess-webapp.conf"
@@ -109,11 +108,17 @@ public class KantegaDirMojo extends AbstractMojo {
             }
 
 
-            // Log4j
-            if(log4j.exists()) {
-                File log4jDest = new File(kantegaDir, "conf/log4j.xml");
-                log4jDest.getParentFile().mkdirs();
-                FileUtils.copyFile(log4j, log4jDest);
+            File logConfDest = new File(kantegaDir, "conf/logback.xml");
+            logConfDest.getParentFile().mkdirs();
+            if(logConfigFile.exists()) {
+                getLog().info("Using logback.xml from project");
+                FileUtils.copyFile(logConfigFile, logConfDest);
+            } else {
+                getLog().info("Using logback.xml from aksess plugin");
+                try(InputStream is = getClass().getResourceAsStream("/logback.xml");
+                    OutputStream os = new FileOutputStream(logConfDest)){
+                    IOUtils.copy(is, os);
+                }
             }
 
             // We no longer accept templates in src/templates

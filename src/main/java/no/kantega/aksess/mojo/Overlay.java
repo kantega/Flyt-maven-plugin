@@ -18,13 +18,6 @@ package no.kantega.aksess.mojo;
 
 import java.util.List;
 
-/**
- * Created by IntelliJ IDEA.
- * User: bjorsnos
- * Date: Jan 28, 2009
- * Time: 4:19:40 PM
- * To change this template use File | Settings | File Templates.
- */
 public class Overlay {
     private String groupId;
     private String artifactId;

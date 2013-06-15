@@ -19,8 +19,6 @@ package no.kantega.aksess.mojo;
 import no.kantega.aksess.MergeWebXml;
 import org.apache.maven.artifact.Artifact;
 import org.apache.maven.artifact.metadata.ArtifactMetadataSource;
-import org.apache.maven.artifact.resolver.ArtifactNotFoundException;
-import org.apache.maven.artifact.resolver.ArtifactResolutionException;
 import org.apache.maven.artifact.resolver.ArtifactResolutionResult;
 import org.apache.maven.artifact.resolver.filter.ScopeArtifactFilter;
 import org.apache.maven.artifact.versioning.VersionRange;
@@ -30,9 +28,6 @@ import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.project.MavenProject;
 import org.apache.maven.project.MavenProjectBuilder;
 import org.apache.maven.project.MavenProjectHelper;
-import org.apache.maven.project.ProjectBuildingException;
-import org.apache.maven.project.artifact.InvalidDependencyVersionException;
-import org.codehaus.plexus.archiver.ArchiverException;
 import org.codehaus.plexus.archiver.jar.JarArchiver;
 import org.codehaus.plexus.archiver.util.DefaultArchivedFileSet;
 import org.codehaus.plexus.components.io.fileselectors.FileInfo;
@@ -235,13 +230,7 @@ public class PackageMojo extends AbstractMojo {
                     }
                 }
 
-            } catch (ProjectBuildingException e) {
-                throw new MojoExecutionException(e.getMessage(), e);
-            } catch (ArtifactNotFoundException e) {
-                throw new MojoExecutionException(e.getMessage(), e);
-            } catch (ArtifactResolutionException e) {
-                throw new MojoExecutionException(e.getMessage(), e);
-            } catch (InvalidDependencyVersionException e) {
+            } catch (Exception e) {
                 throw new MojoExecutionException(e.getMessage(), e);
             }
 
@@ -287,19 +276,7 @@ public class PackageMojo extends AbstractMojo {
             destFile.delete();
             
 
-        } catch (ArchiverException e) {
-            throw new MojoExecutionException(e.getMessage(), e);
-        } catch (IOException e) {
-            throw new MojoExecutionException(e.getMessage(), e);
-        } catch (TransformerException e) {
-            throw new MojoExecutionException(e.getMessage(), e);
-        } catch (ParserConfigurationException e) {
-            throw new MojoExecutionException(e.getMessage(), e);
-        } catch (SAXException e) {
-            throw new MojoExecutionException(e.getMessage(), e);
-        } catch (ArtifactNotFoundException e) {
-            throw new MojoExecutionException(e.getMessage(), e);
-        } catch (ArtifactResolutionException e) {
+        } catch (Exception e) {
             throw new MojoExecutionException(e.getMessage(), e);
         }
 

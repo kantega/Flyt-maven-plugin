@@ -171,6 +171,12 @@ public class RunMojo extends AbstractMojo {
     private MavenProjectBuilder mavenProjectBuilder;
 
     /**
+     * Exclude the files matching the given pattern from runtime classpath.
+     * @parameter
+     */
+    private List<String> excludes;
+
+    /**
      * @parameter expression="${port}" default-value="8080"
      */
     private int port;
@@ -396,7 +402,10 @@ public class RunMojo extends AbstractMojo {
                     }
                 }
             }
-
+            List<String> excludes = selector.getExcludes() == null ? new ArrayList<String>() :  new ArrayList<>(asList(selector.getExcludes()));
+            if(this.excludes != null) excludes.addAll(this.excludes);
+            getLog().info("Excluding from unpacking: " + excludes);
+            selector.setExcludes(excludes.toArray(new String[excludes.size()]));
             unArchiver.setFileSelectors(new FileSelector[] {selector});
 
             try {
