@@ -114,6 +114,7 @@ public class KantegaDirMojo extends AbstractMojo {
                 getLog().info("Using logback.groovy from project");
                 FileUtils.copyFile(logConfigFile, logConfDest);
             } else {
+                System.setProperty("logback.configurationFile", logConfDest.getAbsolutePath());
                 getLog().info("Using logback.groovy from aksess plugin");
                 try(InputStream is = getClass().getResourceAsStream("/logback.groovy");
                     OutputStream os = new FileOutputStream(logConfDest)){

@@ -249,7 +249,7 @@ public class RunMojo extends AbstractMojo {
 
                 for (Object o : result.getArtifacts()) {
                     Artifact artifact = (Artifact) o;
-                    if (artifact.getType().equals("jar") && (!Artifact.SCOPE_PROVIDED.equals(artifact.getScope())) && (!Artifact.SCOPE_TEST.equals(artifact.getScope()))) {
+                    if (isJar(artifact) && isNotScopeProvided(artifact) && isNotScopeTest(artifact)) {
                         dependencyFiles.add(artifact.getFile());
                         dependencyIds.add(artifact.getDependencyConflictId());
                     }
@@ -259,7 +259,7 @@ public class RunMojo extends AbstractMojo {
 
                 for (Object o : project.getArtifacts()) {
                     Artifact artifact = (Artifact) o;
-                    if (artifact.getType().equals("jar") && (!Artifact.SCOPE_PROVIDED.equals(artifact.getScope())) && (!Artifact.SCOPE_TEST.equals(artifact.getScope()))) {
+                    if (isJar(artifact) && isNotScopeProvided(artifact) && isNotScopeTest(artifact)) {
                         if (!dependencyIds.contains(artifact.getDependencyConflictId())) {
                             dependencyFiles.add(artifact.getFile());
                         }
@@ -292,6 +292,18 @@ public class RunMojo extends AbstractMojo {
         } catch (Exception e) {
             throw new MojoExecutionException(e.getMessage(), e);
         }
+    }
+
+    private boolean isNotScopeTest(Artifact artifact) {
+        return (!Artifact.SCOPE_TEST.equals(artifact.getScope()));
+    }
+
+    private boolean isNotScopeProvided(Artifact artifact) {
+        return (!Artifact.SCOPE_PROVIDED.equals(artifact.getScope()));
+    }
+
+    private boolean isJar(Artifact artifact) {
+        return artifact.getType().equals("jar");
     }
 
     private void addRestartConsoleScanner() {

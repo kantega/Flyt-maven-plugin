@@ -14,11 +14,12 @@
  * limitations under the License.
  */
 
-scan("5 seconds")
-appender("STDOUT", ConsoleAppender) {
+scan('5 seconds')
+appender('STDOUT', ConsoleAppender) {
     encoder(PatternLayoutEncoder) {
-        pattern = "%d{HH:mm:ss} %-5level %logger{36} - %msg%n"
+        pattern = '%d{HH:mm:ss} %-5level %logger{36} - %msg%n'
     }
 }
-logger("ro.isdc.wro", WARN)
-root(DEBUG, ["STDOUT"])
+logger('ro.isdc.wro', WARN)
+logger('org.eclipse.jetty', WARN)
+root(DEBUG, ['STDOUT'])
