@@ -16,10 +16,8 @@
 
 package no.kantega.aksess;
 
-import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
-import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.Transformer;
@@ -32,13 +30,17 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URL;
 
-/**
- * Created by IntelliJ IDEA.
- * User: bjorsnos
- * Date: Nov 16, 2007
- * Time: 1:45:54 PM
- */
 public class MergeWebXml {
+
+    /**
+     * Merge web.xml-file
+     * @param OAWebXml - web.xml from OpenAksess.
+     * @param mergedWebXml - the path for the result.
+     * @param projectWebXml - web.xml from project.
+     */
+    public static void mergeWebXml(String OAWebXml, String mergedWebXml, String projectWebXml) throws IOException, ParserConfigurationException, SAXException, TransformerException {
+        main(new String[]{OAWebXml, mergedWebXml, projectWebXml});
+    }
 
     public static void main(String[] args) throws TransformerException, IOException, ParserConfigurationException, SAXException {
         URL in = new URL(args[0]);
@@ -51,7 +53,7 @@ public class MergeWebXml {
         System.out.println("Doc: " + doc);
 
         if(!doc.exists()) {
-            usage("Input document (project web.xml) " + xsl +" does not exist");
+            usage("Input document (project web.xml) " + doc +" does not exist");
         }
 
         out.getParentFile().mkdirs();
@@ -82,10 +84,5 @@ public class MergeWebXml {
         }
         System.err.println("Usage: MergeWebXml input-web.xml output-web.xml merge-stylesheet.xsl input2-web.xml");
         System.exit(1);
-    }
-
-    private static Object getDocument(String doc) throws ParserConfigurationException, IOException, SAXException {
-        DocumentBuilder builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
-        return builder.parse(new InputSource(doc));
     }
 }

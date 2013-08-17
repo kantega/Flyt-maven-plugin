@@ -21,9 +21,11 @@
     <xsl:param name="doc"/>
     <xsl:output method="xml" indent="yes" />
     <xsl:template match="/web-app">
-
-        <web-app xmlns="http://java.sun.com/xml/ns/j2ee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-                  xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd" version="2.4">
+        <web-app xmlns="http://java.sun.com/xml/ns/javaee"
+                 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                 xsi:schemaLocation="http://java.sun.com/xml/ns/javaee
+	      http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd"
+                 version="3.0">
 
 	  <xsl:comment>  This web.xml is an created automatically by merging
   the web.xml from Aksess Publisering with the one
