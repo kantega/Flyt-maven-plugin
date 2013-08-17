@@ -22,4 +22,5 @@ appender('STDOUT', ConsoleAppender) {
 }
 logger('ro.isdc.wro', WARN)
 logger('org.eclipse.jetty', WARN)
+logger('org.springframework', ERROR)
 root(DEBUG, ['STDOUT'])
