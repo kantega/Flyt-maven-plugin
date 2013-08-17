@@ -54,7 +54,7 @@ public class KantegaDirMojo extends AbstractMojo {
     private ArtifactMetadataSource artifactMetadataSource;
 
     /**
-     * @parameter
+     * @parameter expression="${openaksess.version}"
      * @required
      */
     private String aksessVersion;
