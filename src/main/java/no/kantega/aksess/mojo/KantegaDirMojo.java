@@ -110,17 +110,14 @@ public class KantegaDirMojo extends AbstractMojo {
 
             File logConfDest = new File(kantegaDir, "conf/logback.groovy");
             logConfDest.getParentFile().mkdirs();
-            if(logConfigFile.exists()) {
-                getLog().info("Using logback.groovy from project");
-                FileUtils.copyFile(logConfigFile, logConfDest);
-            } else {
-                System.setProperty("logback.configurationFile", logConfDest.getAbsolutePath());
+            if(!logConfigFile.exists()) {
                 getLog().info("Using logback.groovy from aksess plugin");
                 try(InputStream is = getClass().getResourceAsStream("/logback.groovy");
                     OutputStream os = new FileOutputStream(logConfDest)){
                     IOUtils.copy(is, os);
                 }
             }
+            System.setProperty("logback.configurationFile", logConfDest.getAbsolutePath());
 
             // We no longer accept templates in src/templates
             if(templatesDirectory.exists() ) {
