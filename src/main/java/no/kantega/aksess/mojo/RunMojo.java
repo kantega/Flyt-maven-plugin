@@ -401,7 +401,7 @@ public class RunMojo extends AbstractMojo {
             unArchiver.setSourceFile(artifact.getFile());
             unArchiver.setDestDirectory(dir);
             final IncludeExcludeFileSelector selector = new IncludeExcludeFileSelector();
-            if(("org.kantega.openaksess".equals(artifact.getGroupId()) && "openaksess-webapp".equals(artifact.getArtifactId())) || artifact == project.getArtifact()) {
+            if(("org.kantega.openaksess".equals(artifact.getGroupId()) && "openaksess-webapp".equals(artifact.getArtifactId())) || artifact.equals(project.getArtifact())) {
                 selector.setExcludes(new String[] {"WEB-INF/lib/**"});
             }
             if(overlays != null) {
