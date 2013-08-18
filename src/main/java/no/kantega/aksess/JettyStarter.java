@@ -143,19 +143,19 @@ public class JettyStarter {
             context.setTempDirectory(workDir);
         }
         System.out.println("Starting with resource bases: " + bases);
-        if(bases.size() == 1 && new File((String) bases.get(0)).isFile()) {
-            context.setWar((String) bases.get(0));
+        if(bases.size() == 1 && new File(bases.get(0)).isFile()) {
+            context.setWar(bases.get(0));
         } else {
             context.setBaseResource(new ResourceCollection(getResources(bases)));
         }
         context.setContextPath(contextPath);
 
         if(dependencyFiles != null) {
-            String extra = "";
+            StringBuilder extra = new StringBuilder();
             for(File file : dependencyFiles) {
-                extra += file.getAbsolutePath() +";";
+                extra.append(file.getAbsolutePath()).append(';');
             }
-            context.setExtraClasspath(extra);
+            context.setExtraClasspath(extra.toString());
         }
         int firstport = port;
         while (port < firstport+10) {
@@ -219,10 +219,10 @@ public class JettyStarter {
             JOptionPane.showMessageDialog(null, e.getMessage());
         }
     }
-    private Resource[] getResources(List bases) throws IOException {
+    private Resource[] getResources(List<String> bases) throws IOException {
         Resource[] resources = new Resource[bases.size()];
         for(int i  = 0; i < bases.size(); i++) {
-            String resourceRef = (String) bases.get(i);
+            String resourceRef = bases.get(i);
             File file = new File(resourceRef);
             if(file.exists()) {
                 if(file.isDirectory()) {
