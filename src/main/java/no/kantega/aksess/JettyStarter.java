@@ -26,6 +26,7 @@ import org.eclipse.jetty.util.resource.JarResource;
 import org.eclipse.jetty.util.resource.Resource;
 import org.eclipse.jetty.util.resource.ResourceCollection;
 import org.eclipse.jetty.webapp.WebAppContext;
+import org.mortbay.jetty.plugin.JettyWebAppContext;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -119,7 +120,8 @@ public class JettyStarter {
         // We want to use ECJ because that's what JettyConsole uses:
         System.setProperty("org.apache.jasper.compiler.disablejsr199", "true");
 
-        context = new WebAppContext();
+        context = new JettyWebAppContext();
+
 
         context.addServerClass("-org.apache.commons.logging.");
         context.addServerClass("-org.apache.jasper.");
