@@ -126,6 +126,7 @@ public class JettyStarter {
         context.addServerClass("-org.apache.commons.logging.");
         context.addServerClass("-org.apache.jasper.");
         context.addServerClass("org.apache.");
+        context.addServerClass("org.slf4j.");
         if(webXml != null) {
             context.setDescriptor(webXml.getAbsolutePath());
         }

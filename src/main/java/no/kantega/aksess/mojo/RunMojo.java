@@ -183,6 +183,13 @@ public class RunMojo extends AbstractMojo {
     private JettyStarter starter;
 
     public void execute() throws MojoExecutionException, MojoFailureException {
+        if(!aksessConfigFile.exists()) {
+            throw new MojoExecutionException("aksessConfigFile does not exist: " + aksessConfigFile.getAbsolutePath());
+        }
+
+        File logbackConfig = new File(kantegaDir, "conf/logback.xml");
+        System.setProperty("logback.configurationFile", logbackConfig.getAbsolutePath());
+
         getLog().info("Running Jetty");
 
         List<Artifact> wars = new ArrayList<>();
@@ -205,9 +212,7 @@ public class RunMojo extends AbstractMojo {
         }
 
         starter = new JettyStarter();
-        if(!aksessConfigFile.exists()) {
-            throw new MojoExecutionException("aksessConfigFile does not exist: " + aksessConfigFile.getAbsolutePath());
-        }
+
         starter.addContextParam("no.kantega.publishing.setup.SetupServlet.CONFIG_SOURCE", aksessConfigFile.getAbsolutePath());
 
         if(System.getProperty("os.name").toLowerCase().contains("win")) {
@@ -249,9 +254,11 @@ public class RunMojo extends AbstractMojo {
 
                 for (Object o : result.getArtifacts()) {
                     Artifact artifact = (Artifact) o;
-                    if (isJar(artifact) && isNotScopeProvided(artifact) && isNotScopeTest(artifact)) {
+                    if (shouldInclude(artifact)) {
                         dependencyFiles.add(artifact.getFile());
                         dependencyIds.add(artifact.getDependencyConflictId());
+                    } else {
+                        getLog().info("Did not include " + artifact.getDependencyConflictId());
                     }
                 }
             }
@@ -259,9 +266,11 @@ public class RunMojo extends AbstractMojo {
 
                 for (Object o : project.getArtifacts()) {
                     Artifact artifact = (Artifact) o;
-                    if (isJar(artifact) && isNotScopeProvided(artifact) && isNotScopeTest(artifact)) {
-                        if (!dependencyIds.contains(artifact.getDependencyConflictId())) {
+                    if (shouldInclude(artifact)) {
+                        if (isNotAlreadyAdded(dependencyIds, artifact) && shouldInclude(artifact)) {
                             dependencyFiles.add(artifact.getFile());
+                        } else {
+                            getLog().info(artifact.getDependencyConflictId() + " was already added or should not be included");
                         }
 
                     }
@@ -292,6 +301,14 @@ public class RunMojo extends AbstractMojo {
         } catch (Exception e) {
             throw new MojoExecutionException(e.getMessage(), e);
         }
+    }
+
+    private boolean isNotAlreadyAdded(Set<String> dependencyIds, Artifact artifact) {
+        return !dependencyIds.contains(artifact.getDependencyConflictId());
+    }
+
+    private boolean shouldInclude(Artifact artifact) {
+        return isJar(artifact) && isNotScopeProvided(artifact) && isNotScopeTest(artifact);
     }
 
     private boolean isNotScopeTest(Artifact artifact) {
