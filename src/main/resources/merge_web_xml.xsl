@@ -71,13 +71,6 @@
 	    <xsl:comment>Aksess servlet-mappings</xsl:comment>
             <xsl:copy-of select="servlet-mapping"/>
 
-            <welcome-file-list>
-	      <xsl:comment>Project welcome files</xsl:comment>
-                <xsl:copy-of select="$doc/welcome-file-list/welcome-file"/>
-		<xsl:comment>AP welcome files</xsl:comment>
-                <xsl:copy-of select="welcome-file-list/welcome-file"/>
-            </welcome-file-list>
-
             <xsl:choose>
                 <xsl:when test="$doc/session-config">
 		  <xsl:comment>Session-timeout from project</xsl:comment>
