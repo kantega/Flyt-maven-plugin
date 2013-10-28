@@ -274,8 +274,25 @@ public class MakeAksessTemplateConfig {
     }
 
     private static String cleanFieldName(String fieldName) {
-        String cleaned = reservedWords.contains(fieldName) ? fieldName + "_" : fieldName;
-        return cleaned.replaceAll("[\\s\\-\\(\\)\\.,]+", "_").replaceAll("å", "a").replaceAll("ø", "o").replace("æ", "a");
+        String cleaned = reservedWords.contains(fieldName) ? fieldName + '_' : fieldName;
+        cleaned = cleaned.replaceAll("å", "a").replaceAll("ø", "o").replaceAll("æ", "a");
+
+        StringBuilder fieldNameBuilder = new StringBuilder(fieldName.length());
+        char[] chars = cleaned.toCharArray();
+        if(Character.isJavaIdentifierStart(chars[0])){
+            fieldNameBuilder.append(chars[0]);
+        } else {
+            fieldNameBuilder.append('_');
+        }
+        for (int i = 1; i < chars.length; i++) {
+            if(Character.isJavaIdentifierPart(chars[i])){
+                fieldNameBuilder.append(chars[i]);
+            } else {
+                fieldNameBuilder.append('_');
+            }
+
+        }
+        return fieldNameBuilder.toString();
     }
 
     private static void setDocumentTypes(Document doc, XPath xpath, JCodeModel jCodeModel, JDefinedClass jc) throws JClassAlreadyExistsException, XPathExpressionException {
