@@ -35,7 +35,6 @@ public class ValidatorMojo extends SmokeTestBase {
 
     /**
      * @parameter
-     * @required
      * The url of the host hosting a page with the same
      * functionality as http://validator.w3.org/check
      */
@@ -56,14 +55,14 @@ public class ValidatorMojo extends SmokeTestBase {
             HttpClient httpclient = new DefaultHttpClient();
             ObjectMapper mapper = new ObjectMapper();
 
-            List<String> allowedErrorMessages = new LinkedList<String>();
+            List<String> allowedErrorMessages = new LinkedList<>();
             allowedErrorMessages.add("Attribute property not allowed on element meta at this point.");
             allowedErrorMessages.add("Element meta is missing one or more of the following attributes: http-equiv, itemprop, name.");
             allowedErrorMessages.add("Element fb:like not allowed as child of element div in this context. (Suppressing further errors from this subtree.)");
 
             final List<Page> pages = pages();
 
-            Map<Page, String> errors = new HashMap<Page, String>();
+            Map<Page, String> errors = new HashMap<>();
 
             checkPages(driver, httpclient, mapper, allowedErrorMessages, pages, errors);
 
@@ -122,7 +121,7 @@ public class ValidatorMojo extends SmokeTestBase {
                                List<String> allowedErrorMessages, Page page, Map<Page, String> errors) {
         try {
             HttpPost post = new HttpPost(validatorURL);
-            List<NameValuePair> formparams = new ArrayList<NameValuePair>();
+            List<NameValuePair> formparams = new ArrayList<>();
             String pageSource = driver.getPageSource();
             formparams.add(new BasicNameValuePair("fragment", pageSource));
             formparams.add(new BasicNameValuePair("output", "json"));
