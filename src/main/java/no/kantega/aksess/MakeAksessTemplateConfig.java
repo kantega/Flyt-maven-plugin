@@ -284,10 +284,13 @@ public class MakeAksessTemplateConfig {
         } else {
             fieldNameBuilder.append('_');
         }
+        boolean previousWasValid = true;
         for (int i = 1; i < chars.length; i++) {
             if(Character.isJavaIdentifierPart(chars[i])){
+                previousWasValid = true;
                 fieldNameBuilder.append(chars[i]);
-            } else {
+            } else if(previousWasValid){
+                previousWasValid = false;
                 fieldNameBuilder.append('_');
             }
 

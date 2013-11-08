@@ -24,5 +24,6 @@ public class MakeAksessTemplateConfigTest {
         String content = FileUtils.readFileToString(aksessTemplateConfigSources);
         FileUtils.deleteDirectory(destination);
         assertTrue("Java file was empty", isNotBlank(content));
+        assertTrue("Did not contain correct identifierName for Folkebiblioteket - forside", content.contains("class Folkebiblioteket_forside"));
     }
 }
