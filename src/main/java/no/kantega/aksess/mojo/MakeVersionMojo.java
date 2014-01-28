@@ -16,14 +16,17 @@
 
 package no.kantega.aksess.mojo;
 
-import no.kantega.aksess.MakeVersion;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 
-import javax.xml.parsers.ParserConfigurationException;
 import java.io.File;
-import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Properties;
 
 /**
  * @goal makeversion
@@ -43,27 +46,49 @@ public class MakeVersionMojo extends AbstractMojo {
     private String version;
 
     /**
-     * @parameter expression="${basedir}/../.svn/entries"
-     * @required
-     * @readonly
-     */
-    private File entriesFile;
-
-
-    /**
     * @parameter default-value="${project.build.outputDirectory}/aksess-webapp-version.properties"
      */
     private File versionFile;
 
+    /**
+     *
+     * @parameter default-value="${openaksess.webapp.revision}"
+     */
+    private String revision;
+
+    /**
+     * @parameter
+     */
+    private String buildDate;
+
     public void execute() throws MojoExecutionException, MojoFailureException {
-        try {
-            versionFile.getParentFile().mkdirs();
-            MakeVersion.main(new String[] {entriesFile.getAbsolutePath(), versionFile.getAbsolutePath(), version});
-        } catch (ParserConfigurationException | FileNotFoundException e) {
-            throw new MojoExecutionException(e.getMessage(), e);
+
+        if (StringUtils.isEmpty(revision)) {
+            getLog().warn("Revision not set, use <revision> in config or -Dopenaksess.webapp.revision");
+            revision = "unknown";
         }
 
+        if (buildDate == null) {
+            SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS");
+            buildDate = format.format(new Date());
+        }
+
+
+        Properties props = new Properties();
+        props.setProperty("revision", revision);
+        props.setProperty("date", buildDate);
+        props.setProperty("version", version);
+
+        try {
+            File dir = versionFile.getParentFile();
+            if (!dir.exists()) {
+                if (!dir.mkdirs()) {
+                    throw new MojoExecutionException("Failed to create directory " + versionFile.getParentFile());
+                }
+            }
+            props.store(new FileOutputStream(versionFile), "iso-8859-1");
+        } catch (IOException e) {
+            throw new MojoExecutionException("IOException writing " + versionFile +" to disk");
+        }
     }
-
-
 }
