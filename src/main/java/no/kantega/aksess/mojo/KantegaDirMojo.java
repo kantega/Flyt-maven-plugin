@@ -38,26 +38,11 @@ public class KantegaDirMojo extends AbstractMojo {
      */
     private File kantegaDir;
 
-    /** @component */
-    private org.apache.maven.artifact.factory.ArtifactFactory artifactFactory;
-
-    /** @component */
-    private org.apache.maven.artifact.resolver.ArtifactResolver resolver;
-
-    /**@parameter expression="${localRepository}" */
-    private org.apache.maven.artifact.repository.ArtifactRepository localRepository;
-
     /** @parameter expression="${project.remoteArtifactRepositories}" */
     private java.util.List remoteRepositories;
 
     /** @component */
     private ArtifactMetadataSource artifactMetadataSource;
-
-    /**
-     * @parameter expression="${openaksess.version}"
-     * @required
-     */
-    private String aksessVersion;
 
     /**
      * @parameter expression="${basedir}/src/install"
@@ -75,12 +60,6 @@ public class KantegaDirMojo extends AbstractMojo {
      */
     private File webappConf;
 
-
-    /**
-     * @parameter expression="${basedir}/src/templates"
-     */
-    private File templatesDirectory;
-
     /**
      * The maven project.
      *
@@ -94,8 +73,6 @@ public class KantegaDirMojo extends AbstractMojo {
 
     public void execute() throws MojoExecutionException, MojoFailureException {
         kantegaDir.mkdirs();
-        getLog().info("Copy files from openaksess-install " + aksessVersion);
-
 
         try {
             // Extract Aksess's install jar
@@ -118,18 +95,6 @@ public class KantegaDirMojo extends AbstractMojo {
                 }
             }
             System.setProperty("logback.configurationFile", logConfDest.getAbsolutePath());
-
-            // We no longer accept templates in src/templates
-            if(templatesDirectory.exists() ) {
-                final FileFilter filter = new FileFilter() {
-                    public boolean accept(File file) {
-                        return file.isFile() && file.getName().endsWith(".xml");
-                    }
-                };
-                if(templatesDirectory.listFiles(filter).length > 0)  {
-                    throw new MojoFailureException("Content templates are no longer allowed in src/templates, please more them to WEB-INF/templates/content and then delete the src/templates directory");
-                }
-            }
 
         } catch (IOException e) {
             throw new MojoFailureException(e.getMessage(), e);
