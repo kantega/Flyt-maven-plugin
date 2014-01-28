@@ -69,7 +69,7 @@ public class MakeVersionMojo extends AbstractMojo {
         }
 
         if (buildDate == null) {
-            SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS");
+            SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
             buildDate = format.format(new Date());
         }
 
