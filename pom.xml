@@ -60,177 +60,15 @@
         </dependency>
 
         <dependency>
-            <groupId>org.eclipse.jetty</groupId>
-            <artifactId>jetty-webapp</artifactId>
-            <version>${jetty.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.eclipse.jetty</groupId>
-            <artifactId>jetty-websocket</artifactId>
-            <version>${jetty.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.mortbay.jetty</groupId>
-            <artifactId>jetty-maven-plugin</artifactId>
-            <version>${jetty.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>javax.servlet</groupId>
-            <artifactId>javax.servlet-api</artifactId>
-            <version>3.0.1</version>
-            <scope>provided</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>org.eclipse.jetty.orbit</groupId>
-            <artifactId>org.eclipse.jdt.core</artifactId>
-            <version>3.7.1</version>
-            <scope>runtime</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>org.eclipse.jetty.orbit</groupId>
-            <artifactId>javax.servlet.jsp</artifactId>
-            <version>2.2.0.v201112011158</version>
-            <scope>runtime</scope>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.eclipse.jetty.orbit</groupId>
-                    <artifactId>javax.servlet</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>org.eclipse.jetty.orbit</groupId>
-                    <artifactId>javax.servlet.jsp</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-        <!-- JSP Impl -->
-        <dependency>
-            <groupId>org.eclipse.jetty.orbit</groupId>
-            <artifactId>org.apache.jasper.glassfish</artifactId>
-            <version>2.2.2.v201112011158</version>
-            <scope>runtime</scope>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.eclipse.jetty.orbit</groupId>
-                    <artifactId>javax.servlet</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>org.eclipse.jetty.orbit</groupId>
-                    <artifactId>javax.servlet.jsp</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-        <!-- JSTL Api -->
-        <dependency>
-            <groupId>org.eclipse.jetty.orbit</groupId>
-            <artifactId>javax.servlet.jsp.jstl</artifactId>
-            <version>1.2.0.v201105211821</version>
-            <scope>runtime</scope>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.eclipse.jetty.orbit</groupId>
-                    <artifactId>javax.servlet</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>org.eclipse.jetty.orbit</groupId>
-                    <artifactId>javax.servlet.jsp</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-        <!-- JSTL Impl -->
-        <dependency>
-            <groupId>org.eclipse.jetty.orbit</groupId>
-            <artifactId>org.apache.taglibs.standard.glassfish</artifactId>
-            <version>1.2.0.v201112081803</version>
-            <scope>runtime</scope>
-        </dependency>
-        <!-- EL Api -->
-        <dependency>
-            <groupId>org.eclipse.jetty.orbit</groupId>
-            <artifactId>javax.el</artifactId>
-            <version>2.2.0.v201108011116</version>
-            <scope>runtime</scope>
-        </dependency>
-        <!-- EL Impl -->
-        <dependency>
-            <groupId>org.eclipse.jetty.orbit</groupId>
-            <artifactId>com.sun.el</artifactId>
-            <version>2.2.0.v201108011116</version>
-            <scope>runtime</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>commons-httpclient</groupId>
-            <artifactId>commons-httpclient</artifactId>
-            <version>3.1</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>commons-logging</groupId>
-                    <artifactId>commons-logging</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-
-        <dependency>
-            <groupId>org.codehaus.jackson</groupId>
-            <artifactId>jackson-core-asl</artifactId>
-            <version>1.8.0</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.codehaus.jackson</groupId>
-            <artifactId>jackson-mapper-asl</artifactId>
-            <version>1.8.0</version>
-        </dependency>
-
-        <!-- /JSP deps -->
-        <dependency>
-            <artifactId>plexus-archiver</artifactId>
-            <groupId>org.codehaus.plexus</groupId>
-            <version>1.0</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.codehaus.plexus</groupId>
-                    <artifactId>plexus-container-default</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>org.codehaus.plexus</groupId>
-                    <artifactId>plexus-component-api</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-
-        <dependency>
             <artifactId>commons-io</artifactId>
             <groupId>commons-io</groupId>
             <version>2.4</version>
         </dependency>
 
         <dependency>
-            <groupId>org.seleniumhq.selenium</groupId>
-            <artifactId>selenium-java</artifactId>
-            <version>2.31.0</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>commons-logging</groupId>
-                    <artifactId>commons-logging</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-
-        <dependency>
-            <groupId>org.jdom</groupId>
-            <artifactId>jdom</artifactId>
-            <version>1.1</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.apache.velocity</groupId>
-            <artifactId>velocity</artifactId>
-            <version>1.7</version>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+            <version>3.1</version>
         </dependency>
 
         <dependency>
@@ -240,8 +78,4 @@
         </dependency>
     </dependencies>
 
-    <properties>
-        <slf4j-api.version>1.7.5</slf4j-api.version>
-        <jetty.version>8.1.12.v20130726</jetty.version>
-    </properties>
 </project>
