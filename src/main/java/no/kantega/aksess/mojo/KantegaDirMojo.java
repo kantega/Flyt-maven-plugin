@@ -95,7 +95,7 @@ public class KantegaDirMojo extends AbstractMojo {
                 }
             }
 
-            System.setProperty("kantega.dir", kantegaDir.getAbsolutePath());
+            System.setProperty("kantega.appDir", kantegaDir.getAbsolutePath());
             System.setProperty("logback.configurationFile", logConfDest.getAbsolutePath());
 
         } catch (IOException e) {
