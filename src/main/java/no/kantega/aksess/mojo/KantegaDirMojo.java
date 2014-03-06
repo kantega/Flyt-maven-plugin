@@ -87,11 +87,21 @@ public class KantegaDirMojo extends AbstractMojo {
 
             File logConfDest = new File(kantegaDir, "conf/logback.xml");
             logConfDest.getParentFile().mkdirs();
-            if(!logConfigFile.exists()) {
-                getLog().info("Using logback.xml from aksess plugin");
-                try(InputStream is = getClass().getResourceAsStream("/logback.xml");
-                    OutputStream os = new FileOutputStream(logConfDest)){
-                    IOUtils.copy(is, os);
+            if(logConfDest.exists()) {
+                getLog().info("Using existing log config: " + logConfDest.getAbsolutePath());
+            } else {
+                if(logConfigFile.exists()){
+                    getLog().info("Using logback.xml from project");
+                    try(InputStream is = new FileInputStream(logConfigFile);
+                        OutputStream os = new FileOutputStream(logConfDest)){
+                        IOUtils.copy(is, os);
+                    }
+                } else {
+                    getLog().info("Using logback.xml from aksess plugin");
+                    try(InputStream is = getClass().getResourceAsStream("/logback.xml");
+                        OutputStream os = new FileOutputStream(logConfDest)){
+                        IOUtils.copy(is, os);
+                    }
                 }
             }
 
