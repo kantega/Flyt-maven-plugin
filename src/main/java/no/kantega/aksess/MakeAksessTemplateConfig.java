@@ -1,11 +1,15 @@
 package no.kantega.aksess;
 
 import com.sun.codemodel.*;
+import org.apache.maven.artifact.Artifact;
 import org.apache.maven.plugin.MojoExecutionException;
+import org.apache.maven.plugin.MojoFailureException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
+import org.xml.sax.EntityResolver;
+import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -14,8 +18,13 @@ import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.xpath.*;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
+import java.net.URLClassLoader;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Set;
 
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
 
@@ -41,13 +50,13 @@ public class MakeAksessTemplateConfig {
             "finally","long","strictfp","volatile","const",
             "float","native","super","while");
 
-    public static File createAksessTemplateConfigSources(File aksessTemplateConfigXml, String projectPackage, File destinationFolder ) throws MojoExecutionException {
-        return createAksessTemplateConfigSources(aksessTemplateConfigXml, projectPackage, destinationFolder, false);
+    public static File createAksessTemplateConfigSources(File aksessTemplateConfigXml, String projectPackage, File destinationFolder, Set<Artifact> deps ) throws MojoExecutionException {
+        return createAksessTemplateConfigSources(aksessTemplateConfigXml, projectPackage, destinationFolder, false, deps);
     }
 
-    public static File createAksessTemplateConfigSources(File aksessTemplateConfigXml, String projectPackage, File destinationFolder, boolean includeAllAttributes ) throws MojoExecutionException {
+    public static File createAksessTemplateConfigSources(File aksessTemplateConfigXml, String projectPackage, File destinationFolder, boolean includeAllAttributes, Set<Artifact> deps ) throws MojoExecutionException {
         try {
-            Document doc = getDocument(aksessTemplateConfigXml);
+            Document doc = getDocument(aksessTemplateConfigXml.getParentFile(), aksessTemplateConfigXml.getName(), deps);
 
             JCodeModel jCodeModel = new JCodeModel();
             JPackage jp = jCodeModel._package(projectPackage);
@@ -60,8 +69,8 @@ public class MakeAksessTemplateConfig {
             setDocumentTypes(doc, xpath, jCodeModel, jc);
 
             File templates = getTemplateRootDir(aksessTemplateConfigXml);
-            setContentTemplates(doc, xpath, jCodeModel, jc, templates, includeAllAttributes);
-            setMetaDateTemplates(doc, xpath, jCodeModel, jc, templates);
+            setContentTemplates(doc, xpath, jCodeModel, jc, templates, includeAllAttributes, deps);
+            setMetaDateTemplates(doc, xpath, jCodeModel, jc, templates, deps);
 
             setDisplayTemplates(doc, xpath, jCodeModel, jc, includeAllAttributes);
             jCodeModel.build(destinationFolder);
@@ -74,11 +83,62 @@ public class MakeAksessTemplateConfig {
         return generatedFile;
     }
 
-    private static Document getDocument(File aksessTemplateConfigXml) throws ParserConfigurationException, SAXException, IOException {
+    private static Document getDocument(final File templatesDir, String templateFile, Set<Artifact> deps) throws ParserConfigurationException, SAXException, IOException {
+
         DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
-        Document doc = dBuilder.parse(aksessTemplateConfigXml);
+
+        Document doc;
+        File file = new File(templatesDir, templateFile);
+        if(file.exists()) {
+            doc = dBuilder.parse(file);
+
+        } else {
+            List<URL> urls = new ArrayList<>();
+            for (Artifact dep : deps) {
+                urls.add(dep.getFile().toURI().toURL());
+            }
+
+            final URLClassLoader loader = new URLClassLoader(urls.toArray(new URL[urls.size()]), MakeAksessTemplateConfig.class.getClassLoader());
+            URL resource = loader.getResource("META-INF/resources/WEB-INF/templates/content/" + templateFile);
+            if(resource != null) {
+                dBuilder.setEntityResolver(new EntityResolver() {
+                    @Override
+                    public InputSource resolveEntity(String publicId, String systemId) throws SAXException, IOException {
+                        if(systemId.startsWith("jar:")) {
+                            String path = systemId.substring(systemId.indexOf("!")+1);
+                            URL r2 = loader.getResource(path);
+                            if(r2 != null) {
+                                return getInputSource(r2);
+                            } else {
+                                String prefix = "/META-INF/resources/WEB-INF/templates/content/";
+                                if(path.startsWith(prefix)) {
+                                    String filename = path.substring(prefix.length());
+                                    File f = new File(templatesDir, filename);
+                                    if(f.exists()) {
+                                        return getInputSource(f.toURI().toURL());
+                                    }
+                                }
+                            }
+                        }
+                        return null;
+                    }
+                });
+                InputSource is = getInputSource(resource);
+                doc = dBuilder.parse(is);
+            } else {
+                throw new RuntimeException("Can't find template on classpath: " + templateFile);
+            }
+
+        }
         doc.getDocumentElement().normalize();
         return doc;
+    }
+
+    private static InputSource getInputSource(URL resource) throws IOException {
+        InputSource is = new InputSource();
+        is.setByteStream(resource.openStream());
+        is.setSystemId(resource.toExternalForm());
+        return is;
     }
 
     private static File getTemplateRootDir(File aksessTemplateConfigXml) {
@@ -134,19 +194,19 @@ public class MakeAksessTemplateConfig {
         }
     }
 
-    private static void setContentTemplates(Document doc, XPath xpath, JCodeModel jCodeModel, JDefinedClass jc, File templates, boolean includeAllAttributes) throws JClassAlreadyExistsException, XPathExpressionException, ParserConfigurationException, IOException, SAXException {
+    private static void setContentTemplates(Document doc, XPath xpath, JCodeModel jCodeModel, JDefinedClass jc, File templates, boolean includeAllAttributes, Set<Artifact> deps) throws JClassAlreadyExistsException, XPathExpressionException, ParserConfigurationException, IOException, SAXException {
         JDefinedClass contentTemplatesClass = jc._class(STATIC_FINAL, "contentTemplates");
         NodeList contentTemplates = getNodeList(doc, xpath, "contentTemplates", "contentTemplate");
-        addContentTemplates(jCodeModel, contentTemplatesClass, contentTemplates, templates, includeAllAttributes);
+        addContentTemplates(jCodeModel, contentTemplatesClass, contentTemplates, templates, includeAllAttributes, deps);
     }
 
-    private static void setMetaDateTemplates(Document doc, XPath xpath, JCodeModel jCodeModel, JDefinedClass jc, File templates) throws JClassAlreadyExistsException, XPathExpressionException, ParserConfigurationException, IOException, SAXException {
+    private static void setMetaDateTemplates(Document doc, XPath xpath, JCodeModel jCodeModel, JDefinedClass jc, File templates, Set<Artifact> deps) throws JClassAlreadyExistsException, XPathExpressionException, ParserConfigurationException, IOException, SAXException {
         JDefinedClass contentTemplatesClass = jc._class(STATIC_FINAL, "metaDataTemplates");
         NodeList contentTemplates = getNodeList(doc, xpath, "metadataTemplates", "contentTemplate");
-        addContentTemplates(jCodeModel, contentTemplatesClass, contentTemplates, templates, false);
+        addContentTemplates(jCodeModel, contentTemplatesClass, contentTemplates, templates, false, deps);
     }
 
-    private static void addContentTemplates(JCodeModel jCodeModel, JDefinedClass contentTemplatesClass, NodeList contentTemplates, File templates, boolean includeAllAttributes) throws JClassAlreadyExistsException, ParserConfigurationException, IOException, SAXException, XPathExpressionException {
+    private static void addContentTemplates(JCodeModel jCodeModel, JDefinedClass contentTemplatesClass, NodeList contentTemplates, File templates, boolean includeAllAttributes, Set<Artifact> deps) throws JClassAlreadyExistsException, ParserConfigurationException, IOException, SAXException, XPathExpressionException {
         for(int i = 0; i < contentTemplates.getLength(); i++){
             Element contentTemplate = (Element) contentTemplates.item(i);
             String databaseId = contentTemplate.getAttribute("databaseId");
@@ -166,7 +226,7 @@ public class MakeAksessTemplateConfig {
                 contentTemplateClass.field(STATIC_FINAL, String.class, "documentType", JExpr.lit(documentType));
             }
 
-            addContentTemplateAttributes(templates, contentTemplateClass, templateFile);
+            addContentTemplateAttributes(templates, contentTemplateClass, templateFile, deps);
             contentTemplateClass.field(STATIC_FINAL, String.class, "templateFile", JExpr.lit(templateFile));
 
             if (includeAllAttributes) {
@@ -208,10 +268,9 @@ public class MakeAksessTemplateConfig {
         }
     }
 
-    private static void addContentTemplateAttributes(File templates, JDefinedClass contentTemplateClass, String templateFile) throws JClassAlreadyExistsException, ParserConfigurationException, IOException, SAXException, XPathExpressionException {
+    private static void addContentTemplateAttributes(File templates, JDefinedClass contentTemplateClass, String templateFile, Set<Artifact> deps) throws JClassAlreadyExistsException, ParserConfigurationException, IOException, SAXException, XPathExpressionException {
         JDefinedClass attributesClass = contentTemplateClass._class(STATIC_FINAL, "attributes");
-        File contentTemplate = new File(templates, templateFile);
-        Document document = getDocument(contentTemplate);
+        Document document = getDocument(templates, templateFile, deps);
         NodeList attributes = getAttributeNodeList(document, xpath, "attribute");
         for(int i = 0; i < attributes.getLength(); i++){
             Element attribute = (Element) attributes.item(i);

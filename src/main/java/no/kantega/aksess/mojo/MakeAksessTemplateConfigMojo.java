@@ -11,6 +11,7 @@ import java.io.File;
 /**
  * @phase generate-sources
  * @goal generateAksessTemplateConfig
+ * @requiresDependencyResolution runtime
  * @requiresProject
  */
 public class MakeAksessTemplateConfigMojo extends AbstractMojo {
@@ -54,7 +55,7 @@ public class MakeAksessTemplateConfigMojo extends AbstractMojo {
         try {
             destination.mkdirs();
             project.addCompileSourceRoot(destination.getPath());
-            MakeAksessTemplateConfig.createAksessTemplateConfigSources(aksessTemplateConfigXml, projectPackage, destination);
+            MakeAksessTemplateConfig.createAksessTemplateConfigSources(aksessTemplateConfigXml, projectPackage, destination, project.getArtifacts());
         } catch (Exception e) {
             throw new MojoExecutionException(e.getMessage(), e);
         }

@@ -1,12 +1,14 @@
 package no.kantega.aksess;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.maven.artifact.Artifact;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.junit.Test;
 
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.util.Collections;
 
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
 import static org.junit.Assert.assertTrue;
@@ -19,7 +21,7 @@ public class MakeAksessTemplateConfigTest {
 
 
         File destination = Files.createTempDirectory("AksessTemplateConfigJava").toFile();
-        File aksessTemplateConfigSources = MakeAksessTemplateConfig.createAksessTemplateConfigSources(templateConfig, "no.kantega.aksess", destination);
+        File aksessTemplateConfigSources = MakeAksessTemplateConfig.createAksessTemplateConfigSources(templateConfig, "no.kantega.aksess", destination, Collections.<Artifact>emptySet());
 
         String content = FileUtils.readFileToString(aksessTemplateConfigSources);
         FileUtils.deleteDirectory(destination);
