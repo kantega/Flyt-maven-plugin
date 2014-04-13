@@ -172,9 +172,12 @@ public class RunMojo extends AbstractMojo {
         }
 
         if(aksessHome != null) {
-            File aksessSrc  = new File(aksessHome, "modules/webapp/src/webapp");
+            File aksessSrc  = new File(aksessHome, "modules/webapp/src/resources/META-INF/resources");
             if(aksessSrc.exists()) {
+                getLog().info("Using aksessHome " + aksessSrc.getAbsolutePath());
                 starter.setAksessDir(aksessSrc);
+            } else {
+                getLog().warn("aksessHome " + aksessSrc.getAbsolutePath() + " does not exist!");
             }
         }
 
