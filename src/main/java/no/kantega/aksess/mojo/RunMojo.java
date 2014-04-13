@@ -194,7 +194,6 @@ public class RunMojo extends AbstractMojo {
         configureStarter(starter);
 
         addRestartConsoleScanner();
-        addAksessTemplateConfigChangeListener();
 
         try {
             starter.start();
@@ -215,75 +214,6 @@ public class RunMojo extends AbstractMojo {
             }
         };
         t.start();
-    }
-
-    private void addAksessTemplateConfigChangeListener() {
-        if(coreModulePath != null && projectPackage != null){
-            getLog().info("Watching aksess-templateconfig.xml");
-            new Thread(new Runnable() {
-
-                @Override
-                public void run() {
-                    try {
-                        Path templateConfigDir = Paths.get(srcDir.getAbsolutePath(), "/WEB-INF");
-                        File generatedSourcesDir = new File(coreModulePath, "/target/generated-sources/aksess");
-                        File targetClassFile = new File(coreModulePath, "target/classes/");
-
-
-                        WatchService watcher = FileSystems.getDefault().newWatchService();
-                        WatchKey watchKey = templateConfigDir.register(watcher, ENTRY_MODIFY);
-                        loopOverWatchKeys(templateConfigDir, generatedSourcesDir, targetClassFile, watcher);
-                    } catch (Exception e) {
-                        getLog().error(e);
-                    }
-                }
-
-                private void loopOverWatchKeys(Path templateConfigDir, File generatedSourcesDir, File targetClassFile, WatchService watcher) {
-                    for (;;) {
-                        try {
-                            WatchKey key = watcher.take();
-                            for (WatchEvent<?> event : key.pollEvents()) {
-                                WatchEvent<Path> ev = (WatchEvent<Path>)event;
-                                Path filename = ev.context();
-                                handleModifiedFile(templateConfigDir, generatedSourcesDir, targetClassFile, filename);
-                            }
-                            boolean valid = key.reset();
-                            if (!valid) {
-                                break;
-                            }
-                        } catch (Exception e) {
-                            getLog().error(e);
-                        }
-                    }
-                }
-
-                private void handleModifiedFile(Path templateConfigDir, File generatedSourcesDir, File targetClassFile, Path filename) throws MojoExecutionException {
-                    if(filename.getFileName().toString().equals("aksess-templateconfig.xml")){
-                        getLog().info("aksess-templateconfig.xml changed, recompiling to " + targetClassFile);
-
-                        Path templateConfig = templateConfigDir.resolve(filename);
-                        File aksessTemplateConfigSources = MakeAksessTemplateConfig.createAksessTemplateConfigSources(
-                                templateConfig.toFile(), projectPackage, generatedSourcesDir, project.getArtifacts());
-
-                        JavaCompiler compiler = ToolProvider.getSystemJavaCompiler();
-                        MyDiagnosticListener listener = new MyDiagnosticListener();
-                        StandardJavaFileManager fileManager  = compiler.getStandardFileManager(listener, null, null);
-                        Iterable<? extends JavaFileObject> fileObjects =  fileManager.getJavaFileObjects(
-                                aksessTemplateConfigSources);
-
-                        JavaCompiler.CompilationTask task = compiler.getTask(null, fileManager, listener,
-                                asList("-d", targetClassFile.getAbsolutePath()), null, fileObjects);
-
-                        boolean success  = task.call();
-                        if(!success){
-                            getLog().error("Compilation failed!");
-                        } else {
-                            getLog().info("Compilation success!");
-                        }
-                    }
-                }
-            }).start();
-        }
     }
 
     protected void configureStarter(JettyStarter starter) {
