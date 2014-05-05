@@ -17,6 +17,7 @@
 package no.kantega.aksess;
 
 
+import org.eclipse.jetty.maven.plugin.JettyWebAppContext;
 import org.eclipse.jetty.server.Handler;
 import org.eclipse.jetty.server.Request;
 import org.eclipse.jetty.server.Server;
@@ -25,8 +26,6 @@ import org.eclipse.jetty.server.handler.HandlerCollection;
 import org.eclipse.jetty.util.resource.JarResource;
 import org.eclipse.jetty.util.resource.Resource;
 import org.eclipse.jetty.util.resource.ResourceCollection;
-import org.eclipse.jetty.webapp.WebAppContext;
-import org.mortbay.jetty.plugin.JettyWebAppContext;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -122,8 +121,11 @@ public class JettyStarter {
 
         context.addServerClass("-org.apache.commons.logging.");
         context.addServerClass("-org.apache.jasper.");
+        context.addServerClass("-org.apache.tomcat.");
+        context.addServerClass("-org.apache.el.");
         context.addServerClass("org.apache.");
         context.addServerClass("org.slf4j.");
+
         if(webXml != null) {
             context.setDescriptor(webXml.getAbsolutePath());
         }

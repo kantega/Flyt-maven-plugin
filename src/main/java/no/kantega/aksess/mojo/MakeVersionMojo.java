@@ -38,7 +38,7 @@ public class MakeVersionMojo extends AbstractMojo {
     
     /**
      * The version of the project
-     * @parameter expression="${project.version}"
+     * @parameter property="${project.version}"
      * @required
      * @readonly
      *

@@ -26,7 +26,6 @@ import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.project.MavenProject;
 import org.apache.maven.project.MavenProjectBuilder;
 
-
 import javax.tools.*;
 import java.io.File;
 import java.io.IOException;
@@ -45,27 +44,27 @@ import static java.util.Arrays.asList;
 public class RunMojo extends AbstractMojo {
 
     /**
-     * @parameter expression="${basedir}/src/webapp"
+     * @parameter property="${basedir}/src/webapp"
      */
     private File srcDir;
 
     /**
-     * @parameter expression="${project.build.directory}/${project.build.finalName}"
+     * @parameter property="${project.build.directory}/${project.build.finalName}"
      */
     private File webappDir;
 
     /**
-     * @parameter expression="${project.build.directory}/kantega-dir"
+     * @parameter property="${project.build.directory}/kantega-dir"
      */
     private File kantegaDir;
 
     /**
-     * @parameter expression="/${project.artifactId}"
+     * @parameter property="/${project.artifactId}"
      */
     private String contextPath;
 
     /**
-     * @parameter expression="${project.groupId}"
+     * @parameter property="${project.groupId}"
      * @readonly
      */
     private String projectPackage;
@@ -91,7 +90,7 @@ public class RunMojo extends AbstractMojo {
     /**
      * The maven project.
      *
-     * @parameter expression="${project}"
+     * @parameter property="${project}"
      * @required
      * @readonly
      */
@@ -104,10 +103,10 @@ public class RunMojo extends AbstractMojo {
     /** @component */
     protected org.apache.maven.artifact.resolver.ArtifactResolver resolver;
 
-    /**@parameter expression="${localRepository}" */
+    /**@parameter property="${localRepository}" */
     protected org.apache.maven.artifact.repository.ArtifactRepository localRepository;
 
-    /** @parameter expression="${project.remoteArtifactRepositories}" */
+    /** @parameter property="${project.remoteArtifactRepositories}" */
     protected java.util.List remoteRepositories;
 
     /** @component */
@@ -117,7 +116,7 @@ public class RunMojo extends AbstractMojo {
     /**
      * The directory containing generated classes.
      *
-     * @parameter expression="${project.build.outputDirectory}"
+     * @parameter property="${project.build.outputDirectory}"
      * @required
      * @readonly
      */
@@ -126,7 +125,7 @@ public class RunMojo extends AbstractMojo {
     /**
      * The directory containing generated classes.
      *
-     * @parameter expression="${aksessHome}"
+     * @parameter property="${aksessHome}"
      */
     private File aksessHome;
 
@@ -140,7 +139,7 @@ public class RunMojo extends AbstractMojo {
     private List<String> excludes;
 
     /**
-     * @parameter expression="${port}" default-value="8080"
+     * @parameter property="${port}" default-value="8080"
      */
     private int port;
     private JettyStarter starter;
@@ -148,7 +147,7 @@ public class RunMojo extends AbstractMojo {
     /**
      * The artifacts for the project.
      *
-     * @parameter expression="${project.artifacts}"
+     * @parameter property="${project.artifacts}"
      * @readonly
      */
     protected Set<Artifact> projectArtifacts;
