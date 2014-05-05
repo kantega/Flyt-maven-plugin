@@ -34,36 +34,36 @@ import java.io.*;
 public class KantegaDirMojo extends AbstractMojo {
 
     /**
-     * @parameter property="${project.build.directory}/kantega-dir"
+     * @parameter expression="${project.build.directory}/kantega-dir"
      */
     private File kantegaDir;
 
-    /** @parameter property="${project.remoteArtifactRepositories}" */
+    /** @parameter expression="${project.remoteArtifactRepositories}" */
     private java.util.List remoteRepositories;
 
     /** @component */
     private ArtifactMetadataSource artifactMetadataSource;
 
     /**
-     * @parameter property="${basedir}/src/install"
+     * @parameter expression="${basedir}/src/install"
      */
     private File installDir;
 
 
     /**
-     * @parameter property="${basedir}/src/conf/logback.xml"
+     * @parameter expression="${basedir}/src/conf/logback.xml"
      */
     private File logConfigFile;
 
     /**
-     * @parameter property="${basedir}/src/conf/aksess-webapp.conf"
+     * @parameter expression="${basedir}/src/conf/aksess-webapp.conf"
      */
     private File webappConf;
 
     /**
      * The maven project.
      *
-     * @parameter property="${project}"
+     * @parameter expression="${project}"
      * @required
      * @readonly
      */

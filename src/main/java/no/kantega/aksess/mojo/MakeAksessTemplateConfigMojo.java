@@ -29,14 +29,14 @@ public class MakeAksessTemplateConfigMojo extends AbstractMojo {
     private File destination;
 
     /**
-     * @parameter property="${project.groupId}"
+     * @parameter expression="${project.groupId}"
      * @required
      * @readonly
      */
     private String projectPackage;
 
     /**
-     * @parameter property="${project.build.outputDirectory}"
+     * @parameter expression="${project.build.outputDirectory}"
      * @required
      */
     protected String classesDirectory;
@@ -44,7 +44,7 @@ public class MakeAksessTemplateConfigMojo extends AbstractMojo {
     /**
      * The maven project.
      *
-     * @parameter property="${project}"
+     * @parameter expression="${project}"
      * @read-only
      * @required
      */

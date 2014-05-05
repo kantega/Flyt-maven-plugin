@@ -40,27 +40,27 @@ import java.util.Set;
 public class RunMojo extends AbstractMojo {
 
     /**
-     * @parameter property="${basedir}/src/webapp"
+     * @parameter expression="${basedir}/src/webapp"
      */
     private File srcDir;
 
     /**
-     * @parameter property="${project.build.directory}/${project.build.finalName}"
+     * @parameter expression="${project.build.directory}/${project.build.finalName}"
      */
     private File webappDir;
 
     /**
-     * @parameter property="${project.build.directory}/kantega-dir"
+     * @parameter expression="${project.build.directory}/kantega-dir"
      */
     private File kantegaDir;
 
     /**
-     * @parameter property="/${project.artifactId}"
+     * @parameter expression="/${project.artifactId}"
      */
     private String contextPath;
 
     /**
-     * @parameter property="${project.groupId}"
+     * @parameter expression="${project.groupId}"
      * @readonly
      */
     private String projectPackage;
@@ -86,7 +86,7 @@ public class RunMojo extends AbstractMojo {
     /**
      * The maven project.
      *
-     * @parameter property="${project}"
+     * @parameter expression="${project}"
      * @required
      * @readonly
      */
@@ -99,10 +99,10 @@ public class RunMojo extends AbstractMojo {
     /** @component */
     protected org.apache.maven.artifact.resolver.ArtifactResolver resolver;
 
-    /**@parameter property="${localRepository}" */
+    /**@parameter expression="${localRepository}" */
     protected org.apache.maven.artifact.repository.ArtifactRepository localRepository;
 
-    /** @parameter property="${project.remoteArtifactRepositories}" */
+    /** @parameter expression="${project.remoteArtifactRepositories}" */
     protected java.util.List remoteRepositories;
 
     /** @component */
@@ -112,7 +112,7 @@ public class RunMojo extends AbstractMojo {
     /**
      * The directory containing generated classes.
      *
-     * @parameter property="${project.build.outputDirectory}"
+     * @parameter expression="${project.build.outputDirectory}"
      * @required
      * @readonly
      */
@@ -121,7 +121,7 @@ public class RunMojo extends AbstractMojo {
     /**
      * The directory containing generated classes.
      *
-     * @parameter property="${aksessHome}"
+     * @parameter expression="${aksessHome}"
      */
     private File aksessHome;
 
@@ -135,7 +135,7 @@ public class RunMojo extends AbstractMojo {
     private List<String> excludes;
 
     /**
-     * @parameter property="${port}" default-value="8080"
+     * @parameter expression="${port}" default-value="8080"
      */
     private int port;
     private JettyStarter starter;
@@ -143,7 +143,7 @@ public class RunMojo extends AbstractMojo {
     /**
      * The artifacts for the project.
      *
-     * @parameter property="${project.artifacts}"
+     * @parameter expression="${project.artifacts}"
      * @readonly
      */
     protected Set<Artifact> projectArtifacts;
