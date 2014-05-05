@@ -17,7 +17,6 @@
 package no.kantega.aksess.mojo;
 
 import no.kantega.aksess.JettyStarter;
-import no.kantega.aksess.MakeAksessTemplateConfig;
 import org.apache.maven.artifact.Artifact;
 import org.apache.maven.artifact.metadata.ArtifactMetadataSource;
 import org.apache.maven.plugin.AbstractMojo;
@@ -26,14 +25,11 @@ import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.project.MavenProject;
 import org.apache.maven.project.MavenProjectBuilder;
 
-import javax.tools.*;
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.*;
-import java.util.*;
-
-import static java.nio.file.StandardWatchEventKinds.ENTRY_MODIFY;
-import static java.util.Arrays.asList;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
 
 /**
  * @goal run
@@ -282,32 +278,15 @@ public class RunMojo extends AbstractMojo {
         }
     }
 
-    private class MyDiagnosticListener implements DiagnosticListener<JavaFileObject> {
-        public void report(Diagnostic diagnostic) {
-            getLog().error("Code -> " +  diagnostic.getCode());
-            getLog().error("Column Number -> " + diagnostic.getColumnNumber());
-            getLog().error("End Position -> " + diagnostic.getEndPosition());
-            getLog().error("Kind -> " + diagnostic.getKind());
-            getLog().error("Line Number -> " + diagnostic.getLineNumber());
-            getLog().error("Message -> "+ diagnostic.getMessage(Locale.ENGLISH));
-            getLog().error("Position -> " + diagnostic.getPosition());
-            getLog().error("Source -> " + diagnostic.getSource());
-            getLog().error("Start Position -> " + diagnostic.getStartPosition());
-        }
-    }
     /**
      * @return
      */
     private List<File> getDependencyFiles ()
     {
-        List<File> dependencyFiles = new ArrayList<File>();
-        for ( Iterator<Artifact> iter = projectArtifacts.iterator(); iter.hasNext(); )
-        {
-            Artifact artifact = (Artifact) iter.next();
-
+        List<File> dependencyFiles = new ArrayList<>();
+        for (Artifact artifact : projectArtifacts) {
             // Include runtime and compile time libraries, and possibly test libs too
-            if(artifact.getType().equals("war"))
-            {
+            if (artifact.getType().equals("war")) {
                 continue;
             }
 
@@ -315,7 +294,7 @@ public class RunMojo extends AbstractMojo {
                 continue; //never add dependencies of scope=provided to the webapp's classpath (see also <useProvidedScope> param)
 
             dependencyFiles.add(artifact.getFile());
-            getLog().debug( "Adding artifact " + artifact.getFile().getName() + " with scope "+artifact.getScope()+" for WEB-INF/lib " );
+            getLog().debug("Adding artifact " + artifact.getFile().getName() + " with scope " + artifact.getScope() + " for WEB-INF/lib ");
         }
 
         return dependencyFiles;
