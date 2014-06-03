@@ -41,8 +41,15 @@ public class RunMojo extends AbstractMojo {
 
     /**
      * @parameter expression="${basedir}/src/webapp"
+     * @readonly
      */
     private File srcDir;
+
+    /**
+     * @parameter expression="${basedir}/src/main/webapp"
+     * @readonly
+     */
+    private File stdM2SrcDir;
 
     /**
      * @parameter expression="${project.build.directory}/${project.build.finalName}"
@@ -182,7 +189,7 @@ public class RunMojo extends AbstractMojo {
 
         starter.setPort(port);
         starter.setContextPath(contextPath);
-        starter.setSrcDir(srcDir);
+        starter.setSrcDir(getSrcDir());
         starter.addContextParam("kantega.appDir", kantegaDir.getAbsolutePath());
 
         starter.setDependencyFiles(dependencyFiles);
@@ -197,6 +204,16 @@ public class RunMojo extends AbstractMojo {
             starter.start();
         } catch (Exception e) {
             throw new MojoExecutionException(e.getMessage(), e);
+        }
+    }
+
+    private File getSrcDir() {
+        if(srcDir.exists()){
+            return srcDir;
+        } else if (stdM2SrcDir.exists()){
+            return stdM2SrcDir;
+        } else {
+            throw new IllegalStateException("Neither src/webapp nor src/main/webapp exists!");
         }
     }
 
