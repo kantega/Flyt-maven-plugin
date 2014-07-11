@@ -84,6 +84,11 @@ public class RunMojo extends AbstractMojo {
     private File aksessConfigFile;
 
     /**
+     * @parameter default-value="true" expression="${openBrowser}"
+     */
+    private boolean openBrowser;
+
+    /**
      * Path to the module containing all java files. E.g. ../core
      * @parameter
      * @readonly
@@ -232,7 +237,7 @@ public class RunMojo extends AbstractMojo {
     }
 
     protected void configureStarter(JettyStarter starter) {
-        starter.setOpenBrowser(true);
+        starter.setOpenBrowser(openBrowser);
     }
 
     abstract class ConsoleScanner extends Thread {
@@ -298,8 +303,7 @@ public class RunMojo extends AbstractMojo {
     /**
      * @return
      */
-    private List<File> getDependencyFiles ()
-    {
+    private List<File> getDependencyFiles (){
         List<File> dependencyFiles = new ArrayList<>();
         for (Artifact artifact : projectArtifacts) {
             // Include runtime and compile time libraries, and possibly test libs too
