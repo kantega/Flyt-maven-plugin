@@ -137,13 +137,9 @@ public class RunMojo extends AbstractMojo {
         }
 
         if(aksessHome != null) {
-            File aksessSrc  = new File(aksessHome, "modules/webapp/src/resources/META-INF/resources");
-            if(aksessSrc.exists()) {
-                getLog().info("Using aksessHome " + aksessSrc.getAbsolutePath());
-                starter.setAksessDir(aksessSrc);
-            } else {
-                getLog().warn("aksessHome " + aksessSrc.getAbsolutePath() + " does not exist!");
-            }
+            File aksessSrc = getAksessHome();
+            getLog().info("Using aksessHome " + aksessSrc.getAbsolutePath());
+            starter.setAksessDir(aksessSrc);
         }
 
         List<File> dependencyFiles = new ArrayList<>();
@@ -170,13 +166,27 @@ public class RunMojo extends AbstractMojo {
         }
     }
 
-    private File getSrcDir() {
+    private File getAksessHome() throws MojoExecutionException {
+        File aksessSrc  = new File(aksessHome, "modules/webapp/src/main/resources/META-INF/resources");
+        File legacyAksessSrc  = new File(aksessHome, "modules/webapp/src/resources/META-INF/resources");
+        if(aksessSrc.exists()) {
+            return aksessSrc;
+        } else if (legacyAksessSrc.exists()) {
+            return legacyAksessSrc;
+        } else {
+            getLog().error("aksessHome " + aksessSrc.getAbsolutePath() + " does not exist!");
+            throw new MojoExecutionException("aksessHome specified, but neither " + aksessSrc.getAbsolutePath() +
+                    " nor " + legacyAksessSrc.getAbsolutePath() + " exists!");
+        }
+    }
+
+    private File getSrcDir() throws MojoExecutionException {
         if(srcDir.exists()){
             return srcDir;
         } else if (stdM2SrcDir.exists()){
             return stdM2SrcDir;
         } else {
-            throw new IllegalStateException("Neither src/webapp nor src/main/webapp exists!");
+            throw new MojoExecutionException("Neither src/webapp nor src/main/webapp exists!");
         }
     }
 
