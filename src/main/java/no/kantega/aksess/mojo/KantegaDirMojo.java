@@ -18,58 +18,45 @@ package no.kantega.aksess.mojo;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
-import org.apache.maven.artifact.metadata.ArtifactMetadataSource;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
-import org.apache.maven.project.MavenProject;
+import org.apache.maven.plugins.annotations.LifecyclePhase;
+import org.apache.maven.plugins.annotations.Mojo;
+import org.apache.maven.plugins.annotations.Parameter;
 
 import java.io.*;
 
 /**
- * @goal kantegadir
- * @phase process-resources
- * @requiresProject
+ * Mojo for populating kantega-dir
  */
+@Mojo(name = "kantegadir", defaultPhase = LifecyclePhase.PROCESS_RESOURCES, requiresProject = true)
 public class KantegaDirMojo extends AbstractMojo {
 
     /**
-     * @parameter expression="${project.build.directory}/kantega-dir"
+     * Where should kantega-dir be created. Default ${project.build.directory}/kantega-dir
      */
+    @Parameter(defaultValue = "${project.build.directory}/kantega-dir")
     private File kantegaDir;
 
-    /** @parameter expression="${project.remoteArtifactRepositories}" */
-    private java.util.List remoteRepositories;
-
-    /** @component */
-    private ArtifactMetadataSource artifactMetadataSource;
-
     /**
-     * @parameter expression="${basedir}/src/install"
+     * location of install-dir, containing files that should be copied.
      */
+    @Parameter(defaultValue = "${basedir}/src/install")
     private File installDir;
 
 
     /**
-     * @parameter expression="${basedir}/src/conf/logback.xml"
+     * Location of log config file, default ${basedir}/src/conf/logback.xml
      */
+    @Parameter(defaultValue = "${basedir}/src/conf/logback.xml")
     private File logConfigFile;
 
     /**
-     * @parameter expression="${basedir}/src/conf/aksess-webapp.conf"
+     * Location of aksess-webapp.conf, default ${basedir}/src/conf/aksess-webapp.conf
      */
+    @Parameter(defaultValue = "${basedir}/src/conf/aksess-webapp.conf")
     private File webappConf;
-
-    /**
-     * The maven project.
-     *
-     * @parameter expression="${project}"
-     * @required
-     * @readonly
-     */
-    private MavenProject project;
-
-
 
     public void execute() throws MojoExecutionException, MojoFailureException {
         kantegaDir.mkdirs();
