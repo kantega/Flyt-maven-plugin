@@ -281,7 +281,9 @@ public class RunMojo extends AbstractMojo {
                 continue; //never add dependencies of scope=provided to the webapp's classpath (see also <useProvidedScope> param)
 
             dependencyFiles.add(artifact.getFile());
-            getLog().debug("Adding artifact " + artifact.getFile().getName() + " with scope " + artifact.getScope() + " for WEB-INF/lib ");
+            if (getLog().isDebugEnabled()) {
+                getLog().debug("Adding artifact " + artifact.getFile().getName() + " with scope " + artifact.getScope() + " for WEB-INF/lib ");
+            }
         }
 
         return dependencyFiles;
