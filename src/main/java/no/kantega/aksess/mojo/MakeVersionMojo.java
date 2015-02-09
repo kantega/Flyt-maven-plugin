@@ -20,6 +20,9 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
+import org.apache.maven.plugins.annotations.LifecyclePhase;
+import org.apache.maven.plugins.annotations.Mojo;
+import org.apache.maven.plugins.annotations.Parameter;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -29,36 +32,34 @@ import java.util.Date;
 import java.util.Properties;
 
 /**
- * @goal makeversion
- * @phase process-resources
- * @requiresProject
+ * Mojo that creates «aksess-webapp-version.properties», containing version information about the building project.
  */
+@Mojo(name = "makeversion", defaultPhase = LifecyclePhase.PROCESS_RESOURCES, requiresProject = true)
 public class MakeVersionMojo extends AbstractMojo {
 
-    
+
     /**
      * The version of the project
-     * @parameter expression="${project.version}"
-     * @required
-     * @readonly
-     *
      */
+    @Parameter(defaultValue = "${project.version}", readonly = true, required = true)
     private String version;
 
     /**
-    * @parameter default-value="${project.build.outputDirectory}/aksess-webapp-version.properties"
+    * Where to put the file containing version information
      */
+    @Parameter(defaultValue = "${project.build.outputDirectory}/aksess-webapp-version.properties")
     private File versionFile;
 
     /**
-     *
-     * @parameter default-value="${openaksess.webapp.revision}"
+     *  Revision for the build
      */
+    @Parameter(defaultValue = "${openaksess.webapp.revision}")
     private String revision;
 
     /**
-     * @parameter
+     * Timestamp for the build. Current time is default.
      */
+    @Parameter
     private String buildDate;
 
     public void execute() throws MojoExecutionException, MojoFailureException {
@@ -79,14 +80,14 @@ public class MakeVersionMojo extends AbstractMojo {
         props.setProperty("date", buildDate);
         props.setProperty("version", version);
 
-        try {
+        try (FileOutputStream fileOutputStream = new FileOutputStream(versionFile)){
             File dir = versionFile.getParentFile();
             if (!dir.exists()) {
                 if (!dir.mkdirs()) {
                     throw new MojoExecutionException("Failed to create directory " + versionFile.getParentFile());
                 }
             }
-            props.store(new FileOutputStream(versionFile), "iso-8859-1");
+            props.store(fileOutputStream, "iso-8859-1");
         } catch (IOException e) {
             throw new MojoExecutionException("IOException writing " + versionFile +" to disk");
         }

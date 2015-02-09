@@ -163,7 +163,7 @@ public class JettyStarter {
                 int nextPort = port+1;
                 System.out.println("Error starting server on port "+port+", trying port " + nextPort);
                 port++;
-            } 
+            }
         }
 
         server = new Server(port);
@@ -186,13 +186,13 @@ public class JettyStarter {
         this.joinServer = joinServer;
     }
 
+    @SuppressWarnings("unchecked")
     private  void openUrl(String url) {
         String osName = System.getProperty("os.name");
         try {
             if (osName.startsWith("Mac OS")) {
                 Class fileMgr = Class.forName("com.apple.eio.FileManager");
-                Method openURL = fileMgr.getDeclaredMethod("openURL",
-                        new Class[] {String.class});
+                Method openURL = fileMgr.getDeclaredMethod("openURL", String.class);
                 openURL.invoke(null, url);
             }
             else if (osName.startsWith("Windows"))
@@ -225,7 +225,7 @@ public class JettyStarter {
                     resources[i] = Resource.newResource(resourceRef);
                 } else {
                     File extractDir = new File(workDir, file.getName());
-                    final JarResource warResource = (JarResource) Resource.newResource(file.toURL());
+                    final JarResource warResource = (JarResource) Resource.newResource(file.toURI().toURL());
                     warResource.copyTo(extractDir);
                     resources[i] = Resource.newResource(extractDir.getAbsolutePath());
                 }

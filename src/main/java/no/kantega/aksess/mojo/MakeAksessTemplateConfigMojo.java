@@ -4,50 +4,40 @@ import no.kantega.aksess.MakeAksessTemplateConfig;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
+import org.apache.maven.plugins.annotations.*;
 import org.apache.maven.project.MavenProject;
 
 import java.io.File;
 
 /**
- * @phase generate-sources
- * @goal generateAksessTemplateConfig
- * @requiresDependencyResolution runtime
- * @requiresProject
+ * Mojo that processes aksess-templateconfig.xml, generating a class representing it.
  */
+@Mojo(name = "generateAksessTemplateConfig", defaultPhase = LifecyclePhase.GENERATE_SOURCES,
+        requiresDependencyResolution = ResolutionScope.RUNTIME, requiresProject = true)
 public class MakeAksessTemplateConfigMojo extends AbstractMojo {
 
     /**
-     * @parameter
-     * @required
+     * Where is aksess-templateconfig.xml located. Default src/main/webapp/WEB-INF/aksess-templateconfig.xml
      */
+    @Parameter(defaultValue = "src/main/webapp/WEB-INF/aksess-templateconfig.xml")
     private File aksessTemplateConfigXml;
 
-    /**
-     * @parameter default-value="${project.build.directory}/generated-sources/aksess
-     * @required
-     */
+    @Parameter(defaultValue = "${project.build.directory}/generated-sources/aksess")
     private File destination;
 
     /**
-     * @parameter expression="${project.groupId}"
-     * @required
-     * @readonly
+     * Package name for the generated class
      */
+    @Parameter(defaultValue = "${project.groupId}")
     private String projectPackage;
 
     /**
-     * @parameter expression="${project.build.outputDirectory}"
-     * @required
+     * Where the generated class should be written
      */
+    @Parameter(defaultValue = "${project.build.outputDirectory}", readonly = true)
     protected String classesDirectory;
 
-    /**
-     * The maven project.
-     *
-     * @parameter expression="${project}"
-     * @read-only
-     * @required
-     */
+    @Component
     private MavenProject project;
 
     @Override

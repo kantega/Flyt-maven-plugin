@@ -18,147 +18,107 @@ package no.kantega.aksess.mojo;
 
 import no.kantega.aksess.JettyStarter;
 import org.apache.maven.artifact.Artifact;
-import org.apache.maven.artifact.metadata.ArtifactMetadataSource;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
+import org.apache.maven.plugins.annotations.Component;
+import org.apache.maven.plugins.annotations.Mojo;
+import org.apache.maven.plugins.annotations.Parameter;
+import org.apache.maven.plugins.annotations.ResolutionScope;
 import org.apache.maven.project.MavenProject;
-import org.apache.maven.project.MavenProjectBuilder;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 /**
- * @goal run
- * @execute phase="test"
- * @requiresDependencyResolution runtime
- *
+ * Mojo that start the application in Jetty
  */
+@Mojo(name = "run", requiresDependencyResolution = ResolutionScope.RUNTIME, requiresDependencyCollection = ResolutionScope.RUNTIME)
 public class RunMojo extends AbstractMojo {
 
     /**
-     * @parameter expression="${basedir}/src/webapp"
-     * @readonly
+     * Parameter specifying the webapp dir,
+     * Default is ${basedir}/src/webapp for historical reasons.
+     * ${basedir}/src/main/webapp will also be tried, if ${basedir}/src/webapp does not exits.
+     * So this parameter is not necessary to specify if either of those paths are the actual path.
      */
+    @Parameter(defaultValue = "${basedir}/src/webapp")
     private File srcDir;
 
     /**
-     * @parameter expression="${basedir}/src/main/webapp"
-     * @readonly
+     * Parameter to get the standard Maven webapp dir, ${basedir}/src/main/webapp
      */
+    @Parameter(defaultValue = "${basedir}/src/main/webapp", readonly = true)
     private File stdM2SrcDir;
 
     /**
-     * @parameter expression="${project.build.directory}/${project.build.finalName}"
+     * Where the exploded war is located. Default ${project.build.directory}/${project.build.finalName}
      */
+    @Parameter(defaultValue = "${project.build.directory}/${project.build.finalName}")
     private File webappDir;
 
     /**
-     * @parameter expression="${project.build.directory}/kantega-dir"
+     * Where to put kantega-dir, default ${project.build.directory}/kantega-dir
      */
+    @Parameter(defaultValue = "${project.build.directory}/kantega-dir")
     private File kantegaDir;
 
     /**
-     * @parameter expression="/${project.artifactId}"
+     * Context path to start the application with, default /${project.artifactId}
      */
+    @Parameter(defaultValue = "/${project.artifactId}")
     private String contextPath;
 
     /**
-     * @parameter expression="${project.groupId}"
-     * @readonly
+     * Project package
      */
+    @Parameter(defaultValue = "${project.groupId}", readonly = true)
     private String projectPackage;
 
     /**
-     * @parameter default-value="${project.build.Directory}/aksessrun/jettywork"
+     * Workdir for jetty.
      */
+    @Parameter(defaultValue = "${project.build.Directory}/aksessrun/jettywork")
     private File jettyWorkDir;
 
 
     /**
-     * @parameter default-value="${basedir}/src/conf/aksess-webapp.conf"
+     * Location of aksess-webapp.conf, default ${basedir}/src/conf/aksess-webapp.conf
      */
+    @Parameter(defaultValue = "${basedir}/src/conf/aksess-webapp.conf")
     private File aksessConfigFile;
 
     /**
-     * @parameter default-value="true" expression="${openBrowser}"
+     * Should a browser be attempted to be opened when application is started? Default true.
      */
+    @Parameter(defaultValue = "true", property = "openBrowser")
     private boolean openBrowser;
 
     /**
-     * Path to the module containing all java files. E.g. ../core
-     * @parameter
-     * @readonly
-     */
-    private File coreModulePath;
-
-    /**
-     * The maven project.
-     *
-     * @parameter expression="${project}"
-     * @required
-     * @readonly
-     */
-    private MavenProject project;
-
-
-    /** @component */
-    protected org.apache.maven.artifact.factory.ArtifactFactory artifactFactory;
-
-    /** @component */
-    protected org.apache.maven.artifact.resolver.ArtifactResolver resolver;
-
-    /**@parameter expression="${localRepository}" */
-    protected org.apache.maven.artifact.repository.ArtifactRepository localRepository;
-
-    /** @parameter expression="${project.remoteArtifactRepositories}" */
-    protected java.util.List remoteRepositories;
-
-    /** @component */
-    protected ArtifactMetadataSource artifactMetadataSource;
-
-
-    /**
      * The directory containing generated classes.
-     *
-     * @parameter expression="${project.build.outputDirectory}"
-     * @required
-     * @readonly
      */
+    @Parameter(defaultValue = "${project.build.outputDirectory}", readonly = true)
     private File classesDirectory;
 
     /**
-     * The directory containing generated classes.
-     *
-     * @parameter expression="${aksessHome}"
+     * The directory containing Flyt CMS. If parameter is configured, web-artifact directory will de overlayed.
+     * This enabling editing jsp and other resources during runtime.
      */
+    @Parameter(property = "aksessHome")
     private File aksessHome;
 
-    /** @component */
-    private MavenProjectBuilder mavenProjectBuilder;
-
     /**
-     * Exclude the files matching the given pattern from runtime classpath.
-     * @parameter
+     * Port to start application on. 8080 is default, will incrementally try new ports if 8080 is busy.
      */
-    private List<String> excludes;
-
-    /**
-     * @parameter expression="${port}" default-value="8080"
-     */
+    @Parameter(defaultValue = "8080")
     private int port;
+
     private JettyStarter starter;
 
-    /**
-     * The artifacts for the project.
-     *
-     * @parameter expression="${project.artifacts}"
-     * @readonly
-     */
-    protected Set<Artifact> projectArtifacts;
+    @Component
+    private MavenProject project;
 
     public void execute() throws MojoExecutionException, MojoFailureException {
         if(!aksessConfigFile.exists()) {
@@ -172,20 +132,14 @@ public class RunMojo extends AbstractMojo {
 
         starter = new JettyStarter();
 
-        starter.addContextParam("no.kantega.publishing.setup.SetupServlet.CONFIG_SOURCE", aksessConfigFile.getAbsolutePath());
-
         if(System.getProperty("os.name").toLowerCase().contains("win")) {
             starter.addContextParam("org.eclipse.jetty.servlet.Default.useFileMappedBuffer", "false");
         }
 
         if(aksessHome != null) {
-            File aksessSrc  = new File(aksessHome, "modules/webapp/src/resources/META-INF/resources");
-            if(aksessSrc.exists()) {
-                getLog().info("Using aksessHome " + aksessSrc.getAbsolutePath());
-                starter.setAksessDir(aksessSrc);
-            } else {
-                getLog().warn("aksessHome " + aksessSrc.getAbsolutePath() + " does not exist!");
-            }
+            File aksessSrc = getAksessHome();
+            getLog().info("Using aksessHome " + aksessSrc.getAbsolutePath());
+            starter.setAksessDir(aksessSrc);
         }
 
         List<File> dependencyFiles = new ArrayList<>();
@@ -212,13 +166,27 @@ public class RunMojo extends AbstractMojo {
         }
     }
 
-    private File getSrcDir() {
+    private File getAksessHome() throws MojoExecutionException {
+        File aksessSrc  = new File(aksessHome, "modules/webapp/src/main/resources/META-INF/resources");
+        File legacyAksessSrc  = new File(aksessHome, "modules/webapp/src/resources/META-INF/resources");
+        if(aksessSrc.exists()) {
+            return aksessSrc;
+        } else if (legacyAksessSrc.exists()) {
+            return legacyAksessSrc;
+        } else {
+            getLog().error("aksessHome " + aksessSrc.getAbsolutePath() + " does not exist!");
+            throw new MojoExecutionException("aksessHome specified, but neither " + aksessSrc.getAbsolutePath() +
+                    " nor " + legacyAksessSrc.getAbsolutePath() + " exists!");
+        }
+    }
+
+    private File getSrcDir() throws MojoExecutionException {
         if(srcDir.exists()){
             return srcDir;
         } else if (stdM2SrcDir.exists()){
             return stdM2SrcDir;
         } else {
-            throw new IllegalStateException("Neither src/webapp nor src/main/webapp exists!");
+            throw new MojoExecutionException("Neither src/webapp nor src/main/webapp exists!");
         }
     }
 
@@ -300,12 +268,10 @@ public class RunMojo extends AbstractMojo {
         }
     }
 
-    /**
-     * @return
-     */
-    private List<File> getDependencyFiles (){
+    private List<File> getDependencyFiles () throws MojoExecutionException {
         List<File> dependencyFiles = new ArrayList<>();
-        for (Artifact artifact : projectArtifacts) {
+
+        for (Artifact artifact : project.getArtifacts()) {
             // Include runtime and compile time libraries, and possibly test libs too
             if (artifact.getType().equals("war")) {
                 continue;
@@ -315,7 +281,9 @@ public class RunMojo extends AbstractMojo {
                 continue; //never add dependencies of scope=provided to the webapp's classpath (see also <useProvidedScope> param)
 
             dependencyFiles.add(artifact.getFile());
-            getLog().debug("Adding artifact " + artifact.getFile().getName() + " with scope " + artifact.getScope() + " for WEB-INF/lib ");
+            if (getLog().isDebugEnabled()) {
+                getLog().debug("Adding artifact " + artifact.getFile().getName() + " with scope " + artifact.getScope() + " for WEB-INF/lib ");
+            }
         }
 
         return dependencyFiles;
