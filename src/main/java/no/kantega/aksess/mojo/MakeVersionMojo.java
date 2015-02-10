@@ -80,14 +80,16 @@ public class MakeVersionMojo extends AbstractMojo {
         props.setProperty("date", buildDate);
         props.setProperty("version", version);
 
-        try (FileOutputStream fileOutputStream = new FileOutputStream(versionFile)){
+        try {
             File dir = versionFile.getParentFile();
             if (!dir.exists()) {
                 if (!dir.mkdirs()) {
                     throw new MojoExecutionException("Failed to create directory " + versionFile.getParentFile());
                 }
             }
-            props.store(fileOutputStream, "iso-8859-1");
+            try (FileOutputStream fileOutputStream = new FileOutputStream(versionFile)){
+                props.store(fileOutputStream, "iso-8859-1");
+            }
         } catch (IOException e) {
             throw new MojoExecutionException("IOException writing " + versionFile +" to disk");
         }
