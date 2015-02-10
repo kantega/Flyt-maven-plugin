@@ -26,12 +26,12 @@
     <groupId>org.kantega.openaksess</groupId>
     <artifactId>aksess-maven-plugin</artifactId>
     <packaging>maven-plugin</packaging>
-    <version>2.11</version>
+    <version>2.12-SNAPSHOT</version>
     <name>OpenAksess Maven plugin</name>
 
     <scm>
         <connection>scm:git:git@gitlab.kantega.no:flyt-cms/flyt-maven-plugin.git</connection>
-      <tag>aksess-maven-plugin-2.11</tag>
+      <tag>HEAD</tag>
   </scm>
 
     <properties>
