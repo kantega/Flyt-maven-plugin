@@ -83,6 +83,11 @@ public class RunMojo extends AbstractMojo {
     @Parameter(defaultValue = "${project.build.Directory}/aksessrun/jettywork")
     private File jettyWorkDir;
 
+    /**
+     * Folder to set as java.io.tmpdir
+     */
+    @Parameter(defaultValue = "${project.build.Directory}/aksessrun/temp")
+    private File tempDir;
 
     /**
      * Location of aksess-webapp.conf, default ${basedir}/src/conf/aksess-webapp.conf
@@ -127,6 +132,9 @@ public class RunMojo extends AbstractMojo {
 
         File logbackConfig = new File(kantegaDir, "conf/logback.xml");
         System.setProperty("logback.configurationFile", logbackConfig.getAbsolutePath());
+        getLog().info("Setting system property logback.configurationFile to " + logbackConfig.getAbsolutePath());
+        System.setProperty("java.io.tmpdir", tempDir.getAbsolutePath());
+        getLog().info("Setting system property java.io.tmpdir to " + tempDir.getAbsolutePath());
 
         getLog().info("Running Jetty");
 
