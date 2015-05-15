@@ -1,3 +1,4 @@
+package no.kantega.aksess;
 import com.sun.codemodel.*;
 import org.apache.maven.artifact.Artifact;
 import org.apache.maven.plugin.MojoExecutionException;
