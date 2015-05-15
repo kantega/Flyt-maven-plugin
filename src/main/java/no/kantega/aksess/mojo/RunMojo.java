@@ -120,6 +120,12 @@ public class RunMojo extends AbstractMojo {
     @Parameter(defaultValue = "8080")
     private int port;
 
+    /**
+     * System Properties as specified in the application POM
+     */
+    @Parameter
+    private SystemProperties systemProperties;
+
     private JettyStarter starter;
 
     @Component
@@ -139,6 +145,8 @@ public class RunMojo extends AbstractMojo {
         getLog().info("Running Jetty");
 
         starter = new JettyStarter();
+
+        setSystemProperties();
 
         if(System.getProperty("os.name").toLowerCase().contains("win")) {
             starter.addContextParam("org.eclipse.jetty.servlet.Default.useFileMappedBuffer", "false");
@@ -166,11 +174,19 @@ public class RunMojo extends AbstractMojo {
         configureStarter(starter);
 
         addRestartConsoleScanner();
-
         try {
             starter.start();
         } catch (Exception e) {
             throw new MojoExecutionException(e.getMessage(), e);
+        }
+    }
+
+    private void setSystemProperties() {
+        if (systemProperties != null){
+            List<SystemProperty> systemPropertyList = systemProperties.getSystemProperties();
+            for (SystemProperty systemProperty : systemPropertyList) {
+                System.setProperty(systemProperty.getName(), systemProperty.getValue());
+            }
         }
     }
 
