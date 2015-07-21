@@ -85,7 +85,7 @@ public class MakeVersionMojo extends AbstractMojo {
             buildDate = format.format(new Date());
         }
 
-        String revision = (String) mavenProject.getProperties().get("buildNumber");
+        String revision = (String) mavenProject.getProperties().getOrDefault("buildNumber", "unknown");
 
         Properties props = new Properties();
         props.setProperty("revision", revision);
@@ -107,24 +107,28 @@ public class MakeVersionMojo extends AbstractMojo {
         }
     }
 
-    private void executeBuildnumberMavenPlugin() throws MojoExecutionException {
-        executeMojo(
-                plugin(
-                        groupId("org.codehaus.mojo"),
-                        artifactId("buildnumber-maven-plugin"),
-                        version("1.3")
-                ),
-                goal("create"),
-                configuration(
-                        element(name("doCheck"), "false"),
-                        element(name("doCheck"), "doUpdate")
-                ),
-                executionEnvironment(
-                        mavenProject,
-                        mavenSession,
-                        pluginManager
-                )
-        );
+    private void executeBuildnumberMavenPlugin() {
+        try {
+            executeMojo(
+                    plugin(
+                            groupId("org.codehaus.mojo"),
+                            artifactId("buildnumber-maven-plugin"),
+                            version("1.3")
+                    ),
+                    goal("create"),
+                    configuration(
+                            element(name("doCheck"), "false"),
+                            element(name("doCheck"), "doUpdate")
+                    ),
+                    executionEnvironment(
+                            mavenProject,
+                            mavenSession,
+                            pluginManager
+                    )
+            );
+        } catch (MojoExecutionException e) {
+            getLog().error("Error running buildnumber-maven-plugin", e);
+        }
     }
 
 
