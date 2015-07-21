@@ -16,13 +16,16 @@
 
 package no.kantega.aksess.mojo;
 
-import org.apache.commons.lang3.StringUtils;
+import org.apache.maven.execution.MavenSession;
 import org.apache.maven.plugin.AbstractMojo;
+import org.apache.maven.plugin.BuildPluginManager;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
+import org.apache.maven.plugins.annotations.Component;
 import org.apache.maven.plugins.annotations.LifecyclePhase;
 import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
+import org.apache.maven.project.MavenProject;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -31,12 +34,31 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Properties;
 
+import static org.twdata.maven.mojoexecutor.MojoExecutor.artifactId;
+import static org.twdata.maven.mojoexecutor.MojoExecutor.configuration;
+import static org.twdata.maven.mojoexecutor.MojoExecutor.element;
+import static org.twdata.maven.mojoexecutor.MojoExecutor.executeMojo;
+import static org.twdata.maven.mojoexecutor.MojoExecutor.executionEnvironment;
+import static org.twdata.maven.mojoexecutor.MojoExecutor.goal;
+import static org.twdata.maven.mojoexecutor.MojoExecutor.groupId;
+import static org.twdata.maven.mojoexecutor.MojoExecutor.name;
+import static org.twdata.maven.mojoexecutor.MojoExecutor.plugin;
+import static org.twdata.maven.mojoexecutor.MojoExecutor.version;
+
 /**
  * Mojo that creates «aksess-webapp-version.properties», containing version information about the building project.
  */
 @Mojo(name = "makeversion", defaultPhase = LifecyclePhase.PROCESS_RESOURCES, requiresProject = true)
 public class MakeVersionMojo extends AbstractMojo {
 
+    @Parameter( defaultValue = "${project}", readonly = true )
+    private MavenProject mavenProject;
+
+    @Parameter( defaultValue = "${session}", readonly = true )
+    private MavenSession mavenSession;
+
+    @Component
+    private BuildPluginManager pluginManager;
 
     /**
      * The version of the project
@@ -51,29 +73,19 @@ public class MakeVersionMojo extends AbstractMojo {
     private File versionFile;
 
     /**
-     *  Revision for the build
-     */
-    @Parameter(defaultValue = "${openaksess.webapp.revision}")
-    private String revision;
-
-    /**
      * Timestamp for the build. Current time is default.
      */
     @Parameter
     private String buildDate;
 
     public void execute() throws MojoExecutionException, MojoFailureException {
-
-        if (StringUtils.isEmpty(revision)) {
-            getLog().warn("Revision not set, use <revision> in config or -Dopenaksess.webapp.revision");
-            revision = "unknown";
-        }
-
+        executeBuildnumberMavenPlugin();
         if (buildDate == null) {
             SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
             buildDate = format.format(new Date());
         }
 
+        String revision = (String) mavenProject.getProperties().get("buildNumber");
 
         Properties props = new Properties();
         props.setProperty("revision", revision);
@@ -94,4 +106,26 @@ public class MakeVersionMojo extends AbstractMojo {
             throw new MojoExecutionException("IOException writing " + versionFile +" to disk");
         }
     }
+
+    private void executeBuildnumberMavenPlugin() throws MojoExecutionException {
+        executeMojo(
+                plugin(
+                        groupId("org.codehaus.mojo"),
+                        artifactId("buildnumber-maven-plugin"),
+                        version("1.3")
+                ),
+                goal("create"),
+                configuration(
+                        element(name("doCheck"), "false"),
+                        element(name("doCheck"), "doUpdate")
+                ),
+                executionEnvironment(
+                        mavenProject,
+                        mavenSession,
+                        pluginManager
+                )
+        );
+    }
+
+
 }
