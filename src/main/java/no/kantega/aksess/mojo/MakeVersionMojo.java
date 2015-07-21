@@ -34,6 +34,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Properties;
 
+import static org.apache.commons.lang3.StringUtils.defaultIfBlank;
 import static org.twdata.maven.mojoexecutor.MojoExecutor.artifactId;
 import static org.twdata.maven.mojoexecutor.MojoExecutor.configuration;
 import static org.twdata.maven.mojoexecutor.MojoExecutor.element;
@@ -85,7 +86,7 @@ public class MakeVersionMojo extends AbstractMojo {
             buildDate = format.format(new Date());
         }
 
-        String revision = (String) mavenProject.getProperties().getOrDefault("buildNumber", "unknown");
+        String revision = defaultIfBlank((String) mavenProject.getProperties().get("buildNumber"), "unknown");
 
         Properties props = new Properties();
         props.setProperty("revision", revision);
