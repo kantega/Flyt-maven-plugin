@@ -2,7 +2,7 @@ package no.kantega.aksess.mojo;
 
 /**
  * SystemProperty
- * <p/>
+ * <p>
  * Provides the ability to set System properties
  * for the mojo execution. A value will only
  * be set if it is not set already. That is, if
@@ -10,6 +10,7 @@ package no.kantega.aksess.mojo;
  * it won't be overridden by settings in the
  * plugin's configuration.
  * Based on SystemProperty in Jetty-maven-plugin
+ * </p>
  */
 public class SystemProperty {
     private String name;

@@ -23,9 +23,9 @@ import java.util.Map;
 
 /**
  * SystemProperties
- * <p/>
+ * <p>
  * Map of name to SystemProperty.
- * <p/>
+ * </p>
  * When a SystemProperty instance is added, if it has not
  * been already set (eg via the command line java system property)
  * then it will be set.
