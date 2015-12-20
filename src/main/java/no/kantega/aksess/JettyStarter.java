@@ -40,6 +40,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static java.util.Collections.emptyList;
+
 
 public class JettyStarter {
 
@@ -52,12 +54,13 @@ public class JettyStarter {
     private Map<String, String> props = new HashMap<>();
     private File workDir;
 
-    private List<File> dependencyFiles;
+    private List<File> dependencyFiles = emptyList();
     private boolean openBrowser;
     private JettyWebAppContext context;
     private int port = 8080;
     private Server server;
     private boolean joinServer = true;
+    private boolean throwUnavailableOnStartupException = false;
 
     public static void main(String[] args) throws Exception {
         final JettyStarter js = new JettyStarter();
@@ -152,6 +155,7 @@ public class JettyStarter {
         context.setContextPath(contextPath);
 
         context.setWebInfLib(dependencyFiles);
+        context.setThrowUnavailableOnStartupException(throwUnavailableOnStartupException);
 
         int firstport = port;
         while (port < firstport+10) {
@@ -268,6 +272,10 @@ public class JettyStarter {
 
     public void setOpenBrowser(boolean openBrowser) {
         this.openBrowser = openBrowser;
+    }
+
+    public void setThrowUnavailableOnStartupException(boolean throwUnavailableOnStartupException) {
+        this.throwUnavailableOnStartupException = throwUnavailableOnStartupException;
     }
 
     public void restart() throws Exception {
