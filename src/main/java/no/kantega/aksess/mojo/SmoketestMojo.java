@@ -126,7 +126,7 @@ public class SmoketestMojo extends AbstractMojo {
             }
         }
         if(!failedPages.isEmpty()){
-            for (Page page : pages) {
+            for (Page page : failedPages) {
                 getLog().error(page + " failed");
             }
             throw new MojoExecutionException("Pages has failed");
