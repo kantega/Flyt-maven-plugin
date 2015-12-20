@@ -66,6 +66,12 @@ public class SmoketestMojo extends AbstractMojo {
     @Parameter(defaultValue = "dbuser")
     private String fakeUserDomain;
 
+    /**
+     * How many pages should be tested per display template?
+     */
+    @Parameter(defaultValue = "10")
+    private Integer numberPrTemplate;
+
     private JettyStarter starter;
     private String root;
 
@@ -128,7 +134,7 @@ public class SmoketestMojo extends AbstractMojo {
     }
 
     private List<Page> pages(CloseableHttpClient httpClient) throws MalformedURLException, MojoExecutionException {
-        String testOptions = "excludeFilter=smoketest=false";
+        String testOptions = "excludeFilter=smoketest=false&numberPrTemplate=" + numberPrTemplate;
         return getPages(httpClient, new URL(root + "/TestPages.action?" + testOptions));
     }
 
