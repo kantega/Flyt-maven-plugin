@@ -202,17 +202,10 @@ public class JettyStarter {
             else if (osName.startsWith("Windows"))
                 Runtime.getRuntime().exec("rundll32 url.dll,FileProtocolHandler " + url);
             else { //assume Unix or Linux
-                String[] browsers = {
-                        "sensible-browser", "firefox", "opera", "chromium-browser", "konqueror", "epiphany", "mozilla", "netscape" };
-                String browser = null;
-                for (int count = 0; count < browsers.length && browser == null; count++)
-                    if (Runtime.getRuntime().exec(
-                            new String[] {"which", browsers[count]}).waitFor() == 0)
-                        browser = browsers[count];
-                if (browser == null)
-                    throw new Exception("Could not find web browser");
-                else
-                    Runtime.getRuntime().exec(new String[] {browser, url});
+                Process xdgOpen = Runtime.getRuntime().exec(new String[]{"xdg-open", url});
+                if (xdgOpen.waitFor() > 0) {
+                    throw new Exception(String.format("Could not open browser. xdg-open returned %d. See xdg-open manpage for details.", xdgOpen.exitValue()));
+                }
             }
         }
         catch (Exception e) {
