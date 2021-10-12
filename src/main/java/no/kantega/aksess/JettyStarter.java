@@ -26,6 +26,7 @@ import org.eclipse.jetty.server.handler.HandlerCollection;
 import org.eclipse.jetty.util.resource.JarResource;
 import org.eclipse.jetty.util.resource.Resource;
 import org.eclipse.jetty.util.resource.ResourceCollection;
+import org.eclipse.jetty.webapp.Configuration;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -121,13 +122,15 @@ public class JettyStarter {
 
         context = new JettyWebAppContext();
 
-
-        context.addServerClass("-org.apache.commons.logging.");
-        context.addServerClass("-org.apache.jasper.");
-        context.addServerClass("-org.apache.tomcat.");
-        context.addServerClass("-org.apache.el.");
-        context.addServerClass("org.apache.");
-        context.addServerClass("org.slf4j.");
+        context.getServerClasspathPattern()
+            .add(
+                "-org.apache.commons.logging.",
+                "-org.apache.jasper.",
+                "-org.apache.tomcat.",
+                "-org.apache.el.",
+                "org.apache.",
+                "org.slf4j."
+            );
 
         if(webXml != null) {
             context.setDescriptor(webXml.getAbsolutePath());
@@ -171,6 +174,16 @@ public class JettyStarter {
         }
 
         server = new Server(port);
+
+        server.addBean(new Configuration.ClassList(
+            new String[]{
+                "org.eclipse.jetty.maven.plugin.MavenWebInfConfiguration",
+                "org.eclipse.jetty.webapp.WebXmlConfiguration",
+                "org.eclipse.jetty.webapp.MetaInfConfiguration",
+                "org.eclipse.jetty.webapp.FragmentConfiguration",
+                "org.eclipse.jetty.webapp.JettyWebXmlConfiguration"
+            }
+        ));
 
         HandlerCollection collection = new HandlerCollection();
         collection.setHandlers(new Handler[] {new ContextPathHandler(), context});
