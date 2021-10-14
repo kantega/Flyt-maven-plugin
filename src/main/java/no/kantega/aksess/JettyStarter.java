@@ -17,7 +17,12 @@
 package no.kantega.aksess;
 
 
+import org.apache.tomcat.InstanceManager;
+import org.apache.tomcat.SimpleInstanceManager;
+import org.eclipse.jetty.annotations.ServletContainerInitializersStarter;
+import org.eclipse.jetty.apache.jsp.JettyJasperInitializer;
 import org.eclipse.jetty.maven.plugin.JettyWebAppContext;
+import org.eclipse.jetty.plus.annotation.ContainerInitializer;
 import org.eclipse.jetty.server.Handler;
 import org.eclipse.jetty.server.Request;
 import org.eclipse.jetty.server.Server;
@@ -173,6 +178,10 @@ public class JettyStarter {
             }
         }
 
+        context.setAttribute("org.eclipse.jetty.containerInitializers", jspInitializers());
+        context.setAttribute(InstanceManager.class.getName(), new SimpleInstanceManager());
+        context.addBean(new ServletContainerInitializersStarter(context), true);
+
         server = new Server(port);
 
         server.addBean(new Configuration.ClassList(
@@ -199,6 +208,13 @@ public class JettyStarter {
         }
     }
 
+    private static List<ContainerInitializer> jspInitializers() {
+        JettyJasperInitializer sci = new JettyJasperInitializer();
+        ContainerInitializer initializer = new ContainerInitializer(sci, null);
+        List<ContainerInitializer> initializers = new ArrayList<>();
+        initializers.add(initializer);
+        return initializers;
+    }
     public void setJoinServer(boolean joinServer) {
         this.joinServer = joinServer;
     }
