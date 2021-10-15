@@ -126,6 +126,7 @@ public class JettyStarter {
             .add(
                 "-org.apache.commons.logging.",
                 "-org.apache.jasper.",
+                "-org.apache.taglibs.",
                 "-org.apache.tomcat.",
                 "-org.apache.el.",
                 "org.apache.",
